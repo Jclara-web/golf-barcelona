@@ -128,7 +128,6 @@
         .tee-option .tee-number { font-size: 1.5rem; font-weight: bold; color: #1a472a; }
         .tee-option .tee-label { font-size: 0.8rem; color: #666; }
 
-        /* Configuración de grupo */
         .group-config {
             background: #f8f9fa;
             border-radius: 10px;
@@ -202,7 +201,6 @@
             letter-spacing: 2px;
         }
 
-        /* Colores */
         .color-picker { display: flex; gap: 6px; flex-wrap: wrap; }
 
         .color-option {
@@ -217,7 +215,6 @@
         .color-option:hover { transform: scale(1.1); }
         .color-option.selected { border-color: #333; }
 
-        /* Marcadores */
         .group-markers { display: flex; gap: 10px; margin-bottom: 15px; }
 
         .marker-box {
@@ -254,7 +251,6 @@
         .marker-icon { font-size: 1.5rem; }
         .marker-text { font-size: 0.8rem; font-weight: 600; margin-top: 3px; }
 
-        /* Botones */
         .btn {
             width: 100%;
             padding: 12px;
@@ -274,7 +270,6 @@
         .btn-primary:hover { box-shadow: 0 5px 20px rgba(45, 90, 61, 0.4); }
         .btn-danger { background: #dc3545; color: white; margin-top: 10px; }
 
-        /* Lista jugadores */
         .players-list { margin-top: 20px; max-height: 300px; overflow-y: auto; }
 
         .player-card {
@@ -357,7 +352,6 @@
 
         .no-players { text-align: center; color: #999; padding: 20px; font-style: italic; }
 
-        /* Campo de golf */
         .golf-course {
             background: linear-gradient(180deg, #7cb342 0%, #558b2f 100%);
             border-radius: 15px;
@@ -505,7 +499,6 @@
         .current-time-info .value { font-size: 1.2rem; font-weight: bold; color: #1a472a; }
         .current-time-info .label { font-size: 0.8rem; color: #666; }
 
-        /* Config panel */
         .config-panel { max-width: 900px; margin: 0 auto; }
 
         .config-header {
@@ -667,14 +660,14 @@
                     </div>
                     <div class="total-time-box">
                         <div class="label">Total</div>
-                        <div class="value" id="totalTimeDisplay">4h 20min</div>
+                        <div class="value" id="totalTimeDisplay">4h 28min</div>
                     </div>
                 </div>
 
                 <div class="preset-buttons">
-                    <button class="preset-btn" onclick="applyPreset('standard')">📊 Estándar</button>
-                    <button class="preset-btn" onclick="applyPreset('fast')">🏃 Rápido</button>
-                    <button class="preset-btn" onclick="applyPreset('slow')">🐢 Lento</button>
+                    <button class="preset-btn" onclick="applyPreset('standard')">📊 Estándar (4h 28min)</button>
+                    <button class="preset-btn" onclick="applyPreset('fast')">🏃 Rápido (3h 45min)</button>
+                    <button class="preset-btn" onclick="applyPreset('slow')">🐢 Lento (5h 15min)</button>
                 </div>
 
                 <div class="times-grid">
@@ -702,7 +695,7 @@
 
                     <div class="current-time-info">
                         <div class="label">Tiempo total</div>
-                        <div class="value" id="currentTotalTime">4h 20min</div>
+                        <div class="value" id="currentTotalTime">4h 28min</div>
                     </div>
 
                     <div class="form-group">
@@ -810,7 +803,7 @@
                 </div>
 
                 <div class="panel golf-course">
-                    <div class="course-title">🏌️ Campo - 18 Hoyos</div>
+                    <div class="course-title">🏌️ Golf Barcelona - 18 Hoyos</div>
                     <div class="holes-container">
                         <div class="nine-section-visual" id="frontNineVisual"></div>
                         <div class="nine-section-visual back-nine" id="backNineVisual"></div>
@@ -833,21 +826,46 @@
     </div>
 
     <script>
+        // ===== DATOS REALES DE GOLF BARCELONA =====
         const holesData = [
-            {n:1,par:4,m:365,t:14},{n:2,par:5,m:485,t:17},{n:3,par:3,m:165,t:12},
-            {n:4,par:4,m:380,t:15},{n:5,par:4,m:340,t:14},{n:6,par:3,m:155,t:12},
-            {n:7,par:5,m:510,t:18},{n:8,par:4,m:395,t:15},{n:9,par:4,m:370,t:14},
-            {n:10,par:4,m:385,t:15},{n:11,par:3,m:175,t:12},{n:12,par:4,m:350,t:14},
-            {n:13,par:5,m:495,t:17},{n:14,par:4,m:360,t:14},{n:15,par:4,m:400,t:15},
-            {n:16,par:3,m:180,t:12},{n:17,par:5,m:520,t:18},{n:18,par:4,m:410,t:15}
+            { n: 1,  par: 5, m: 478, t: 16 },
+            { n: 2,  par: 3, m: 141, t: 13 },
+            { n: 3,  par: 4, m: 272, t: 14 },
+            { n: 4,  par: 4, m: 353, t: 15 },
+            { n: 5,  par: 3, m: 150, t: 14 },
+            { n: 6,  par: 4, m: 379, t: 15 },
+            { n: 7,  par: 5, m: 492, t: 16 },
+            { n: 8,  par: 4, m: 322, t: 15 },
+            { n: 9,  par: 4, m: 255, t: 15 },
+            { n: 10, par: 5, m: 466, t: 16 },
+            { n: 11, par: 4, m: 311, t: 15 },
+            { n: 12, par: 4, m: 357, t: 15 },
+            { n: 13, par: 5, m: 483, t: 16 },
+            { n: 14, par: 3, m: 127, t: 14 },
+            { n: 15, par: 4, m: 317, t: 15 },
+            { n: 16, par: 3, m: 139, t: 13 },
+            { n: 17, par: 4, m: 361, t: 16 },
+            { n: 18, par: 4, m: 321, t: 15 }
         ];
 
         const colors = ['#e53935','#1e88e5','#fdd835','#7b1fa2','#fb8c00','#00897b','#d81b60','#5e35b1'];
+        
+        // Presets con tiempos reales de Golf Barcelona
         const presets = {
-            standard:{1:14,2:17,3:12,4:15,5:14,6:12,7:18,8:15,9:14,10:15,11:12,12:14,13:17,14:14,15:15,16:12,17:18,18:15},
-            fast:{1:11,2:14,3:10,4:12,5:11,6:10,7:14,8:12,9:11,10:12,11:10,12:11,13:14,14:11,15:12,16:10,17:14,18:12},
-            slow:{1:16,2:20,3:14,4:17,5:16,6:14,7:20,8:17,9:16,10:17,11:14,12:16,13:20,14:16,15:17,16:14,17:20,18:17}
+            standard: {
+                1:16, 2:13, 3:14, 4:15, 5:14, 6:15, 7:16, 8:15, 9:15,
+                10:16, 11:15, 12:15, 13:16, 14:14, 15:15, 16:13, 17:16, 18:15
+            },
+            fast: {
+                1:13, 2:10, 3:11, 4:12, 5:11, 6:12, 7:13, 8:12, 9:12,
+                10:13, 11:12, 12:12, 13:13, 14:11, 15:12, 16:10, 17:13, 18:12
+            },
+            slow: {
+                1:19, 2:16, 3:17, 4:18, 5:17, 6:18, 7:19, 8:18, 9:18,
+                10:19, 11:18, 12:18, 13:19, 14:17, 15:18, 16:16, 17:19, 18:18
+            }
         };
+
         const limits = {players:{min:1,max:4},buggys:{min:0,max:2},moto3:{min:0,max:4},moto4:{min:0,max:4}};
 
         let holeTimes = {};
