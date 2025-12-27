@@ -5,28 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#1a472a">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Golf Barcelona - Control de Tiempos</title>
-    <link rel="manifest" href="manifest.json">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);
             min-height: 100vh;
             padding: 20px;
-            padding-top: env(safe-area-inset-top, 20px);
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1400px; margin: 0 auto; }
 
         header {
             text-align: center;
@@ -40,13 +30,11 @@
         }
 
         .header-text h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .header-text p {
-            opacity: 0.9;
-        }
+        .header-text p { opacity: 0.9; }
 
         .tabs {
             display: flex;
@@ -57,7 +45,7 @@
         }
 
         .tab-btn {
-            padding: 12px 30px;
+            padding: 12px 25px;
             border: none;
             border-radius: 25px;
             font-size: 1rem;
@@ -68,63 +56,50 @@
             transition: all 0.3s;
         }
 
-        .tab-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
+        .tab-btn:hover { background: rgba(255,255,255,0.3); }
+        .tab-btn.active { background: white; color: #1a472a; }
 
-        .tab-btn.active {
-            background: white;
-            color: #1a472a;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
         .main-content {
             display: grid;
-            grid-template-columns: 420px 1fr;
+            grid-template-columns: 400px 1fr;
             gap: 25px;
         }
 
-        @media (max-width: 1000px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 900px) {
+            .main-content { grid-template-columns: 1fr; }
         }
 
         .panel {
             background: white;
             border-radius: 15px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
         .panel h2 {
             color: #1a472a;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 2px solid #e8f5e9;
+            font-size: 1.2rem;
         }
 
-        .form-group {
-            margin-bottom: 18px;
-        }
+        .form-group { margin-bottom: 15px; }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #333;
             font-weight: 600;
+            font-size: 0.9rem;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px 15px;
+            padding: 10px 12px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 1rem;
@@ -135,14 +110,11 @@
             border-color: #2d5a3d;
         }
 
-        .tee-selector {
-            display: flex;
-            gap: 10px;
-        }
+        .tee-selector { display: flex; gap: 10px; }
 
         .tee-option {
             flex: 1;
-            padding: 15px;
+            padding: 12px;
             border: 3px solid #e0e0e0;
             border-radius: 10px;
             text-align: center;
@@ -151,218 +123,144 @@
             transition: all 0.3s;
         }
 
-        .tee-option:hover {
-            border-color: #2d5a3d;
-        }
+        .tee-option:hover { border-color: #2d5a3d; }
+        .tee-option.active { border-color: #2d5a3d; background: #e8f5e9; }
+        .tee-option .tee-number { font-size: 1.5rem; font-weight: bold; color: #1a472a; }
+        .tee-option .tee-label { font-size: 0.8rem; color: #666; }
 
-        .tee-option.active {
-            border-color: #2d5a3d;
-            background: #e8f5e9;
-        }
-
-        .tee-option .tee-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #1a472a;
-        }
-
-        .tee-option .tee-label {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        /* ===== SELECTOR DE JUGADORES Y VEHÍCULOS ===== */
+        /* Configuración de grupo */
         .group-config {
             background: #f8f9fa;
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 10px;
+            padding: 12px;
         }
 
         .config-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px;
+            padding: 10px;
             background: white;
-            border-radius: 10px;
-            margin-bottom: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
             border: 2px solid #e8f5e9;
         }
 
-        .config-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .config-row.has-value {
-            border-color: #2d5a3d;
-            background: #f0fff4;
-        }
+        .config-row.has-value { border-color: #2d5a3d; background: #f0fff4; }
 
         .config-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .config-icon {
-            font-size: 1.5rem;
-            width: 40px;
-            text-align: center;
-        }
-
-        .config-text {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .config-subtext {
-            font-size: 0.75rem;
-            color: #888;
-        }
-
-        .quantity-selector {
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
+        .config-icon { font-size: 1.3rem; }
+        .config-text { font-weight: 600; color: #333; font-size: 0.9rem; }
+        .config-subtext { font-size: 0.7rem; color: #888; }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
         .qty-btn {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border: 2px solid #2d5a3d;
             background: white;
             color: #2d5a3d;
             border-radius: 50%;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
         }
 
-        .qty-btn:hover {
-            background: #2d5a3d;
-            color: white;
-        }
-
-        .qty-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .qty-btn:disabled:hover {
-            background: white;
-            color: #2d5a3d;
-        }
+        .qty-btn:hover { background: #2d5a3d; color: white; }
 
         .qty-value {
-            width: 40px;
+            width: 30px;
             text-align: center;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: bold;
             color: #1a472a;
         }
 
-        .qty-value.zero {
-            color: #ccc;
-        }
+        .qty-value.zero { color: #ccc; }
 
         .group-summary {
-            margin-top: 15px;
-            padding: 12px;
+            margin-top: 10px;
+            padding: 10px;
             background: linear-gradient(135deg, #1a472a, #2d5a3d);
-            border-radius: 10px;
+            border-radius: 8px;
             color: white;
             text-align: center;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
         }
 
-        .group-summary .summary-title {
-            font-size: 0.85rem;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-
-        .group-summary .summary-icons {
-            font-size: 1.3rem;
-            letter-spacing: 3px;
-        }
-
-        /* ===== COLORES ===== */
-        .color-picker {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+        /* Colores */
+        .color-picker { display: flex; gap: 6px; flex-wrap: wrap; }
 
         .color-option {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
             border: 3px solid transparent;
             transition: all 0.2s;
         }
 
-        .color-option:hover {
-            transform: scale(1.15);
-        }
+        .color-option:hover { transform: scale(1.1); }
+        .color-option.selected { border-color: #333; }
 
-        .color-option.selected {
-            border-color: #333;
-        }
+        /* Marcadores */
+        .group-markers { display: flex; gap: 10px; margin-bottom: 15px; }
 
-        /* ===== GRUPO A VIGILAR ===== */
-        .watch-group-container {
-            background: #fff3e0;
-            border: 2px solid #ff9800;
+        .marker-box {
+            flex: 1;
+            padding: 10px;
             border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 18px;
             cursor: pointer;
-        }
-
-        .watch-group-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .checkbox-custom {
-            width: 28px;
-            height: 28px;
-            border: 3px solid #ff9800;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            font-size: 1.2rem;
+            text-align: center;
             transition: all 0.3s;
         }
 
-        .checkbox-custom.checked {
-            background: #ff9800;
+        .marker-box.tournament {
+            background: #e3f2fd;
+            border: 2px solid #1976d2;
+            color: #1565c0;
         }
 
-        .checkbox-label .title {
-            font-weight: 600;
+        .marker-box.tournament.active {
+            background: #1976d2;
+            color: white;
+        }
+
+        .marker-box.watch {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
             color: #e65100;
         }
 
-        .checkbox-label .subtitle {
-            font-size: 0.8rem;
-            color: #ff9800;
+        .marker-box.watch.active {
+            background: #ff9800;
+            color: white;
         }
 
-        /* ===== BOTONES ===== */
+        .marker-icon { font-size: 1.5rem; }
+        .marker-text { font-size: 0.8rem; font-weight: 600; margin-top: 3px; }
+
+        /* Botones */
         .btn {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             border: none;
             border-radius: 10px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
@@ -373,115 +271,70 @@
             color: white;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(45, 90, 61, 0.4);
-        }
+        .btn-primary:hover { box-shadow: 0 5px 20px rgba(45, 90, 61, 0.4); }
+        .btn-danger { background: #dc3545; color: white; margin-top: 10px; }
 
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-            margin-top: 10px;
-        }
-
-        /* ===== LISTA DE JUGADORES ===== */
-        .players-list {
-            margin-top: 25px;
-            max-height: 350px;
-            overflow-y: auto;
-        }
+        /* Lista jugadores */
+        .players-list { margin-top: 20px; max-height: 300px; overflow-y: auto; }
 
         .player-card {
             background: #f8f9fa;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 12px;
-            border-left: 5px solid #2d5a3d;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 4px solid #2d5a3d;
             position: relative;
         }
 
-        .player-card.delayed {
-            border-left-color: #dc3545;
-            background: #fff5f5;
-        }
-
-        .player-card.watch-group {
-            border-left-color: #ff9800;
-            background: #fff8e1;
-            box-shadow: 0 0 0 2px #ff9800;
-        }
+        .player-card.delayed { border-left-color: #dc3545; background: #fff5f5; }
+        .player-card.watch-group { border-left-color: #ff9800; background: #fff8e1; }
+        .player-card.tournament-group { border-left-color: #1976d2; background: #e3f2fd; }
 
         .player-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .player-color {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .player-name {
-            font-weight: 600;
-            color: #333;
-            font-size: 1.1rem;
-            flex: 1;
-        }
-
-        .player-vehicles {
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-        }
-
-        .watch-badge {
-            background: #ff9800;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .player-info {
-            font-size: 0.85rem;
-            color: #666;
-            display: flex;
-            gap: 12px;
+            gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 5px;
         }
 
-        .player-details {
-            font-size: 0.8rem;
-            color: #888;
-            background: #f0f0f0;
-            padding: 5px 10px;
-            border-radius: 5px;
-            margin-top: 5px;
+        .player-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
+
+        .player-name { font-weight: 600; color: #333; flex: 1; }
+
+        .badge {
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .badge.tournament { background: #1976d2; }
+        .badge.watch { background: #ff9800; }
+
+        .player-info { font-size: 0.8rem; color: #666; margin-bottom: 3px; }
+        .player-details { font-size: 0.75rem; color: #888; background: #f0f0f0; padding: 4px 8px; border-radius: 4px; }
 
         .player-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
-        .expected-hole {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: #1a472a;
-        }
+        .expected-hole { font-size: 1.4rem; font-weight: bold; color: #1a472a; }
 
         .player-status {
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
             font-weight: 600;
         }
 
@@ -491,92 +344,65 @@
 
         .delete-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 8px;
+            right: 8px;
             background: none;
             border: none;
             color: #999;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
 
-        .delete-btn:hover {
-            color: #dc3545;
-        }
+        .delete-btn:hover { color: #dc3545; }
 
-        .no-players {
-            text-align: center;
-            color: #999;
-            padding: 30px;
-            font-style: italic;
-        }
+        .no-players { text-align: center; color: #999; padding: 20px; font-style: italic; }
 
-        /* ===== CAMPO DE GOLF ===== */
+        /* Campo de golf */
         .golf-course {
             background: linear-gradient(180deg, #7cb342 0%, #558b2f 100%);
             border-radius: 15px;
-            padding: 20px;
+            padding: 15px;
         }
 
         .course-title {
             text-align: center;
             color: white;
-            font-size: 1.3rem;
-            margin-bottom: 20px;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
         }
 
         .holes-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 12px;
         }
 
-        .nine-section-visual {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .nine-section-visual.back-nine {
-            flex-direction: column-reverse;
-        }
-
-        .nine-title {
-            color: white;
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+        .nine-section-visual { display: flex; flex-direction: column; gap: 6px; }
+        .nine-section-visual.back-nine { flex-direction: column-reverse; }
+        .nine-title { color: white; text-align: center; font-weight: bold; margin-bottom: 8px; font-size: 0.9rem; }
 
         .hole {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: rgba(255,255,255,0.15);
-            padding: 10px 15px;
-            border-radius: 25px;
+            padding: 8px 12px;
+            border-radius: 20px;
             position: relative;
         }
 
         .hole.current {
             background: rgba(255,255,255,0.95);
-            transform: scale(1.03);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        .hole.watch-hole {
-            background: rgba(255, 152, 0, 0.9);
-            animation: pulse-orange 2s infinite;
-        }
-
-        @keyframes pulse-orange {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7); }
-            50% { box-shadow: 0 0 0 8px rgba(255, 152, 0, 0); }
-        }
+        .hole.watch-hole { background: rgba(255, 152, 0, 0.85); }
+        .hole.tournament-hole { background: rgba(25, 118, 210, 0.85); }
 
         .hole-number {
-            width: 35px;
-            height: 35px;
+            width: 28px;
+            height: 28px;
             background: white;
             border-radius: 50%;
             display: flex;
@@ -584,235 +410,173 @@
             justify-content: center;
             font-weight: bold;
             color: #1a472a;
-        }
-
-        .hole.current .hole-number {
-            background: #1a472a;
-            color: white;
-        }
-
-        .hole.watch-hole .hole-number {
-            background: #e65100;
-            color: white;
-        }
-
-        .hole-info {
-            flex: 1;
-            color: white;
             font-size: 0.85rem;
         }
 
-        .hole.current .hole-info {
-            color: #1a472a;
-        }
+        .hole.current .hole-number { background: #1a472a; color: white; }
+        .hole.watch-hole .hole-number { background: #e65100; color: white; }
+        .hole.tournament-hole .hole-number { background: #0d47a1; color: white; }
 
-        .player-markers {
-            display: flex;
-            gap: 3px;
-        }
+        .hole-info { flex: 1; color: white; font-size: 0.75rem; }
+        .hole.current .hole-info { color: #1a472a; }
+
+        .player-markers { display: flex; gap: 2px; }
 
         .player-dot {
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             border: 2px solid white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-
-        .player-dot.watch {
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
         .clock-display {
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             background: rgba(0,0,0,0.2);
             border-radius: 10px;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
-        .clock-display .time {
-            font-size: 3rem;
-            font-weight: bold;
-            color: white;
-        }
-
-        .clock-display .date {
-            color: rgba(255,255,255,0.8);
-        }
+        .clock-display .time { font-size: 2.5rem; font-weight: bold; color: white; }
+        .clock-display .date { color: rgba(255,255,255,0.8); font-size: 0.9rem; }
 
         .legend {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 8px;
+            margin-top: 15px;
             flex-wrap: wrap;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             color: white;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             background: rgba(0,0,0,0.2);
-            padding: 5px 10px;
-            border-radius: 15px;
+            padding: 4px 8px;
+            border-radius: 12px;
         }
 
-        .legend-item.watch {
-            background: rgba(255, 152, 0, 0.8);
-        }
+        .legend-item.watch { background: rgba(255, 152, 0, 0.7); }
+        .legend-item.tournament { background: rgba(25, 118, 210, 0.7); }
 
         .legend-dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             border: 2px solid white;
         }
 
         .summary-stats {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 20px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 15px;
         }
 
         @media (max-width: 600px) {
-            .summary-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .summary-stats { grid-template-columns: repeat(3, 1fr); }
         }
 
         .stat-card {
             background: rgba(0,0,0,0.2);
-            padding: 15px;
-            border-radius: 10px;
+            padding: 10px 5px;
+            border-radius: 8px;
             text-align: center;
             color: white;
         }
 
-        .stat-card.warning {
-            background: rgba(255, 152, 0, 0.6);
-        }
-
-        .stat-card .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-
-        .stat-card .stat-label {
-            font-size: 0.75rem;
-        }
+        .stat-card.warning { background: rgba(255, 152, 0, 0.6); }
+        .stat-card.tournament { background: rgba(25, 118, 210, 0.6); }
+        .stat-card .stat-value { font-size: 1.3rem; font-weight: bold; }
+        .stat-card .stat-label { font-size: 0.65rem; }
 
         .current-time-info {
             background: #f0f4f0;
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 18px;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
-        .current-time-info .value {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #1a472a;
-        }
+        .current-time-info .value { font-size: 1.2rem; font-weight: bold; color: #1a472a; }
+        .current-time-info .label { font-size: 0.8rem; color: #666; }
 
-        .current-time-info .label {
-            font-size: 0.85rem;
-            color: #666;
-        }
-
-        /* Config Panel */
-        .config-panel { max-width: 1000px; margin: 0 auto; }
+        /* Config panel */
+        .config-panel { max-width: 900px; margin: 0 auto; }
 
         .config-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 25px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
         .total-time-box {
             background: linear-gradient(135deg, #1a472a, #2d5a3d);
             color: white;
-            padding: 20px 30px;
-            border-radius: 15px;
+            padding: 15px 25px;
+            border-radius: 12px;
             text-align: center;
         }
 
-        .total-time-box .value {
-            font-size: 2rem;
-            font-weight: bold;
-        }
+        .total-time-box .value { font-size: 1.5rem; font-weight: bold; }
 
-        .preset-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
-        }
+        .preset-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
 
         .preset-btn {
-            padding: 12px 20px;
+            padding: 10px 15px;
             border: 2px solid #2d5a3d;
-            border-radius: 10px;
+            border-radius: 8px;
             background: white;
             color: #2d5a3d;
             font-weight: 600;
             cursor: pointer;
         }
 
-        .preset-btn:hover {
-            background: #2d5a3d;
-            color: white;
-        }
+        .preset-btn:hover { background: #2d5a3d; color: white; }
 
         .times-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
+            gap: 20px;
         }
 
-        @media (max-width: 700px) {
-            .times-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 600px) { .times-grid { grid-template-columns: 1fr; } }
 
         .nine-section {
             background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 15px;
         }
 
         .nine-section h3 {
             color: #1a472a;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-align: center;
-            padding-bottom: 12px;
+            padding-bottom: 10px;
             border-bottom: 2px solid #e0e0e0;
+            font-size: 1rem;
         }
 
         .hole-time-row {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
+            gap: 10px;
+            padding: 8px 10px;
             background: white;
-            border-radius: 10px;
-            margin-bottom: 8px;
+            border-radius: 8px;
+            margin-bottom: 6px;
         }
 
         .hole-badge {
-            width: 36px;
-            height: 36px;
+            width: 30px;
+            height: 30px;
             background: linear-gradient(135deg, #1a472a, #2d5a3d);
             color: white;
             border-radius: 50%;
@@ -820,34 +584,31 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            font-size: 0.85rem;
         }
 
         .hole-details { flex: 1; }
-        .hole-details .par-info { font-weight: 600; color: #333; }
-        .hole-details .meters-info { font-size: 0.8rem; color: #888; }
+        .hole-details .par-info { font-weight: 600; color: #333; font-size: 0.85rem; }
+        .hole-details .meters-info { font-size: 0.7rem; color: #888; }
 
-        .time-input-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .time-input-wrapper { display: flex; align-items: center; gap: 4px; }
 
         .time-input-wrapper input {
-            width: 60px;
-            padding: 10px;
+            width: 50px;
+            padding: 8px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 6px;
             text-align: center;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             color: #1a472a;
         }
 
         .nine-subtotal {
-            margin-top: 15px;
-            padding: 12px;
+            margin-top: 12px;
+            padding: 10px;
             background: #e8f5e9;
-            border-radius: 10px;
+            border-radius: 8px;
             text-align: center;
             font-weight: 600;
             color: #1a472a;
@@ -855,38 +616,29 @@
 
         .save-config-btn {
             width: 100%;
-            padding: 18px;
+            padding: 15px;
             background: linear-gradient(135deg, #2d5a3d, #1a472a);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1.2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 25px;
+            margin-top: 20px;
         }
 
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-        }
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
 
         .toast {
             background: #4caf50;
             color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
+            padding: 12px 20px;
+            border-radius: 8px;
             margin-bottom: 10px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            animation: slideIn 0.3s ease;
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
+        .toast.blue { background: #1976d2; }
     </style>
 </head>
 <body>
@@ -894,7 +646,7 @@
 
     <div class="container">
         <header>
-            <div style="font-size: 3rem;">⛳</div>
+            <div style="font-size: 2.5rem;">⛳</div>
             <div class="header-text">
                 <h1>Golf Barcelona</h1>
                 <p>Control de Tiempos de Juego</p>
@@ -902,20 +654,19 @@
         </header>
 
         <div class="tabs">
-            <button class="tab-btn active" id="tabPlay" onclick="showTab('play')">🏌️ Control de Juego</button>
-            <button class="tab-btn" id="tabConfig" onclick="showTab('config')">⏱️ Configurar Tiempos</button>
+            <button class="tab-btn active" id="tabPlay" onclick="showTab('play')">🏌️ Control</button>
+            <button class="tab-btn" id="tabConfig" onclick="showTab('config')">⏱️ Tiempos</button>
         </div>
 
-        <!-- TAB CONFIGURACIÓN -->
+        <!-- TAB CONFIG -->
         <div id="configTab" class="tab-content">
             <div class="panel config-panel">
                 <div class="config-header">
                     <div>
-                        <h2 style="border: none; padding: 0; margin: 0;">⏱️ Tiempos por Hoyo</h2>
-                        <p style="color: #666; margin-top: 5px;">Configura los minutos de cada hoyo</p>
+                        <h2 style="border:none;padding:0;margin:0;">⏱️ Tiempos por Hoyo</h2>
                     </div>
                     <div class="total-time-box">
-                        <div class="label">Tiempo Total</div>
+                        <div class="label">Total</div>
                         <div class="value" id="totalTimeDisplay">4h 20min</div>
                     </div>
                 </div>
@@ -928,12 +679,12 @@
 
                 <div class="times-grid">
                     <div class="nine-section">
-                        <h3>🏌️ IDA (1-9)</h3>
+                        <h3>IDA (1-9)</h3>
                         <div id="frontNineTimes"></div>
                         <div class="nine-subtotal">Subtotal: <span id="frontNineTotal">0</span> min</div>
                     </div>
                     <div class="nine-section">
-                        <h3>🏌️ VUELTA (10-18)</h3>
+                        <h3>VUELTA (10-18)</h3>
                         <div id="backNineTimes"></div>
                         <div class="nine-subtotal">Subtotal: <span id="backNineTotal">0</span> min</div>
                     </div>
@@ -943,35 +694,35 @@
             </div>
         </div>
 
-        <!-- TAB JUEGO -->
+        <!-- TAB PLAY -->
         <div id="playTab" class="tab-content active">
             <div class="main-content">
                 <div class="panel">
                     <h2>➕ Añadir Grupo</h2>
 
                     <div class="current-time-info">
-                        <div class="label">Tiempo configurado</div>
+                        <div class="label">Tiempo total</div>
                         <div class="value" id="currentTotalTime">4h 20min</div>
                     </div>
 
                     <div class="form-group">
-                        <label>Nombre del Grupo</label>
+                        <label>Nombre</label>
                         <input type="text" id="playerName" placeholder="Ej: Grupo García">
                     </div>
 
                     <div class="form-group">
-                        <label>Hora de Salida</label>
+                        <label>Hora Salida</label>
                         <input type="time" id="startTime" value="08:00">
                     </div>
 
                     <div class="form-group">
-                        <label>Tee de Salida</label>
+                        <label>Tee</label>
                         <div class="tee-selector">
-                            <div class="tee-option active" onclick="selectTee(this, 1)">
+                            <div class="tee-option active" onclick="selectTee(this,1)">
                                 <div class="tee-number">1</div>
                                 <div class="tee-label">Tee 1</div>
                             </div>
-                            <div class="tee-option" onclick="selectTee(this, 10)">
+                            <div class="tee-option" onclick="selectTee(this,10)">
                                 <div class="tee-number">10</div>
                                 <div class="tee-label">Tee 10</div>
                             </div>
@@ -981,75 +732,51 @@
                     <div class="form-group">
                         <label>👥 Jugadores y Vehículos</label>
                         <div class="group-config">
-                            <!-- Jugadores -->
                             <div class="config-row has-value" id="rowPlayers">
                                 <div class="config-label">
-                                    <div class="config-icon">👥</div>
-                                    <div>
-                                        <div class="config-text">Jugadores</div>
-                                        <div class="config-subtext">Número de jugadores</div>
-                                    </div>
+                                    <span class="config-icon">👥</span>
+                                    <div><div class="config-text">Jugadores</div><div class="config-subtext">1-4</div></div>
                                 </div>
                                 <div class="quantity-selector">
-                                    <button class="qty-btn" onclick="changeQty('players', -1)">−</button>
+                                    <button class="qty-btn" onclick="changeQty('players',-1)">−</button>
                                     <div class="qty-value" id="qtyPlayers">4</div>
-                                    <button class="qty-btn" onclick="changeQty('players', 1)">+</button>
+                                    <button class="qty-btn" onclick="changeQty('players',1)">+</button>
                                 </div>
                             </div>
-
-                            <!-- Buggys -->
                             <div class="config-row" id="rowBuggys">
                                 <div class="config-label">
-                                    <div class="config-icon">🚗</div>
-                                    <div>
-                                        <div class="config-text">Buggys</div>
-                                        <div class="config-subtext">Máximo 2</div>
-                                    </div>
+                                    <span class="config-icon">🚗</span>
+                                    <div><div class="config-text">Buggys</div><div class="config-subtext">0-2</div></div>
                                 </div>
                                 <div class="quantity-selector">
-                                    <button class="qty-btn" onclick="changeQty('buggys', -1)">−</button>
+                                    <button class="qty-btn" onclick="changeQty('buggys',-1)">−</button>
                                     <div class="qty-value zero" id="qtyBuggys">0</div>
-                                    <button class="qty-btn" onclick="changeQty('buggys', 1)">+</button>
+                                    <button class="qty-btn" onclick="changeQty('buggys',1)">+</button>
                                 </div>
                             </div>
-
-                            <!-- Motos 3 Ruedas -->
                             <div class="config-row" id="rowMoto3">
                                 <div class="config-label">
-                                    <div class="config-icon">🛵</div>
-                                    <div>
-                                        <div class="config-text">Motos 3 Ruedas</div>
-                                        <div class="config-subtext">Máximo 4</div>
-                                    </div>
+                                    <span class="config-icon">🛵</span>
+                                    <div><div class="config-text">Moto 3R</div><div class="config-subtext">0-4</div></div>
                                 </div>
                                 <div class="quantity-selector">
-                                    <button class="qty-btn" onclick="changeQty('moto3', -1)">−</button>
+                                    <button class="qty-btn" onclick="changeQty('moto3',-1)">−</button>
                                     <div class="qty-value zero" id="qtyMoto3">0</div>
-                                    <button class="qty-btn" onclick="changeQty('moto3', 1)">+</button>
+                                    <button class="qty-btn" onclick="changeQty('moto3',1)">+</button>
                                 </div>
                             </div>
-
-                            <!-- Motos 4 Ruedas -->
                             <div class="config-row" id="rowMoto4">
                                 <div class="config-label">
-                                    <div class="config-icon">🏍️</div>
-                                    <div>
-                                        <div class="config-text">Motos 4 Ruedas</div>
-                                        <div class="config-subtext">Máximo 4</div>
-                                    </div>
+                                    <span class="config-icon">🏍️</span>
+                                    <div><div class="config-text">Moto 4R</div><div class="config-subtext">0-4</div></div>
                                 </div>
                                 <div class="quantity-selector">
-                                    <button class="qty-btn" onclick="changeQty('moto4', -1)">−</button>
+                                    <button class="qty-btn" onclick="changeQty('moto4',-1)">−</button>
                                     <div class="qty-value zero" id="qtyMoto4">0</div>
-                                    <button class="qty-btn" onclick="changeQty('moto4', 1)">+</button>
+                                    <button class="qty-btn" onclick="changeQty('moto4',1)">+</button>
                                 </div>
                             </div>
-
-                            <!-- Resumen -->
-                            <div class="group-summary">
-                                <div class="summary-title">Resumen del grupo</div>
-                                <div class="summary-icons" id="groupSummary">👥👥👥👥</div>
-                            </div>
+                            <div class="group-summary" id="groupSummary">👤👤👤👤</div>
                         </div>
                     </div>
 
@@ -1058,12 +785,16 @@
                         <div class="color-picker" id="colorPicker"></div>
                     </div>
 
-                    <div class="watch-group-container" onclick="toggleWatchGroup()">
-                        <div class="watch-group-checkbox">
-                            <div class="checkbox-custom" id="watchCheckbox">⚠️</div>
-                            <div class="checkbox-label">
-                                <div class="title">Grupo a Vigilar</div>
-                                <div class="subtitle">Grupo potencialmente lento</div>
+                    <div class="form-group">
+                        <label>🏷️ Tipo</label>
+                        <div class="group-markers">
+                            <div class="marker-box tournament" id="markerTournament" onclick="toggleMarker('tournament')">
+                                <div class="marker-icon">🏆</div>
+                                <div class="marker-text">Torneo</div>
+                            </div>
+                            <div class="marker-box watch" id="markerWatch" onclick="toggleMarker('watch')">
+                                <div class="marker-icon">⚠️</div>
+                                <div class="marker-text">Vigilar</div>
                             </div>
                         </div>
                     </div>
@@ -1071,47 +802,30 @@
                     <button class="btn btn-primary" onclick="addPlayer()">➕ Añadir Grupo</button>
 
                     <div class="players-list">
-                        <h3 style="margin-top: 20px; margin-bottom: 15px; color: #1a472a;">📋 Grupos en Campo</h3>
-                        <div id="playersContainer">
-                            <div class="no-players">No hay grupos registrados</div>
-                        </div>
+                        <h3 style="margin-top:15px;margin-bottom:10px;color:#1a472a;font-size:0.95rem;">📋 Grupos en Campo</h3>
+                        <div id="playersContainer"><div class="no-players">No hay grupos</div></div>
                     </div>
 
-                    <button class="btn btn-danger" onclick="clearAllPlayers()">🗑️ Limpiar Todo</button>
+                    <button class="btn btn-danger" onclick="clearAllPlayers()">🗑️ Limpiar</button>
                 </div>
 
                 <div class="panel golf-course">
                     <div class="course-title">🏌️ Campo - 18 Hoyos</div>
-
                     <div class="holes-container">
                         <div class="nine-section-visual" id="frontNineVisual"></div>
                         <div class="nine-section-visual back-nine" id="backNineVisual"></div>
                     </div>
-
                     <div class="legend" id="legend"></div>
-
                     <div class="clock-display">
                         <div class="date" id="currentDate"></div>
                         <div class="time" id="currentTime"></div>
                     </div>
-
                     <div class="summary-stats">
-                        <div class="stat-card">
-                            <div class="stat-value" id="totalPlayers">0</div>
-                            <div class="stat-label">Grupos</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="totalJugadores">0</div>
-                            <div class="stat-label">Jugadores</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="delayedPlayers">0</div>
-                            <div class="stat-label">Retrasados</div>
-                        </div>
-                        <div class="stat-card warning">
-                            <div class="stat-value" id="watchPlayers">0</div>
-                            <div class="stat-label">⚠️ Vigilar</div>
-                        </div>
+                        <div class="stat-card"><div class="stat-value" id="totalGroups">0</div><div class="stat-label">Grupos</div></div>
+                        <div class="stat-card"><div class="stat-value" id="totalJugadores">0</div><div class="stat-label">Jugadores</div></div>
+                        <div class="stat-card"><div class="stat-value" id="delayedCount">0</div><div class="stat-label">Retrasados</div></div>
+                        <div class="stat-card tournament"><div class="stat-value" id="tournamentCount">0</div><div class="stat-label">🏆 Torneo</div></div>
+                        <div class="stat-card warning"><div class="stat-value" id="watchCount">0</div><div class="stat-label">⚠️ Vigilar</div></div>
                     </div>
                 </div>
             </div>
@@ -1119,235 +833,139 @@
     </div>
 
     <script>
-        // ===== DATOS =====
         const holesData = [
-            { number: 1, par: 5, meters: 478, defaultTime: 14 },
-            { number: 2, par: 3, meters: 141, defaultTime: 17 },
-            { number: 3, par: 4, meters: 272, defaultTime: 12 },
-            { number: 4, par: 4, meters: 353, defaultTime: 15 },
-            { number: 5, par: 3, meters: 150, defaultTime: 14 },
-            { number: 6, par: 4, meters: 379, defaultTime: 12 },
-            { number: 7, par: 5, meters: 492, defaultTime: 18 },
-            { number: 8, par: 4, meters: 322, defaultTime: 15 },
-            { number: 9, par: 4, meters: 255, defaultTime: 14 },
-            { number: 10, par: 5, meters: 466, defaultTime: 15 },
-            { number: 11, par: 4, meters: 311, defaultTime: 12 },
-            { number: 12, par: 4, meters: 357, defaultTime: 14 },
-            { number: 13, par: 5, meters: 483, defaultTime: 17 },
-            { number: 14, par: 3, meters: 127, defaultTime: 14 },
-            { number: 15, par: 4, meters: 317, defaultTime: 15 },
-            { number: 16, par: 3, meters: 139, defaultTime: 12 },
-            { number: 17, par: 4, meters: 361, defaultTime: 18 },
-            { number: 18, par: 4, meters: 321, defaultTime: 15 }
+            {n:1,par:4,m:365,t:14},{n:2,par:5,m:485,t:17},{n:3,par:3,m:165,t:12},
+            {n:4,par:4,m:380,t:15},{n:5,par:4,m:340,t:14},{n:6,par:3,m:155,t:12},
+            {n:7,par:5,m:510,t:18},{n:8,par:4,m:395,t:15},{n:9,par:4,m:370,t:14},
+            {n:10,par:4,m:385,t:15},{n:11,par:3,m:175,t:12},{n:12,par:4,m:350,t:14},
+            {n:13,par:5,m:495,t:17},{n:14,par:4,m:360,t:14},{n:15,par:4,m:400,t:15},
+            {n:16,par:3,m:180,t:12},{n:17,par:5,m:520,t:18},{n:18,par:4,m:410,t:15}
         ];
 
-        const colors = ['#e53935', '#1e88e5', '#fdd835', '#7b1fa2', '#fb8c00', '#00897b', '#d81b60', '#5e35b1'];
-
+        const colors = ['#e53935','#1e88e5','#fdd835','#7b1fa2','#fb8c00','#00897b','#d81b60','#5e35b1'];
         const presets = {
-            standard: { 1:14,2:17,3:12,4:15,5:14,6:12,7:18,8:15,9:14,10:15,11:12,12:14,13:17,14:14,15:15,16:12,17:18,18:15 },
-            fast: { 1:11,2:14,3:10,4:12,5:11,6:10,7:14,8:12,9:11,10:12,11:10,12:11,13:14,14:11,15:12,16:10,17:14,18:12 },
-            slow: { 1:16,2:20,3:14,4:17,5:16,6:14,7:20,8:17,9:16,10:17,11:14,12:16,13:20,14:16,15:17,16:14,17:20,18:17 }
+            standard:{1:14,2:17,3:12,4:15,5:14,6:12,7:18,8:15,9:14,10:15,11:12,12:14,13:17,14:14,15:15,16:12,17:18,18:15},
+            fast:{1:11,2:14,3:10,4:12,5:11,6:10,7:14,8:12,9:11,10:12,11:10,12:11,13:14,14:11,15:12,16:10,17:14,18:12},
+            slow:{1:16,2:20,3:14,4:17,5:16,6:14,7:20,8:17,9:16,10:17,11:14,12:16,13:20,14:16,15:17,16:14,17:20,18:17}
         };
-
-        // Límites de cantidades
-        const limits = {
-            players: { min: 1, max: 4 },
-            buggys: { min: 0, max: 2 },
-            moto3: { min: 0, max: 4 },
-            moto4: { min: 0, max: 4 }
-        };
+        const limits = {players:{min:1,max:4},buggys:{min:0,max:2},moto3:{min:0,max:4},moto4:{min:0,max:4}};
 
         let holeTimes = {};
         let players = [];
         let selectedTee = 1;
         let selectedColor = colors[0];
         let watchGroup = false;
+        let tournamentGroup = false;
+        let qty = {players:4,buggys:0,moto3:0,moto4:0};
 
-        // Cantidades actuales
-        let quantities = {
-            players: 4,
-            buggys: 0,
-            moto3: 0,
-            moto4: 0
-        };
-
-        // ===== INIT =====
         document.addEventListener('DOMContentLoaded', function() {
             loadData();
-            initColorPicker();
-            renderHoleTimesConfig();
-            renderCourse();
-            renderPlayers();
+            initColors();
+            renderTimesConfig();
+            render();
             updateClock();
-            updateGroupSummary();
             setInterval(updateClock, 1000);
-
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js').catch(e => console.log(e));
-            }
         });
 
         function loadData() {
-            const savedTimes = localStorage.getItem('golf_holeTimes');
-            holeTimes = savedTimes ? JSON.parse(savedTimes) : {...presets.standard};
-            const savedPlayers = localStorage.getItem('golf_players');
-            players = savedPlayers ? JSON.parse(savedPlayers) : [];
+            try {
+                const t = localStorage.getItem('golf_times');
+                holeTimes = t ? JSON.parse(t) : {...presets.standard};
+                const p = localStorage.getItem('golf_players');
+                players = p ? JSON.parse(p) : [];
+            } catch(e) {
+                holeTimes = {...presets.standard};
+                players = [];
+            }
         }
 
         function saveData() {
-            localStorage.setItem('golf_holeTimes', JSON.stringify(holeTimes));
+            localStorage.setItem('golf_times', JSON.stringify(holeTimes));
             localStorage.setItem('golf_players', JSON.stringify(players));
         }
 
-        // ===== QUANTITY SELECTOR =====
-        function changeQty(type, delta) {
-            const newVal = quantities[type] + delta;
-            if (newVal >= limits[type].min && newVal <= limits[type].max) {
-                quantities[type] = newVal;
-                updateQtyDisplay(type);
-                updateGroupSummary();
-            }
-        }
-
-        function updateQtyDisplay(type) {
-            const el = document.getElementById('qty' + type.charAt(0).toUpperCase() + type.slice(1));
-            const row = document.getElementById('row' + type.charAt(0).toUpperCase() + type.slice(1));
-            el.textContent = quantities[type];
-            
-            if (quantities[type] === 0) {
-                el.classList.add('zero');
-                row.classList.remove('has-value');
-            } else {
-                el.classList.remove('zero');
-                row.classList.add('has-value');
-            }
-        }
-
-        function updateGroupSummary() {
-            let icons = '';
-            // Jugadores
-            for (let i = 0; i < quantities.players; i++) icons += '👤';
-            // Separador si hay vehículos
-            if (quantities.buggys > 0 || quantities.moto3 > 0 || quantities.moto4 > 0) {
-                icons += ' ';
-            }
-            // Buggys
-            for (let i = 0; i < quantities.buggys; i++) icons += '🚗';
-            // Motos 3R
-            for (let i = 0; i < quantities.moto3; i++) icons += '🛵';
-            // Motos 4R
-            for (let i = 0; i < quantities.moto4; i++) icons += '🏍️';
-
-            document.getElementById('groupSummary').textContent = icons || '👤';
-        }
-
-        function resetQuantities() {
-            quantities = { players: 4, buggys: 0, moto3: 0, moto4: 0 };
-            ['players', 'buggys', 'moto3', 'moto4'].forEach(updateQtyDisplay);
-            updateGroupSummary();
-        }
-
-        // ===== TABS =====
         function showTab(tab) {
             document.getElementById('playTab').classList.remove('active');
             document.getElementById('configTab').classList.remove('active');
             document.getElementById('tabPlay').classList.remove('active');
             document.getElementById('tabConfig').classList.remove('active');
-            document.getElementById(tab + 'Tab').classList.add('active');
-            document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+            document.getElementById(tab+'Tab').classList.add('active');
+            document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
         }
 
-        // ===== SELECTORS =====
-        function initColorPicker() {
-            const picker = document.getElementById('colorPicker');
-            picker.innerHTML = colors.map((c, i) => 
-                `<div class="color-option ${i===0?'selected':''}" style="background:${c}" onclick="selectColor(this,'${c}')"></div>`
+        function initColors() {
+            const p = document.getElementById('colorPicker');
+            p.innerHTML = colors.map((c,i) => 
+                '<div class="color-option '+(i===0?'selected':'')+'" style="background:'+c+'" onclick="selectColor(this,\''+c+'\')"></div>'
             ).join('');
         }
 
-        function selectColor(el, color) {
+        function selectColor(el, c) {
             document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
             el.classList.add('selected');
-            selectedColor = color;
+            selectedColor = c;
         }
 
-        function selectTee(el, tee) {
+        function selectTee(el, t) {
             document.querySelectorAll('.tee-option').forEach(o => o.classList.remove('active'));
             el.classList.add('active');
-            selectedTee = tee;
+            selectedTee = t;
         }
 
-        function toggleWatchGroup() {
-            watchGroup = !watchGroup;
-            document.getElementById('watchCheckbox').classList.toggle('checked', watchGroup);
+        function changeQty(type, delta) {
+            const nv = qty[type] + delta;
+            if (nv >= limits[type].min && nv <= limits[type].max) {
+                qty[type] = nv;
+                updateQtyDisplay();
+            }
         }
 
-        // ===== HOLE TIMES =====
-        function renderHoleTimesConfig() {
-            const front = document.getElementById('frontNineTimes');
-            const back = document.getElementById('backNineTimes');
-            let frontHtml = '', backHtml = '';
-
-            holesData.forEach(h => {
-                const time = holeTimes[h.number] || h.defaultTime;
-                const html = `
-                    <div class="hole-time-row">
-                        <div class="hole-badge">${h.number}</div>
-                        <div class="hole-details">
-                            <div class="par-info">Par ${h.par}</div>
-                            <div class="meters-info">${h.meters}m</div>
-                        </div>
-                        <div class="time-input-wrapper">
-                            <input type="number" id="ht${h.number}" value="${time}" min="5" max="30" onchange="updateTotals()">
-                            <span>min</span>
-                        </div>
-                    </div>`;
-                if (h.number <= 9) frontHtml += html;
-                else backHtml += html;
+        function updateQtyDisplay() {
+            ['players','buggys','moto3','moto4'].forEach(t => {
+                const el = document.getElementById('qty'+t.charAt(0).toUpperCase()+t.slice(1));
+                const row = document.getElementById('row'+t.charAt(0).toUpperCase()+t.slice(1));
+                if (el && row) {
+                    el.textContent = qty[t];
+                    el.classList.toggle('zero', qty[t] === 0);
+                    row.classList.toggle('has-value', qty[t] > 0);
+                }
             });
-
-            front.innerHTML = frontHtml;
-            back.innerHTML = backHtml;
-            updateTotals();
+            updateSummary();
         }
 
-        function updateTotals() {
-            let ft = 0, bt = 0;
-            for (let i = 1; i <= 18; i++) {
-                const input = document.getElementById('ht' + i);
-                const val = input ? parseInt(input.value) || holesData[i-1].defaultTime : holeTimes[i] || holesData[i-1].defaultTime;
-                if (i <= 9) ft += val; else bt += val;
+        function updateSummary() {
+            let s = '';
+            for(let i=0;i<qty.players;i++) s+='👤';
+            if(qty.buggys+qty.moto3+qty.moto4>0) s+=' ';
+            for(let i=0;i<qty.buggys;i++) s+='🚗';
+            for(let i=0;i<qty.moto3;i++) s+='🛵';
+            for(let i=0;i<qty.moto4;i++) s+='🏍️';
+            document.getElementById('groupSummary').textContent = s || '👤';
+        }
+
+        function toggleMarker(type) {
+            if(type==='watch') {
+                watchGroup = !watchGroup;
+                document.getElementById('markerWatch').classList.toggle('active', watchGroup);
+            } else {
+                tournamentGroup = !tournamentGroup;
+                document.getElementById('markerTournament').classList.toggle('active', tournamentGroup);
             }
-            document.getElementById('frontNineTotal').textContent = ft;
-            document.getElementById('backNineTotal').textContent = bt;
-            const total = ft + bt;
-            document.getElementById('totalTimeDisplay').textContent = Math.floor(total/60) + 'h ' + (total%60) + 'min';
-            document.getElementById('currentTotalTime').textContent = Math.floor(total/60) + 'h ' + (total%60) + 'min';
         }
 
-        function saveHoleTimes() {
-            for (let i = 1; i <= 18; i++) {
-                const input = document.getElementById('ht' + i);
-                if (input) holeTimes[i] = parseInt(input.value) || holesData[i-1].defaultTime;
-            }
-            saveData();
-            renderCourse();
-            showToast('✅ Tiempos guardados');
+        function resetForm() {
+            qty = {players:4,buggys:0,moto3:0,moto4:0};
+            updateQtyDisplay();
+            watchGroup = false;
+            tournamentGroup = false;
+            document.getElementById('markerWatch').classList.remove('active');
+            document.getElementById('markerTournament').classList.remove('active');
         }
 
-        function applyPreset(name) {
-            holeTimes = {...presets[name]};
-            renderHoleTimesConfig();
-            showToast('📊 Preset aplicado');
-        }
-
-        // ===== PLAYERS =====
         function addPlayer() {
             const name = document.getElementById('playerName').value.trim();
             const time = document.getElementById('startTime').value;
-            
-            if (!name) { alert('Introduce un nombre'); return; }
-            if (quantities.players < 1) { alert('Debe haber al menos 1 jugador'); return; }
+            if(!name) { alert('Introduce un nombre'); return; }
 
             players.push({
                 id: Date.now(),
@@ -1356,30 +974,26 @@
                 startTee: selectedTee,
                 color: selectedColor,
                 watchGroup: watchGroup,
-                numPlayers: quantities.players,
-                numBuggys: quantities.buggys,
-                numMoto3: quantities.moto3,
-                numMoto4: quantities.moto4
+                tournamentGroup: tournamentGroup,
+                numPlayers: qty.players,
+                numBuggys: qty.buggys,
+                numMoto3: qty.moto3,
+                numMoto4: qty.moto4
             });
 
             saveData();
-            renderPlayers();
-            renderCourse();
-            
+            render();
             document.getElementById('playerName').value = '';
-            watchGroup = false;
-            document.getElementById('watchCheckbox').classList.remove('checked');
-            resetQuantities();
+            resetForm();
             rotateColor();
-            
-            showToast('✅ ' + name + ' añadido');
+            showToast('✅ '+name+' añadido', tournamentGroup);
         }
 
         function rotateColor() {
             const used = players.map(p => p.color);
-            const available = colors.filter(c => !used.includes(c));
-            if (available.length > 0) {
-                selectedColor = available[0];
+            const avail = colors.filter(c => !used.includes(c));
+            if(avail.length > 0) {
+                selectedColor = avail[0];
                 document.querySelectorAll('.color-option').forEach(o => {
                     o.classList.toggle('selected', o.style.background === selectedColor);
                 });
@@ -1389,148 +1003,121 @@
         function deletePlayer(id) {
             players = players.filter(p => p.id !== id);
             saveData();
-            renderPlayers();
-            renderCourse();
+            render();
         }
 
         function clearAllPlayers() {
-            if (confirm('¿Eliminar todos los grupos?')) {
+            if(confirm('¿Eliminar todos?')) {
                 players = [];
                 saveData();
-                renderPlayers();
-                renderCourse();
+                render();
             }
         }
 
-        function getVehicleIcons(p) {
-            let icons = '';
-            for (let i = 0; i < (p.numPlayers || 1); i++) icons += '👤';
-            if (p.numBuggys > 0 || p.numMoto3 > 0 || p.numMoto4 > 0) icons += ' ';
-            for (let i = 0; i < (p.numBuggys || 0); i++) icons += '🚗';
-            for (let i = 0; i < (p.numMoto3 || 0); i++) icons += '🛵';
-            for (let i = 0; i < (p.numMoto4 || 0); i++) icons += '🏍️';
-            return icons;
-        }
-
-        function getVehicleText(p) {
-            const parts = [];
-            parts.push((p.numPlayers || 1) + ' jug.');
-            if (p.numBuggys > 0) parts.push(p.numBuggys + ' buggy');
-            if (p.numMoto3 > 0) parts.push(p.numMoto3 + ' moto3R');
-            if (p.numMoto4 > 0) parts.push(p.numMoto4 + ' moto4R');
-            return parts.join(' • ');
-        }
-
-        function calculateExpectedHole(player) {
+        function calcHole(p) {
             const now = new Date();
-            const [h, m] = player.startTime.split(':').map(Number);
+            const [h,m] = p.startTime.split(':').map(Number);
             const start = new Date();
-            start.setHours(h, m, 0, 0);
+            start.setHours(h,m,0,0);
             const elapsed = (now - start) / 60000;
 
-            if (elapsed < 0) return { hole: 0, status: 'pending', diff: Math.round(-elapsed) };
+            if(elapsed < 0) return {hole:0, status:'pending', diff:Math.round(-elapsed)};
 
-            const order = player.startTee === 1 
+            const order = p.startTee === 1 
                 ? [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
                 : [10,11,12,13,14,15,16,17,18,1,2,3,4,5,6,7,8,9];
 
             let total = 0;
-            for (const ho of order) total += holeTimes[ho] || holesData[ho-1].defaultTime;
-            if (elapsed >= total) return { hole: 19, status: 'finished', diff: 0 };
+            for(const ho of order) total += holeTimes[ho] || holesData[ho-1].t;
+            if(elapsed >= total) return {hole:19, status:'finished', diff:0};
 
             let acc = 0, curr = order[0], into = 0, ht = 0;
-            for (const ho of order) {
-                ht = holeTimes[ho] || holesData[ho-1].defaultTime;
-                if (acc + ht > elapsed) {
-                    curr = ho;
-                    into = elapsed - acc;
-                    break;
-                }
+            for(const ho of order) {
+                ht = holeTimes[ho] || holesData[ho-1].t;
+                if(acc + ht > elapsed) { curr = ho; into = elapsed - acc; break; }
                 acc += ht;
             }
 
             let status = 'ontime';
-            if (into > ht * 0.8) status = 'delayed';
-            else if (into < ht * 0.3) status = 'ahead';
+            if(into > ht * 0.8) status = 'delayed';
+            else if(into < ht * 0.3) status = 'ahead';
 
-            return { hole: curr, status, diff: Math.round(into), holeTime: ht };
+            return {hole:curr, status:status, diff:Math.round(into), holeTime:ht};
+        }
+
+        function getDetails(p) {
+            let parts = [(p.numPlayers||1)+' jug.'];
+            if(p.numBuggys>0) parts.push(p.numBuggys+' buggy');
+            if(p.numMoto3>0) parts.push(p.numMoto3+' moto3R');
+            if(p.numMoto4>0) parts.push(p.numMoto4+' moto4R');
+            return parts.join(' • ');
+        }
+
+        function render() {
+            renderPlayers();
+            renderCourse();
         }
 
         function renderPlayers() {
-            const container = document.getElementById('playersContainer');
-            
-            if (players.length === 0) {
-                container.innerHTML = '<div class="no-players">No hay grupos registrados</div>';
+            const c = document.getElementById('playersContainer');
+            if(players.length === 0) {
+                c.innerHTML = '<div class="no-players">No hay grupos</div>';
                 updateStats();
                 return;
             }
 
             let html = '';
             players.forEach(p => {
-                const exp = calculateExpectedHole(p);
-                let statusClass = '', statusText = '', badgeClass = '';
+                const exp = calcHole(p);
+                let sc = '', st = '', bc = '';
 
-                if (exp.status === 'pending') {
-                    statusText = 'Sale en ' + exp.diff + ' min';
-                    badgeClass = 'status-ontime';
-                } else if (exp.status === 'finished') {
-                    statusText = 'Finalizado';
-                    badgeClass = 'status-ahead';
-                } else if (exp.status === 'delayed') {
-                    statusClass = 'delayed';
-                    statusText = exp.diff + '/' + exp.holeTime + ' min';
-                    badgeClass = 'status-delayed';
-                } else if (exp.status === 'ahead') {
-                    statusText = 'Adelantado';
-                    badgeClass = 'status-ahead';
-                } else {
-                    statusText = 'En tiempo';
-                    badgeClass = 'status-ontime';
-                }
+                if(exp.status==='pending') { st='Sale en '+exp.diff+' min'; bc='status-ontime'; }
+                else if(exp.status==='finished') { st='Finalizado'; bc='status-ahead'; }
+                else if(exp.status==='delayed') { sc='delayed'; st=exp.diff+'/'+exp.holeTime+' min'; bc='status-delayed'; }
+                else if(exp.status==='ahead') { st='Adelantado'; bc='status-ahead'; }
+                else { st='En tiempo'; bc='status-ontime'; }
 
-                if (p.watchGroup) statusClass += ' watch-group';
+                if(p.watchGroup) sc += ' watch-group';
+                if(p.tournamentGroup) sc += ' tournament-group';
 
-                html += `
-                    <div class="player-card ${statusClass}">
-                        <button class="delete-btn" onclick="deletePlayer(${p.id})">✕</button>
-                        <div class="player-header">
-                            <div class="player-color" style="background:${p.color}"></div>
-                            <div class="player-name">${p.name}</div>
-                            ${p.watchGroup ? '<span class="watch-badge">⚠️</span>' : ''}
-                        </div>
-                        <div class="player-info">
-                            <span>🕐 ${p.startTime}</span>
-                            <span>Tee ${p.startTee}</span>
-                        </div>
-                        <div class="player-details">${getVehicleText(p)}</div>
-                        <div class="player-footer">
-                            <div>${exp.hole > 0 && exp.hole <= 18 ? '<span>Hoyo: </span><span class="expected-hole">' + exp.hole + '</span>' : ''}</div>
-                            <span class="player-status ${badgeClass}">${statusText}</span>
-                        </div>
-                    </div>`;
+                html += '<div class="player-card '+sc+'">';
+                html += '<button class="delete-btn" onclick="deletePlayer('+p.id+')">✕</button>';
+                html += '<div class="player-header">';
+                html += '<div class="player-color" style="background:'+p.color+'"></div>';
+                html += '<div class="player-name">'+p.name+'</div>';
+                if(p.tournamentGroup) html += '<span class="badge tournament">🏆</span>';
+                if(p.watchGroup) html += '<span class="badge watch">⚠️</span>';
+                html += '</div>';
+                html += '<div class="player-info">🕐 '+p.startTime+' • Tee '+p.startTee+'</div>';
+                html += '<div class="player-details">'+getDetails(p)+'</div>';
+                html += '<div class="player-footer">';
+                if(exp.hole>0 && exp.hole<=18) html += '<div>Hoyo: <span class="expected-hole">'+exp.hole+'</span></div>';
+                else html += '<div></div>';
+                html += '<span class="player-status '+bc+'">'+st+'</span>';
+                html += '</div></div>';
             });
 
-            container.innerHTML = html;
+            c.innerHTML = html;
             updateStats();
         }
 
         function updateStats() {
-            let grupos = 0, jugadores = 0, delayed = 0, watch = 0;
-            
+            let g=0, j=0, d=0, w=0, t=0;
             players.forEach(p => {
-                const exp = calculateExpectedHole(p);
-                if (exp.status !== 'pending' && exp.status !== 'finished') {
-                    grupos++;
-                    if (exp.status === 'delayed') delayed++;
+                const exp = calcHole(p);
+                if(exp.status !== 'pending' && exp.status !== 'finished') {
+                    g++;
+                    if(exp.status === 'delayed') d++;
                 }
-                jugadores += p.numPlayers || 1;
-                if (p.watchGroup) watch++;
+                j += p.numPlayers || 1;
+                if(p.watchGroup) w++;
+                if(p.tournamentGroup) t++;
             });
-
-            document.getElementById('totalPlayers').textContent = grupos;
-            document.getElementById('totalJugadores').textContent = jugadores;
-            document.getElementById('delayedPlayers').textContent = delayed;
-            document.getElementById('watchPlayers').textContent = watch;
+            document.getElementById('totalGroups').textContent = g;
+            document.getElementById('totalJugadores').textContent = j;
+            document.getElementById('delayedCount').textContent = d;
+            document.getElementById('watchCount').textContent = w;
+            document.getElementById('tournamentCount').textContent = t;
         }
 
         function renderCourse() {
@@ -1539,162 +1126,135 @@
 
             const byHole = {};
             players.forEach(p => {
-                const exp = calculateExpectedHole(p);
-                if (exp.hole > 0 && exp.hole <= 18) {
-                    if (!byHole[exp.hole]) byHole[exp.hole] = [];
+                const exp = calcHole(p);
+                if(exp.hole > 0 && exp.hole <= 18) {
+                    if(!byHole[exp.hole]) byHole[exp.hole] = [];
                     byHole[exp.hole].push(p);
                 }
             });
 
-            let frontHtml = '<div class="nine-title">IDA (1-9)</div>';
-            let backHtml = '<div class="nine-title">VUELTA (10-18)</div>';
+            let fh = '<div class="nine-title">IDA (1-9)</div>';
+            let bh = '<div class="nine-title">VUELTA (10-18)</div>';
 
             holesData.forEach(h => {
-                const pls = byHole[h.number] || [];
-                const hasWatch = pls.some(p => p.watchGroup);
-                const hasCurrent = pls.length > 0;
-                let holeClass = hasWatch ? 'watch-hole' : (hasCurrent ? 'current' : '');
-                const ht = holeTimes[h.number] || h.defaultTime;
+                const pls = byHole[h.n] || [];
+                const hasW = pls.some(p => p.watchGroup);
+                const hasT = pls.some(p => p.tournamentGroup);
+                const hasC = pls.length > 0;
 
-                const holeHtml = `
-                    <div class="hole ${holeClass}">
-                        <div class="hole-number">${h.number}</div>
-                        <div class="hole-info">
-                            <div class="hole-par">Par ${h.par} • ${h.meters}m</div>
-                            <div style="font-size:0.7rem;opacity:0.8">⏱️ ${ht} min</div>
-                        </div>
-                        ${pls.length > 0 ? '<div class="player-markers">' + pls.map(p => 
-                            '<div class="player-dot ' + (p.watchGroup ? 'watch' : '') + '" style="background:' + p.color + '"></div>'
-                        ).join('') + '</div>' : ''}
-                    </div>`;
+                let hc = '';
+                if(hasW) hc = 'watch-hole';
+                else if(hasT) hc = 'tournament-hole';
+                else if(hasC) hc = 'current';
 
-                if (h.number <= 9) frontHtml += holeHtml;
-                else backHtml += holeHtml;
+                const ht = holeTimes[h.n] || h.t;
+
+                let holeHtml = '<div class="hole '+hc+'">';
+                holeHtml += '<div class="hole-number">'+h.n+'</div>';
+                holeHtml += '<div class="hole-info">Par '+h.par+' • '+h.m+'m<br>⏱️ '+ht+' min</div>';
+                if(pls.length > 0) {
+                    holeHtml += '<div class="player-markers">';
+                    pls.forEach(p => {
+                        holeHtml += '<div class="player-dot" style="background:'+p.color+'"></div>';
+                    });
+                    holeHtml += '</div>';
+                }
+                holeHtml += '</div>';
+
+                if(h.n <= 9) fh += holeHtml;
+                else bh += holeHtml;
             });
 
-            front.innerHTML = frontHtml;
-            back.innerHTML = backHtml;
+            front.innerHTML = fh;
+            back.innerHTML = bh;
             renderLegend();
         }
 
         function renderLegend() {
-            const legend = document.getElementById('legend');
-            if (players.length === 0) { legend.innerHTML = ''; return; }
+            const leg = document.getElementById('legend');
+            if(players.length === 0) { leg.innerHTML = ''; return; }
 
-            legend.innerHTML = players.map(p => {
-                const exp = calculateExpectedHole(p);
-                const holeText = exp.status === 'pending' ? 'Pend.' : (exp.status === 'finished' ? 'Fin' : 'H' + exp.hole);
-                return `<div class="legend-item ${p.watchGroup ? 'watch' : ''}">
-                    <div class="legend-dot" style="background:${p.color}"></div>
-                    <span>${p.name} (${p.numPlayers || 1}) - ${holeText}</span>
-                </div>`;
-            }).join('');
+            let html = '';
+            players.forEach(p => {
+                const exp = calcHole(p);
+                const txt = exp.status==='pending' ? 'Pend.' : (exp.status==='finished' ? 'Fin' : 'H'+exp.hole);
+                let ic = '';
+                if(p.tournamentGroup) ic = 'tournament';
+                else if(p.watchGroup) ic = 'watch';
+                html += '<div class="legend-item '+ic+'">';
+                html += '<div class="legend-dot" style="background:'+p.color+'"></div>';
+                html += '<span>'+p.name+' - '+txt+'</span></div>';
+            });
+            leg.innerHTML = html;
+        }
+
+        function renderTimesConfig() {
+            const f = document.getElementById('frontNineTimes');
+            const b = document.getElementById('backNineTimes');
+            let fh = '', bh = '';
+
+            holesData.forEach(h => {
+                const t = holeTimes[h.n] || h.t;
+                const html = '<div class="hole-time-row">' +
+                    '<div class="hole-badge">'+h.n+'</div>' +
+                    '<div class="hole-details"><div class="par-info">Par '+h.par+'</div><div class="meters-info">'+h.m+'m</div></div>' +
+                    '<div class="time-input-wrapper"><input type="number" id="ht'+h.n+'" value="'+t+'" min="5" max="30" onchange="updateTotals()"><span>min</span></div>' +
+                    '</div>';
+                if(h.n <= 9) fh += html;
+                else bh += html;
+            });
+
+            f.innerHTML = fh;
+            b.innerHTML = bh;
+            updateTotals();
+        }
+
+        function updateTotals() {
+            let ft = 0, bt = 0;
+            for(let i=1; i<=18; i++) {
+                const inp = document.getElementById('ht'+i);
+                const v = inp ? parseInt(inp.value) || holesData[i-1].t : holeTimes[i] || holesData[i-1].t;
+                if(i <= 9) ft += v;
+                else bt += v;
+            }
+            document.getElementById('frontNineTotal').textContent = ft;
+            document.getElementById('backNineTotal').textContent = bt;
+            const tot = ft + bt;
+            document.getElementById('totalTimeDisplay').textContent = Math.floor(tot/60)+'h '+(tot%60)+'min';
+            document.getElementById('currentTotalTime').textContent = Math.floor(tot/60)+'h '+(tot%60)+'min';
+        }
+
+        function saveHoleTimes() {
+            for(let i=1; i<=18; i++) {
+                const inp = document.getElementById('ht'+i);
+                if(inp) holeTimes[i] = parseInt(inp.value) || holesData[i-1].t;
+            }
+            saveData();
+            render();
+            showToast('✅ Tiempos guardados');
+        }
+
+        function applyPreset(name) {
+            holeTimes = {...presets[name]};
+            renderTimesConfig();
+            showToast('📊 Preset aplicado');
         }
 
         function updateClock() {
             const now = new Date();
             document.getElementById('currentTime').textContent = now.toLocaleTimeString('es-ES');
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('es-ES', {
-                weekday: 'long', day: 'numeric', month: 'short'
-            });
-            renderPlayers();
-            renderCourse();
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'short'});
+            render();
         }
 
-        function showToast(msg) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = msg;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        function showToast(msg, isBlue) {
+            const c = document.getElementById('toastContainer');
+            const t = document.createElement('div');
+            t.className = 'toast' + (isBlue ? ' blue' : '');
+            t.textContent = msg;
+            c.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
         }
-    // ===== INSTALACIÓN PWA =====
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    document.getElementById('installBanner').style.display = 'block';
-});
-
-function installApp() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((result) => {
-            if (result.outcome === 'accepted') {
-                showToast('✅ App instalada correctamente');
-            }
-            deferredPrompt = null;
-            closeBanner();
-        });
-    } else {
-        // Mostrar instrucciones manuales
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        if (isIOS) {
-            alert('Para instalar en iPhone:\n\n1. Pulsa el botón Compartir (□↑)\n2. Pulsa "Añadir a pantalla de inicio"\n3. Pulsa "Añadir"');
-        } else {
-            alert('Para instalar:\n\n1. Abre el menú del navegador (⋮)\n2. Pulsa "Instalar aplicación" o "Añadir a pantalla de inicio"');
-        }
-    }
-}
-
-function closeBanner() {
-    document.getElementById('installBanner').style.display = 'none';
-    localStorage.setItem('installBannerClosed', 'true');
-}
-
-// Mostrar banner si no se ha cerrado antes
-window.addEventListener('load', () => {
-    if (!localStorage.getItem('installBannerClosed')) {
-        setTimeout(() => {
-            if (!deferredPrompt) {
-                // Mostrar banner con instrucciones para iOS o manual
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-                const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-                if (!isStandalone) {
-                    document.getElementById('installBanner').style.display = 'block';
-                }
-            }
-        }, 3000);
-    }
-});</script>
-</body><div id="installBanner" style="
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(135deg, #1a472a, #2d5a3d);
-    color: white;
-    padding: 15px 20px;
-    z-index: 10000;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
-">
-    <div style="display: flex; align-items: center; justify-content: space-between; max-width: 600px; margin: 0 auto;">
-        <div>
-            <div style="font-weight: bold;">⛳ Instalar Golf Barcelona</div>
-            <div style="font-size: 0.85rem; opacity: 0.9;">Añadir a pantalla de inicio</div>
-        </div>
-        <div style="display: flex; gap: 10px;">
-            <button onclick="installApp()" style="
-                background: white;
-                color: #1a472a;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 8px;
-                font-weight: bold;
-                cursor: pointer;
-            ">Instalar</button>
-            <button onclick="closeBanner()" style="
-                background: transparent;
-                color: white;
-                border: 2px solid white;
-                padding: 10px 15px;
-                border-radius: 8px;
-                cursor: pointer;
-            ">✕</button>
-        </div>
-    </div>
-</div>
+    </script>
+</body>
 </html>
