@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a472a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Golf Barcelona - Control de Tiempos</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-text h1 {
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header-text p { opacity: 0.9; }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover { background: rgba(255,255,255,0.3); }
+        .tab-btn.active { background: white; color: #1a472a; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .panel h2 {
+            color: #1a472a;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8f5e9;
+            font-size: 1.2rem;
+        }
+
+        .form-group { margin-bottom: 15px; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2d5a3d;
+        }
+
+        .tee-selector { display: flex; gap: 10px; }
+
+        .tee-option {
+            flex: 1;
+            padding: 12px;
+            border: 3px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            background: #f5f5f5;
+            transition: all 0.3s;
+        }
+
+        .tee-option:hover { border-color: #2d5a3d; }
+        .tee-option.active { border-color: #2d5a3d; background: #e8f5e9; }
+        .tee-option .tee-number { font-size: 1.5rem; font-weight: bold; color: #1a472a; }
+        .tee-option .tee-label { font-size: 0.8rem; color: #666; }
+
+        .group-config {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .config-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 2px solid #e8f5e9;
+        }
+
+        .config-row.has-value { border-color: #2d5a3d; background: #f0fff4; }
+
+        .config-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .config-icon { font-size: 1.3rem; }
+        .config-text { font-weight: 600; color: #333; font-size: 0.9rem; }
+        .config-subtext { font-size: 0.7rem; color: #888; }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #2d5a3d;
+            background: white;
+            color: #2d5a3d;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover { background: #2d5a3d; color: white; }
+
+        .qty-value {
+            width: 30px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1a472a;
+        }
+
+        .qty-value.zero { color: #ccc; }
+
+        .group-summary {
+            margin-top: 10px;
+            padding: 10px;
+            background: linear-gradient(135deg, #1a472a, #2d5a3d);
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
+        .color-picker { display: flex; gap: 6px; flex-wrap: wrap; }
+
+        .color-option {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .color-option:hover { transform: scale(1.1); }
+        .color-option.selected { border-color: #333; }
+
+        .group-markers { display: flex; gap: 10px; margin-bottom: 15px; }
+
+        .marker-box {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .marker-box.tournament {
+            background: #e3f2fd;
+            border: 2px solid #1976d2;
+            color: #1565c0;
+        }
+
+        .marker-box.tournament.active {
+            background: #1976d2;
+            color: white;
+        }
+
+        .marker-box.watch {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            color: #e65100;
+        }
+
+        .marker-box.watch.active {
+            background: #ff9800;
+            color: white;
+        }
+
+        .marker-icon { font-size: 1.5rem; }
+        .marker-text { font-size: 0.8rem; font-weight: 600; margin-top: 3px; }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2d5a3d, #1a472a);
+            color: white;
+        }
+
+        .btn-primary:hover { box-shadow: 0 5px 20px rgba(45, 90, 61, 0.4); }
+        .btn-danger { background: #dc3545; color: white; margin-top: 10px; }
+
+        .players-list { margin-top: 20px; max-height: 300px; overflow-y: auto; }
+
+        .player-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 4px solid #2d5a3d;
+            position: relative;
+        }
+
+        .player-card.delayed { border-left-color: #dc3545; background: #fff5f5; }
+        .player-card.watch-group { border-left-color: #ff9800; background: #fff8e1; }
+        .player-card.tournament-group { border-left-color: #1976d2; background: #e3f2fd; }
+
+        .player-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 5px;
+        }
+
+        .player-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .player-name { font-weight: 600; color: #333; flex: 1; }
+
+        .badge {
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .badge.tournament { background: #1976d2; }
+        .badge.watch { background: #ff9800; }
+
+        .player-info { font-size: 0.8rem; color: #666; margin-bottom: 3px; }
+        .player-details { font-size: 0.75rem; color: #888; background: #f0f0f0; padding: 4px 8px; border-radius: 4px; }
+
+        .player-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .expected-hole { font-size: 1.4rem; font-weight: bold; color: #1a472a; }
+
+        .player-status {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-ontime { background: #e8f5e9; color: #2d5a3d; }
+        .status-delayed { background: #ffebee; color: #c62828; }
+        .status-ahead { background: #e3f2fd; color: #1565c0; }
+
+        .delete-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .delete-btn:hover { color: #dc3545; }
+
+        .no-players { text-align: center; color: #999; padding: 20px; font-style: italic; }
+
+        .golf-course {
+            background: linear-gradient(180deg, #7cb342 0%, #558b2f 100%);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .course-title {
+            text-align: center;
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .holes-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .nine-section-visual { display: flex; flex-direction: column; gap: 6px; }
+        .nine-section-visual.back-nine { flex-direction: column-reverse; }
+        .nine-title { color: white; text-align: center; font-weight: bold; margin-bottom: 8px; font-size: 0.9rem; }
+
+        .hole {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .hole.current {
+            background: rgba(255,255,255,0.95);
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .hole.watch-hole { background: rgba(255, 152, 0, 0.85); }
+        .hole.tournament-hole { background: rgba(25, 118, 210, 0.85); }
+
+        .hole-number {
+            width: 28px;
+            height: 28px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #1a472a;
+            font-size: 0.85rem;
+        }
+
+        .hole.current .hole-number { background: #1a472a; color: white; }
+        .hole.watch-hole .hole-number { background: #e65100; color: white; }
+        .hole.tournament-hole .hole-number { background: #0d47a1; color: white; }
+
+        .hole-info { flex: 1; color: white; font-size: 0.75rem; }
+        .hole.current .hole-info { color: #1a472a; }
+
+        .player-markers { display: flex; gap: 2px; }
+
+        .player-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .clock-display {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .clock-display .time { font-size: 2.5rem; font-weight: bold; color: white; }
+        .clock-display .date { color: rgba(255,255,255,0.8); font-size: 0.9rem; }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: white;
+            font-size: 0.75rem;
+            background: rgba(0,0,0,0.2);
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+
+        .legend-item.watch { background: rgba(255, 152, 0, 0.7); }
+        .legend-item.tournament { background: rgba(25, 118, 210, 0.7); }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .summary-stats { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .stat-card {
+            background: rgba(0,0,0,0.2);
+            padding: 10px 5px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+        }
+
+        .stat-card.warning { background: rgba(255, 152, 0, 0.6); }
+        .stat-card.tournament { background: rgba(25, 118, 210, 0.6); }
+        .stat-card .stat-value { font-size: 1.3rem; font-weight: bold; }
+        .stat-card .stat-label { font-size: 0.65rem; }
+
+        .current-time-info {
+            background: #f0f4f0;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .current-time-info .value { font-size: 1.2rem; font-weight: bold; color: #1a472a; }
+        .current-time-info .label { font-size: 0.8rem; color: #666; }
+
+        .config-panel { max-width: 900px; margin: 0 auto; }
+
+        .config-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .total-time-box {
+            background: linear-gradient(135deg, #1a472a, #2d5a3d);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .total-time-box .value { font-size: 1.5rem; font-weight: bold; }
+
+        .preset-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+
+        .preset-btn {
+            padding: 10px 15px;
+            border: 2px solid #2d5a3d;
+            border-radius: 8px;
+            background: white;
+            color: #2d5a3d;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .preset-btn:hover { background: #2d5a3d; color: white; }
+
+        .times-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) { .times-grid { grid-template-columns: 1fr; } }
+
+        .nine-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .nine-section h3 {
+            color: #1a472a;
+            margin-bottom: 12px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            font-size: 1rem;
+        }
+
+        .hole-time-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 6px;
+        }
+
+        .hole-badge {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #1a472a, #2d5a3d);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .hole-details { flex: 1; }
+        .hole-details .par-info { font-weight: 600; color: #333; font-size: 0.85rem; }
+        .hole-details .meters-info { font-size: 0.7rem; color: #888; }
+
+        .time-input-wrapper { display: flex; align-items: center; gap: 4px; }
+
+        .time-input-wrapper input {
+            width: 50px;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a472a;
+        }
+
+        .nine-subtotal {
+            margin-top: 12px;
+            padding: 10px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            color: #1a472a;
+        }
+
+        .save-config-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #2d5a3d, #1a472a);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* ===== ESTILOS PARA REGLAS DEL CLUB (MARSHALL) ===== */
+        .rules-panel {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .marshall-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .marshall-icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .marshall-title {
+            font-size: 2rem;
+            color: #1a472a;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+
+        .marshall-subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .notebook {
+            background: #fffef0;
+            border-radius: 15px;
+            box-shadow: 
+                0 0 0 2px #8b4513,
+                0 0 0 4px #654321,
+                0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notebook-binding {
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, 
+                #dc3545 0%, #dc3545 10%,
+                transparent 10%, transparent 20%,
+                #dc3545 20%, #dc3545 30%,
+                transparent 30%, transparent 40%,
+                #dc3545 40%, #dc3545 50%,
+                transparent 50%, transparent 60%,
+                #dc3545 60%, #dc3545 70%,
+                transparent 70%, transparent 80%,
+                #dc3545 80%, #dc3545 90%,
+                transparent 90%, transparent 100%
+            );
+        }
+
+        .notebook-header {
+            background: linear-gradient(135deg, #1a472a, #2d5a3d);
+            color: white;
+            padding: 20px 20px 20px 50px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notebook-header-icon {
+            font-size: 2rem;
+        }
+
+        .notebook-header-text h3 {
+            font-size: 1.3rem;
+            margin-bottom: 3px;
+        }
+
+        .notebook-header-text p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .notebook-content {
+            padding: 25px 25px 25px 50px;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 27px,
+                #e0e0e0 27px,
+                #e0e0e0 28px
+            );
+            min-height: 400px;
+        }
+
+        .rule-section {
+            margin-bottom: 25px;
+        }
+
+        .rule-section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1a472a;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px dashed #2d5a3d;
+        }
+
+        .rule-section-title .section-icon {
+            font-size: 1.3rem;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 8px;
+            border-left: 3px solid #2d5a3d;
+            line-height: 1.6;
+        }
+
+        .rule-number {
+            background: #1a472a;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .rule-text {
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .rule-text strong {
+            color: #1a472a;
+        }
+
+        .rule-highlight {
+            background: #fff3cd;
+            border-left-color: #ff9800;
+        }
+
+        .rule-important {
+            background: #ffebee;
+            border-left-color: #dc3545;
+        }
+
+        .notebook-footer {
+            background: #f5f5dc;
+            padding: 15px 25px 15px 50px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .marshall-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #1a472a, #2d5a3d);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .marshall-badge .badge-icon {
+            font-size: 1.2rem;
+        }
+
+        .contact-info {
+            font-size: 0.8rem;
+            color: #666;
+            text-align: right;
+        }
+
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
+
+        .toast {
+            background: #4caf50;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .toast.blue { background: #1976d2; }
+    </style>
+</head>
+<body>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="container">
+        <header>
+            <div style="font-size: 2.5rem;">⛳</div>
+            <div class="header-text">
+                <h1>Golf Barcelona</h1>
+                <p>Control de Tiempos de Juego</p>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" id="tabPlay" onclick="showTab('play')">🏌️ Control</button>
+            <button class="tab-btn" id="tabConfig" onclick="showTab('config')">⏱️ Tiempos</button>
+            <button class="tab-btn" id="tabRules" onclick="showTab('rules')">👮 Reglas</button>
+        </div>
+
+        <!-- TAB REGLAS DEL CLUB -->
+        <div id="rulesTab" class="tab-content">
+            <div class="panel rules-panel">
+                <div class="marshall-header">
+                    <div class="marshall-icon">👮</div>
+                    <div class="marshall-title">MARSHALL</div>
+                    <div class="marshall-subtitle">Reglamento del Club</div>
+                </div>
+
+                <div class="notebook">
+                    <div class="notebook-binding"></div>
+                    
+                    <div class="notebook-header">
+                        <div class="notebook-header-icon">📋</div>
+                        <div class="notebook-header-text">
+                            <h3>Normas de Juego - Golf Barcelona</h3>
+                            <p>Por favor, respete las siguientes normas para una mejor experiencia</p>
+                        </div>
+                    </div>
+
+                    <div class="notebook-content">
+                        <!-- Sección: Ritmo de Juego -->
+                        <div class="rule-section">
+                            <div class="rule-section-title">
+                                <span class="section-icon">⏱️</span>
+                                Ritmo de Juego
+                            </div>
+                            <div class="rule-item rule-important">
+                                <div class="rule-number">1</div>
+                                <div class="rule-text"><strong>Tiempo máximo por recorrido:</strong> 4 horas y 28 minutos para 18 hoyos.</div>
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-number">2</div>
+                                <div class="rule-text">Mantenga siempre su posición respecto al grupo de delante. Si pierde más de un hoyo de distancia, <strong>deje pasar</strong> al grupo siguiente.</div>
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-number">3</div>
+                                <div class="rule-text">Esté preparado para jugar cuando sea su turno. Planifique su golpe mientras otros juegan.</div>
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-number">4</div>
+                                <div class="rule-text">Limite la búsqueda de bolas a <strong>3 minutos</strong> máximo.</div>
+                            </div>
+                        </div>
+
+                        <!-- Sección: Etiqueta -->
+                        <div class="rule-section">
+                            <div class="rule-section-title">
+                                <span class="section-icon">🤝</span>
+                                Etiqueta en el Campo
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-number">5</div>
+                                <div class="rule-text"><strong>Silencio durante los golpes:</strong> No hable ni se mueva mientras otro jugador ejecuta su golpe.</div>
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-number">6</div>
+                                <div class="rule-text">Repare siempre sus <strong>piques de bola</strong> en los greens y los <strong>divots</strong> en las calles.</div>
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-number">7</div>
+                                <div class="rule-text">Rastrillar los <strong>bunkers</strong> después de jugar, dejando el rastrillo dentro o fuera según las normas locales.</div>
+                            </div>
+                            <div class="rule-item rule-highlight">
+                                <div class="rule-number">8</div>
+                                <div class="rule-text"><strong>Móviles en silencio:</strong> Mantenga su teléfono en modo silencioso durante todo el recorrido.</div>
+                            </div>
+                        </div>
+
+                        <!-- Sección: Seguridad -->
+                        <div class="rule-section">
+                            <div class="rule-section-title">
+                                <span class="section-icon">⚠️</span>
+                                Seguridad
+                            </div>
+                            <div class="rule-item rule-important">
+                                <div class="rule-number">9</div>
+                                <div class="rule-text"><strong>¡FORE!</strong> Grite "¡FORE!" en voz alta si su bola puede alcanzar a otros jugadores.</div>
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-number">10</div>
+                                <div class="rule-text">No golpee hasta que el grupo de delante esté fuera de alcance.</div>
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-number">11</div>
+                                <div class="rule-text">Los <strong>buggys</strong> deben mantenerse en los caminos señalizados y respetar las zonas restringidas.</div>
+                            </div>
+                        </div>
+
+                        <!-- Sección: Vestimenta -->
+                        <div class="rule-section">
+                            <div class="rule-section-title">
+                                <span class="section-icon">👔</span>
+                                Código de Vestimenta
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-number">12</div>
+                                <div class="rule-text">Polo o camisa con cuello obligatorio. <strong>No se permiten</strong> camisetas de tirantes.</div>
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-number">13</div>
+                                <div class="rule-text">Pantalón largo o bermudas (tipo golf). No se admiten pantalones cortos de deporte.</div>
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-number">14</div>
+                                <div class="rule-text">Zapatos de golf con tacos blandos. No se permiten zapatos de calle.</div>
+                            </div>
+                        </div>
+
+                        <!-- Sección: General -->
+                        <div class="rule-section">
+                            <div class="rule-section-title">
+                                <span class="section-icon">📌</span>
+                                Normas Generales
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-number">15</div>
+                                <div class="rule-text">Preséntese en el tee de salida con <strong>10 minutos de antelación</strong> a su hora reservada.</div>
+                            </div>
+                            <div class="rule-item rule-highlight">
+                                <div class="rule-number">16</div>
+                                <div class="rule-text"><strong>Máximo 4 jugadores</strong> por grupo. Grupos de 5 o más no están permitidos.</div>
+                            </div>
+                            <div class="rule-item">
+                                <div class="rule-number">17</div>
+                                <div class="rule-text">Respete las indicaciones del <strong>Marshall</strong> en todo momento.</div>
+                            </div>
+                            <div class="rule-item rule-important">
+                                <div class="rule-number">18</div>
+                                <div class="rule-text">El incumplimiento reiterado de estas normas puede suponer la <strong>expulsión del campo</strong>.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="notebook-footer">
+                        <div class="marshall-badge">
+                            <span class="badge-icon">👮</span>
+                            <span>MARSHALL - Golf Barcelona</span>
+                        </div>
+                        <div class="contact-info">
+                            <div>📞 Contacto Marshall: (+34) 937728802</div>
+                            <div>⛳ Casa Club: (+34) 937728800</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONFIG -->
+        <div id="configTab" class="tab-content">
+            <div class="panel config-panel">
+                <div class="config-header">
+                    <div>
+                        <h2 style="border:none;padding:0;margin:0;">⏱️ Tiempos por Hoyo</h2>
+                    </div>
+                    <div class="total-time-box">
+                        <div class="label">Total</div>
+                        <div class="value" id="totalTimeDisplay">4h 28min</div>
+                    </div>
+                </div>
+
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="applyPreset('standard')">📊 Estándar (4h 28min)</button>
+                    <button class="preset-btn" onclick="applyPreset('fast')">🏃 Rápido (3h 45min)</button>
+                    <button class="preset-btn" onclick="applyPreset('slow')">🐢 Lento (5h 15min)</button>
+                </div>
+
+                <div class="times-grid">
+                    <div class="nine-section">
+                        <h3>IDA (1-9)</h3>
+                        <div id="frontNineTimes"></div>
+                        <div class="nine-subtotal">Subtotal: <span id="frontNineTotal">0</span> min</div>
+                    </div>
+                    <div class="nine-section">
+                        <h3>VUELTA (10-18)</h3>
+                        <div id="backNineTimes"></div>
+                        <div class="nine-subtotal">Subtotal: <span id="backNineTotal">0</span> min</div>
+                    </div>
+                </div>
+
+                <button class="save-config-btn" onclick="saveHoleTimes()">💾 Guardar</button>
+            </div>
+        </div>
+
+        <!-- TAB PLAY -->
+        <div id="playTab" class="tab-content active">
+            <div class="main-content">
+                <div class="panel">
+                    <h2>➕ Añadir Grupo</h2>
+
+                    <div class="current-time-info">
+                        <div class="label">Tiempo total</div>
+                        <div class="value" id="currentTotalTime">4h 28min</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" id="playerName" placeholder="Ej: Grupo García">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Hora Salida</label>
+                        <input type="time" id="startTime" value="08:00">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tee</label>
+                        <div class="tee-selector">
+                            <div class="tee-option active" onclick="selectTee(this,1)">
+                                <div class="tee-number">1</div>
+                                <div class="tee-label">Tee 1</div>
+                            </div>
+                            <div class="tee-option" onclick="selectTee(this,10)">
+                                <div class="tee-number">10</div>
+                                <div class="tee-label">Tee 10</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>👥 Jugadores y Vehículos</label>
+                        <div class="group-config">
+                            <div class="config-row has-value" id="rowPlayers">
+                                <div class="config-label">
+                                    <span class="config-icon">👥</span>
+                                    <div><div class="config-text">Jugadores</div><div class="config-subtext">1-4</div></div>
+                                </div>
+                                <div class="quantity-selector">
+                                    <button class="qty-btn" onclick="changeQty('players',-1)">−</button>
+                                    <div class="qty-value" id="qtyPlayers">4</div>
+                                    <button class="qty-btn" onclick="changeQty('players',1)">+</button>
+                                </div>
+                            </div>
+                            <div class="config-row" id="rowBuggys">
+                                <div class="config-label">
+                                    <span class="config-icon">🚗</span>
+                                    <div><div class="config-text">Buggys</div><div class="config-subtext">0-2</div></div>
+                                </div>
+                                <div class="quantity-selector">
+                                    <button class="qty-btn" onclick="changeQty('buggys',-1)">−</button>
+                                    <div class="qty-value zero" id="qtyBuggys">0</div>
+                                    <button class="qty-btn" onclick="changeQty('buggys',1)">+</button>
+                                </div>
+                            </div>
+                            <div class="config-row" id="rowMoto3">
+                                <div class="config-label">
+                                    <span class="config-icon">🛵</span>
+                                    <div><div class="config-text">Moto 3R</div><div class="config-subtext">0-4</div></div>
+                                </div>
+                                <div class="quantity-selector">
+                                    <button class="qty-btn" onclick="changeQty('moto3',-1)">−</button>
+                                    <div class="qty-value zero" id="qtyMoto3">0</div>
+                                    <button class="qty-btn" onclick="changeQty('moto3',1)">+</button>
+                                </div>
+                            </div>
+                            <div class="config-row" id="rowMoto4">
+                                <div class="config-label">
+                                    <span class="config-icon">🏍️</span>
+                                    <div><div class="config-text">Moto 4R</div><div class="config-subtext">0-4</div></div>
+                                </div>
+                                <div class="quantity-selector">
+                                    <button class="qty-btn" onclick="changeQty('moto4',-1)">−</button>
+                                    <div class="qty-value zero" id="qtyMoto4">0</div>
+                                    <button class="qty-btn" onclick="changeQty('moto4',1)">+</button>
+                                </div>
+                            </div>
+                            <div class="group-summary" id="groupSummary">👤👤👤👤</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🎨 Color</label>
+                        <div class="color-picker" id="colorPicker"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🏷️ Tipo</label>
+                        <div class="group-markers">
+                            <div class="marker-box tournament" id="markerTournament" onclick="toggleMarker('tournament')">
+                                <div class="marker-icon">🏆</div>
+                                <div class="marker-text">Torneo</div>
+                            </div>
+                            <div class="marker-box watch" id="markerWatch" onclick="toggleMarker('watch')">
+                                <div class="marker-icon">⚠️</div>
+                                <div class="marker-text">Vigilar</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="addPlayer()">➕ Añadir Grupo</button>
+
+                    <div class="players-list">
+                        <h3 style="margin-top:15px;margin-bottom:10px;color:#1a472a;font-size:0.95rem;">📋 Grupos en Campo</h3>
+                        <div id="playersContainer"><div class="no-players">No hay grupos</div></div>
+                    </div>
+
+                    <button class="btn btn-danger" onclick="clearAllPlayers()">🗑️ Limpiar</button>
+                </div>
+
+                <div class="panel golf-course">
+                    <div class="course-title">🏌️ Golf Barcelona - 18 Hoyos</div>
+                    <div class="holes-container">
+                        <div class="nine-section-visual" id="frontNineVisual"></div>
+                        <div class="nine-section-visual back-nine" id="backNineVisual"></div>
+                    </div>
+                    <div class="legend" id="legend"></div>
+                    <div class="clock-display">
+                        <div class="date" id="currentDate"></div>
+                        <div class="time" id="currentTime"></div>
+                    </div>
+                    <div class="summary-stats">
+                        <div class="stat-card"><div class="stat-value" id="totalGroups">0</div><div class="stat-label">Grupos</div></div>
+                        <div class="stat-card"><div class="stat-value" id="totalJugadores">0</div><div class="stat-label">Jugadores</div></div>
+                        <div class="stat-card"><div class="stat-value" id="delayedCount">0</div><div class="stat-label">Retrasados</div></div>
+                        <div class="stat-card tournament"><div class="stat-value" id="tournamentCount">0</div><div class="stat-label">🏆 Torneo</div></div>
+                        <div class="stat-card warning"><div class="stat-value" id="watchCount">0</div><div class="stat-label">⚠️ Vigilar</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const holesData = [
+            { n: 1,  par: 5, m: 478, t: 16 },
+            { n: 2,  par: 3, m: 141, t: 13 },
+            { n: 3,  par: 4, m: 272, t: 14 },
+            { n: 4,  par: 4, m: 353, t: 15 },
+            { n: 5,  par: 3, m: 150, t: 14 },
+            { n: 6,  par: 4, m: 379, t: 15 },
+            { n: 7,  par: 5, m: 492, t: 16 },
+            { n: 8,  par: 4, m: 322, t: 15 },
+            { n: 9,  par: 4, m: 255, t: 15 },
+            { n: 10, par: 5, m: 466, t: 16 },
+            { n: 11, par: 4, m: 311, t: 15 },
+            { n: 12, par: 4, m: 357, t: 15 },
+            { n: 13, par: 5, m: 483, t: 16 },
+            { n: 14, par: 3, m: 127, t: 14 },
+            { n: 15, par: 4, m: 317, t: 15 },
+            { n: 16, par: 3, m: 139, t: 13 },
+            { n: 17, par: 4, m: 361, t: 16 },
+            { n: 18, par: 4, m: 321, t: 15 }
+        ];
+
+        const colors = ['#e53935','#1e88e5','#fdd835','#7b1fa2','#fb8c00','#00897b','#d81b60','#5e35b1'];
+        
+        const presets = {
+            standard: {1:16,2:13,3:14,4:15,5:14,6:15,7:16,8:15,9:15,10:16,11:15,12:15,13:16,14:14,15:15,16:13,17:16,18:15},
+            fast: {1:13,2:10,3:11,4:12,5:11,6:12,7:13,8:12,9:12,10:13,11:12,12:12,13:13,14:11,15:12,16:10,17:13,18:12},
+            slow: {1:19,2:16,3:17,4:18,5:17,6:18,7:19,8:18,9:18,10:19,11:18,12:18,13:19,14:17,15:18,16:16,17:19,18:18}
+        };
+
+        const limits = {players:{min:1,max:4},buggys:{min:0,max:2},moto3:{min:0,max:4},moto4:{min:0,max:4}};
+
+        let holeTimes = {};
+        let players = [];
+        let selectedTee = 1;
+        let selectedColor = colors[0];
+        let watchGroup = false;
+        let tournamentGroup = false;
+        let qty = {players:4,buggys:0,moto3:0,moto4:0};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            initColors();
+            renderTimesConfig();
+            render();
+            updateClock();
+            setInterval(updateClock, 1000);
+        });
+
+        function loadData() {
+            try {
+                const t = localStorage.getItem('golf_times');
+                holeTimes = t ? JSON.parse(t) : {...presets.standard};
+                const p = localStorage.getItem('golf_players');
+                players = p ? JSON.parse(p) : [];
+            } catch(e) {
+                holeTimes = {...presets.standard};
+                players = [];
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('golf_times', JSON.stringify(holeTimes));
+            localStorage.setItem('golf_players', JSON.stringify(players));
+        }
+
+        function showTab(tab) {
+            document.getElementById('playTab').classList.remove('active');
+            document.getElementById('configTab').classList.remove('active');
+            document.getElementById('rulesTab').classList.remove('active');
+            document.getElementById('tabPlay').classList.remove('active');
+            document.getElementById('tabConfig').classList.remove('active');
+            document.getElementById('tabRules').classList.remove('active');
+            document.getElementById(tab+'Tab').classList.add('active');
+            document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
+        }
+
+        function initColors() {
+            const p = document.getElementById('colorPicker');
+            p.innerHTML = colors.map((c,i) => 
+                '<div class="color-option '+(i===0?'selected':'')+'" style="background:'+c+'" onclick="selectColor(this,\''+c+'\')"></div>'
+            ).join('');
+        }
+
+        function selectColor(el, c) {
+            document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedColor = c;
+        }
+
+        function selectTee(el, t) {
+            document.querySelectorAll('.tee-option').forEach(o => o.classList.remove('active'));
+            el.classList.add('active');
+            selectedTee = t;
+        }
+
+        function changeQty(type, delta) {
+            const nv = qty[type] + delta;
+            if (nv >= limits[type].min && nv <= limits[type].max) {
+                qty[type] = nv;
+                updateQtyDisplay();
+            }
+        }
+
+        function updateQtyDisplay() {
+            ['players','buggys','moto3','moto4'].forEach(t => {
+                const el = document.getElementById('qty'+t.charAt(0).toUpperCase()+t.slice(1));
+                const row = document.getElementById('row'+t.charAt(0).toUpperCase()+t.slice(1));
+                if (el && row) {
+                    el.textContent = qty[t];
+                    el.classList.toggle('zero', qty[t] === 0);
+                    row.classList.toggle('has-value', qty[t] > 0);
+                }
+            });
+            updateSummary();
+        }
+
+        function updateSummary() {
+            let s = '';
+            for(let i=0;i<qty.players;i++) s+='👤';
+            if(qty.buggys+qty.moto3+qty.moto4>0) s+=' ';
+            for(let i=0;i<qty.buggys;i++) s+='🚗';
+            for(let i=0;i<qty.moto3;i++) s+='🛵';
+            for(let i=0;i<qty.moto4;i++) s+='🏍️';
+            document.getElementById('groupSummary').textContent = s || '👤';
+        }
+
+        function toggleMarker(type) {
+            if(type==='watch') {
+                watchGroup = !watchGroup;
+                document.getElementById('markerWatch').classList.toggle('active', watchGroup);
+            } else {
+                tournamentGroup = !tournamentGroup;
+                document.getElementById('markerTournament').classList.toggle('active', tournamentGroup);
+            }
+        }
+
+        function resetForm() {
+            qty = {players:4,buggys:0,moto3:0,moto4:0};
+            updateQtyDisplay();
+            watchGroup = false;
+            tournamentGroup = false;
+            document.getElementById('markerWatch').classList.remove('active');
+            document.getElementById('markerTournament').classList.remove('active');
+        }
+
+        function addPlayer() {
+            const name = document.getElementById('playerName').value.trim();
+            const time = document.getElementById('startTime').value;
+            if(!name) { alert('Introduce un nombre'); return; }
+
+            players.push({
+                id: Date.now(),
+                name: name,
+                startTime: time,
+                startTee: selectedTee,
+                color: selectedColor,
+                watchGroup: watchGroup,
+                tournamentGroup: tournamentGroup,
+                numPlayers: qty.players,
+                numBuggys: qty.buggys,
+                numMoto3: qty.moto3,
+                numMoto4: qty.moto4
+            });
+
+            saveData();
+            render();
+            document.getElementById('playerName').value = '';
+            resetForm();
+            rotateColor();
+            showToast('✅ '+name+' añadido', tournamentGroup);
+        }
+
+        function rotateColor() {
+            const used = players.map(p => p.color);
+            const avail = colors.filter(c => !used.includes(c));
+            if(avail.length > 0) {
+                selectedColor = avail[0];
+                document.querySelectorAll('.color-option').forEach(o => {
+                    o.classList.toggle('selected', o.style.background === selectedColor);
+                });
+            }
+        }
+
+        function deletePlayer(id) {
+            players = players.filter(p => p.id !== id);
+            saveData();
+            render();
+        }
+
+        function clearAllPlayers() {
+            if(confirm('¿Eliminar todos?')) {
+                players = [];
+                saveData();
+                render();
+            }
+        }
+
+        function calcHole(p) {
+            const now = new Date();
+            const [h,m] = p.startTime.split(':').map(Number);
+            const start = new Date();
+            start.setHours(h,m,0,0);
+            const elapsed = (now - start) / 60000;
+
+            if(elapsed < 0) return {hole:0, status:'pending', diff:Math.round(-elapsed)};
+
+            const order = p.startTee === 1 
+                ? [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
+                : [10,11,12,13,14,15,16,17,18,1,2,3,4,5,6,7,8,9];
+
+            let total = 0;
+            for(const ho of order) total += holeTimes[ho] || holesData[ho-1].t;
+            if(elapsed >= total) return {hole:19, status:'finished', diff:0};
+
+            let acc = 0, curr = order[0], into = 0, ht = 0;
+            for(const ho of order) {
+                ht = holeTimes[ho] || holesData[ho-1].t;
+                if(acc + ht > elapsed) { curr = ho; into = elapsed - acc; break; }
+                acc += ht;
+            }
+
+            let status = 'ontime';
+            if(into > ht * 0.8) status = 'delayed';
+            else if(into < ht * 0.3) status = 'ahead';
+
+            return {hole:curr, status:status, diff:Math.round(into), holeTime:ht};
+        }
+
+        function getDetails(p) {
+            let parts = [(p.numPlayers||1)+' jug.'];
+            if(p.numBuggys>0) parts.push(p.numBuggys+' buggy');
+            if(p.numMoto3>0) parts.push(p.numMoto3+' moto3R');
+            if(p.numMoto4>0) parts.push(p.numMoto4+' moto4R');
+            return parts.join(' • ');
+        }
+
+        function render() {
+            renderPlayers();
+            renderCourse();
+        }
+
+        function renderPlayers() {
+            const c = document.getElementById('playersContainer');
+            if(players.length === 0) {
+                c.innerHTML = '<div class="no-players">No hay grupos</div>';
+                updateStats();
+                return;
+            }
+
+            let html = '';
+            players.forEach(p => {
+                const exp = calcHole(p);
+                let sc = '', st = '', bc = '';
+
+                if(exp.status==='pending') { st='Sale en '+exp.diff+' min'; bc='status-ontime'; }
+                else if(exp.status==='finished') { st='Finalizado'; bc='status-ahead'; }
+                else if(exp.status==='delayed') { sc='delayed'; st=exp.diff+'/'+exp.holeTime+' min'; bc='status-delayed'; }
+                else if(exp.status==='ahead') { st='Adelantado'; bc='status-ahead'; }
+                else { st='En tiempo'; bc='status-ontime'; }
+
+                if(p.watchGroup) sc += ' watch-group';
+                if(p.tournamentGroup) sc += ' tournament-group';
+
+                html += '<div class="player-card '+sc+'">';
+                html += '<button class="delete-btn" onclick="deletePlayer('+p.id+')">✕</button>';
+                html += '<div class="player-header">';
+                html += '<div class="player-color" style="background:'+p.color+'"></div>';
+                html += '<div class="player-name">'+p.name+'</div>';
+                if(p.tournamentGroup) html += '<span class="badge tournament">🏆</span>';
+                if(p.watchGroup) html += '<span class="badge watch">⚠️</span>';
+                html += '</div>';
+                html += '<div class="player-info">🕐 '+p.startTime+' • Tee '+p.startTee+'</div>';
+                html += '<div class="player-details">'+getDetails(p)+'</div>';
+                html += '<div class="player-footer">';
+                if(exp.hole>0 && exp.hole<=18) html += '<div>Hoyo: <span class="expected-hole">'+exp.hole+'</span></div>';
+                else html += '<div></div>';
+                html += '<span class="player-status '+bc+'">'+st+'</span>';
+                html += '</div></div>';
+            });
+
+            c.innerHTML = html;
+            updateStats();
+        }
+
+        function updateStats() {
+            let g=0, j=0, d=0, w=0, t=0;
+            players.forEach(p => {
+                const exp = calcHole(p);
+                if(exp.status !== 'pending' && exp.status !== 'finished') {
+                    g++;
+                    if(exp.status === 'delayed') d++;
+                }
+                j += p.numPlayers || 1;
+                if(p.watchGroup) w++;
+                if(p.tournamentGroup) t++;
+            });
+            document.getElementById('totalGroups').textContent = g;
+            document.getElementById('totalJugadores').textContent = j;
+            document.getElementById('delayedCount').textContent = d;
+            document.getElementById('watchCount').textContent = w;
+            document.getElementById('tournamentCount').textContent = t;
+        }
+
+        function renderCourse() {
+            const front = document.getElementById('frontNineVisual');
+            const back = document.getElementById('backNineVisual');
+
+            const byHole = {};
+            players.forEach(p => {
+                const exp = calcHole(p);
+                if(exp.hole > 0 && exp.hole <= 18) {
+                    if(!byHole[exp.hole]) byHole[exp.hole] = [];
+                    byHole[exp.hole].push(p);
+                }
+            });
+
+            let fh = '<div class="nine-title">IDA (1-9)</div>';
+            let bh = '<div class="nine-title">VUELTA (10-18)</div>';
+
+            holesData.forEach(h => {
+                const pls = byHole[h.n] || [];
+                const hasW = pls.some(p => p.watchGroup);
+                const hasT = pls.some(p => p.tournamentGroup);
+                const hasC = pls.length > 0;
+
+                let hc = '';
+                if(hasW) hc = 'watch-hole';
+                else if(hasT) hc = 'tournament-hole';
+                else if(hasC) hc = 'current';
+
+                const ht = holeTimes[h.n] || h.t;
+
+                let holeHtml = '<div class="hole '+hc+'">';
+                holeHtml += '<div class="hole-number">'+h.n+'</div>';
+                holeHtml += '<div class="hole-info">Par '+h.par+' • '+h.m+'m<br>⏱️ '+ht+' min</div>';
+                if(pls.length > 0) {
+                    holeHtml += '<div class="player-markers">';
+                    pls.forEach(p => {
+                        holeHtml += '<div class="player-dot" style="background:'+p.color+'"></div>';
+                    });
+                    holeHtml += '</div>';
+                }
+                holeHtml += '</div>';
+
+                if(h.n <= 9) fh += holeHtml;
+                else bh += holeHtml;
+            });
+
+            front.innerHTML = fh;
+            back.innerHTML = bh;
+            renderLegend();
+        }
+
+        function renderLegend() {
+            const leg = document.getElementById('legend');
+            if(players.length === 0) { leg.innerHTML = ''; return; }
+
+            let html = '';
+            players.forEach(p => {
+                const exp = calcHole(p);
+                const txt = exp.status==='pending' ? 'Pend.' : (exp.status==='finished' ? 'Fin' : 'H'+exp.hole);
+                let ic = '';
+                if(p.tournamentGroup) ic = 'tournament';
+                else if(p.watchGroup) ic = 'watch';
+                html += '<div class="legend-item '+ic+'">';
+                html += '<div class="legend-dot" style="background:'+p.color+'"></div>';
+                html += '<span>'+p.name+' - '+txt+'</span></div>';
+            });
+            leg.innerHTML = html;
+        }
+
+        function renderTimesConfig() {
+            const f = document.getElementById('frontNineTimes');
+            const b = document.getElementById('backNineTimes');
+            let fh = '', bh = '';
+
+            holesData.forEach(h => {
+                const t = holeTimes[h.n] || h.t;
+                const html = '<div class="hole-time-row">' +
+                    '<div class="hole-badge">'+h.n+'</div>' +
+                    '<div class="hole-details"><div class="par-info">Par '+h.par+'</div><div class="meters-info">'+h.m+'m</div></div>' +
+                    '<div class="time-input-wrapper"><input type="number" id="ht'+h.n+'" value="'+t+'" min="5" max="30" onchange="updateTotals()"><span>min</span></div>' +
+                    '</div>';
+                if(h.n <= 9) fh += html;
+                else bh += html;
+            });
+
+            f.innerHTML = fh;
+            b.innerHTML = bh;
+            updateTotals();
+        }
+
+        function updateTotals() {
+            let ft = 0, bt = 0;
+            for(let i=1; i<=18; i++) {
+                const inp = document.getElementById('ht'+i);
+                const v = inp ? parseInt(inp.value) || holesData[i-1].t : holeTimes[i] || holesData[i-1].t;
+                if(i <= 9) ft += v;
+                else bt += v;
+            }
+            document.getElementById('frontNineTotal').textContent = ft;
+            document.getElementById('backNineTotal').textContent = bt;
+            const tot = ft + bt;
+            document.getElementById('totalTimeDisplay').textContent = Math.floor(tot/60)+'h '+(tot%60)+'min';
+            document.getElementById('currentTotalTime').textContent = Math.floor(tot/60)+'h '+(tot%60)+'min';
+        }
+
+        function saveHoleTimes() {
+            for(let i=1; i<=18; i++) {
+                const inp = document.getElementById('ht'+i);
+                if(inp) holeTimes[i] = parseInt(inp.value) || holesData[i-1].t;
+            }
+            saveData();
+            render();
+            showToast('✅ Tiempos guardados');
+        }
+
+        function applyPreset(name) {
+            holeTimes = {...presets[name]};
+            renderTimesConfig();
+            showToast('📊 Preset aplicado');
+        }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('es-ES');
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'short'});
+            render();
+        }
+
+        function showToast(msg, isBlue) {
+            const c = document.getElementById('toastContainer');
+            const t = document.createElement('div');
+            t.className = 'toast' + (isBlue ? ' blue' : '');
+            t.textContent = msg;
+            c.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
