@@ -29,11 +29,7 @@
             flex-wrap: wrap;
         }
 
-        .header-text h1 {
-            font-size: 2rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
+        .header-text h1 { font-size: 2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
         .header-text p { opacity: 0.9; }
 
         .tabs {
@@ -68,9 +64,7 @@
             gap: 25px;
         }
 
-        @media (max-width: 900px) {
-            .main-content { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 900px) { .main-content { grid-template-columns: 1fr; } }
 
         .panel {
             background: white;
@@ -88,27 +82,9 @@
         }
 
         .form-group { margin-bottom: 15px; }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            color: #333;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #2d5a3d;
-        }
+        .form-group label { display: block; margin-bottom: 6px; color: #333; font-weight: 600; font-size: 0.9rem; }
+        .form-group input { width: 100%; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: #2d5a3d; }
 
         .tee-selector { display: flex; gap: 10px; }
 
@@ -128,11 +104,7 @@
         .tee-option .tee-number { font-size: 1.5rem; font-weight: bold; color: #1a472a; }
         .tee-option .tee-label { font-size: 0.8rem; color: #666; }
 
-        .holes-selector {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
+        .holes-selector { display: flex; gap: 10px; margin-top: 10px; }
 
         .holes-option {
             flex: 1;
@@ -151,11 +123,7 @@
         .holes-option .holes-label { font-size: 0.75rem; color: #666; }
         .holes-option .holes-detail { font-size: 0.7rem; color: #999; margin-top: 2px; }
 
-        .group-config {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 12px;
-        }
+        .group-config { background: #f8f9fa; border-radius: 10px; padding: 12px; }
 
         .config-row {
             display: flex;
@@ -169,22 +137,11 @@
         }
 
         .config-row.has-value { border-color: #2d5a3d; background: #f0fff4; }
-
-        .config-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
+        .config-label { display: flex; align-items: center; gap: 8px; }
         .config-icon { font-size: 1.3rem; }
         .config-text { font-weight: 600; color: #333; font-size: 0.9rem; }
         .config-subtext { font-size: 0.7rem; color: #888; }
-
-        .quantity-selector {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .quantity-selector { display: flex; align-items: center; gap: 6px; }
 
         .qty-btn {
             width: 32px;
@@ -202,15 +159,7 @@
         }
 
         .qty-btn:hover { background: #2d5a3d; color: white; }
-
-        .qty-value {
-            width: 30px;
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #1a472a;
-        }
-
+        .qty-value { width: 30px; text-align: center; font-size: 1.2rem; font-weight: bold; color: #1a472a; }
         .qty-value.zero { color: #ccc; }
 
         .group-summary {
@@ -238,12 +187,7 @@
         .color-option:hover { transform: scale(1.1); }
         .color-option.selected { border-color: #333; }
 
-        .group-markers { 
-            display: flex; 
-            gap: 8px; 
-            margin-bottom: 15px; 
-            flex-wrap: wrap;
-        }
+        .group-markers { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
 
         .marker-box {
             flex: 1;
@@ -255,38 +199,12 @@
             transition: all 0.3s;
         }
 
-        .marker-box.tournament {
-            background: #e3f2fd;
-            border: 2px solid #1976d2;
-            color: #1565c0;
-        }
-
-        .marker-box.tournament.active {
-            background: #1976d2;
-            color: white;
-        }
-
-        .marker-box.greenmonday {
-            background: #e8f5e9;
-            border: 2px solid #4caf50;
-            color: #2e7d32;
-        }
-
-        .marker-box.greenmonday.active {
-            background: #4caf50;
-            color: white;
-        }
-
-        .marker-box.watch {
-            background: #fff3e0;
-            border: 2px solid #ff9800;
-            color: #e65100;
-        }
-
-        .marker-box.watch.active {
-            background: #ff9800;
-            color: white;
-        }
+        .marker-box.tournament { background: #e3f2fd; border: 2px solid #1976d2; color: #1565c0; }
+        .marker-box.tournament.active { background: #1976d2; color: white; }
+        .marker-box.greenmonday { background: #e8f5e9; border: 2px solid #4caf50; color: #2e7d32; }
+        .marker-box.greenmonday.active { background: #4caf50; color: white; }
+        .marker-box.watch { background: #fff3e0; border: 2px solid #ff9800; color: #e65100; }
+        .marker-box.watch.active { background: #ff9800; color: white; }
 
         .marker-icon { font-size: 1.3rem; }
         .marker-text { font-size: 0.7rem; font-weight: 600; margin-top: 3px; }
@@ -302,15 +220,11 @@
             transition: all 0.3s;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #2d5a3d, #1a472a);
-            color: white;
-        }
-
+        .btn-primary { background: linear-gradient(135deg, #2d5a3d, #1a472a); color: white; }
         .btn-primary:hover { box-shadow: 0 5px 20px rgba(45, 90, 61, 0.4); }
         .btn-danger { background: #dc3545; color: white; margin-top: 10px; }
 
-        .players-list { margin-top: 20px; max-height: 300px; overflow-y: auto; }
+        .players-list { margin-top: 20px; max-height: 350px; overflow-y: auto; }
 
         .player-card {
             background: #f8f9fa;
@@ -319,20 +233,23 @@
             margin-bottom: 10px;
             border-left: 4px solid #2d5a3d;
             position: relative;
+            cursor: grab;
+            transition: all 0.2s;
+            user-select: none;
         }
+
+        .player-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .player-card:active { cursor: grabbing; }
+        .player-card.dragging { opacity: 0.5; transform: scale(1.02); }
+        .player-card.drag-over { border-top: 3px solid #1976d2; margin-top: 10px; }
 
         .player-card.delayed { border-left-color: #dc3545; background: #fff5f5; }
         .player-card.watch-group { border-left-color: #ff9800; background: #fff8e1; }
         .player-card.tournament-group { border-left-color: #1976d2; background: #e3f2fd; }
         .player-card.greenmonday-group { border-left-color: #4caf50; background: #e8f5e9; }
+        .player-card.skipped-group { border-left-color: #9c27b0; background: #f3e5f5; }
 
-        .player-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 5px;
-        }
+        .player-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
 
         .player-color {
             width: 14px;
@@ -344,75 +261,143 @@
 
         .player-name { font-weight: 600; color: #333; flex: 1; }
 
-        .badge {
-            padding: 2px 6px;
-            border-radius: 8px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: white;
-        }
-
+        .badge { padding: 2px 6px; border-radius: 8px; font-size: 0.65rem; font-weight: 600; color: white; }
         .badge.tournament { background: #1976d2; }
         .badge.greenmonday { background: #4caf50; }
         .badge.watch { background: #ff9800; }
         .badge.nine-holes { background: #9c27b0; }
+        .badge.skipped { background: #9c27b0; }
 
         .player-info { font-size: 0.8rem; color: #666; margin-bottom: 3px; }
         .player-details { font-size: 0.75rem; color: #888; background: #f0f0f0; padding: 4px 8px; border-radius: 4px; }
 
-        .player-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px;
-        }
-
+        .player-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
         .expected-hole { font-size: 1.4rem; font-weight: bold; color: #1a472a; }
 
-        .player-status {
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
+        .player-status { padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
         .status-ontime { background: #e8f5e9; color: #2d5a3d; }
         .status-delayed { background: #ffebee; color: #c62828; }
         .status-ahead { background: #e3f2fd; color: #1565c0; }
 
-        .delete-btn {
+        .player-actions {
             position: absolute;
             top: 8px;
             right: 8px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
             background: none;
             border: none;
             color: #999;
             cursor: pointer;
             font-size: 1rem;
+            padding: 2px 5px;
+            border-radius: 5px;
+            transition: all 0.2s;
         }
 
-        .delete-btn:hover { color: #dc3545; }
+        .action-btn:hover { background: #e0e0e0; color: #333; }
+        .action-btn.edit:hover { color: #1976d2; }
+        .action-btn.delete:hover { color: #dc3545; }
+        .action-btn.skip:hover { color: #9c27b0; }
 
         .no-players { text-align: center; color: #999; padding: 20px; font-style: italic; }
 
+        /* ===== MODAL DE EDICIÓN ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e8f5e9;
+        }
+
+        .modal-header h3 { color: #1a472a; font-size: 1.3rem; }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-close:hover { color: #333; }
+
+        .modal-body .form-group { margin-bottom: 18px; }
+
+        .modal-actions { display: flex; gap: 10px; margin-top: 25px; }
+        .modal-actions .btn { flex: 1; padding: 12px; }
+
+        .btn-secondary { background: #e0e0e0; color: #333; }
+        .btn-skip { background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white; }
+
+        .skip-info {
+            background: #f3e5f5;
+            border: 2px solid #9c27b0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+
+        .skip-info-title { font-weight: 600; color: #7b1fa2; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .skip-info-text { font-size: 0.85rem; color: #666; }
+
+        .current-hole-display {
+            background: linear-gradient(135deg, #1a472a, #2d5a3d);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .current-hole-display .label { font-size: 0.85rem; opacity: 0.9; }
+        .current-hole-display .value { font-size: 2rem; font-weight: bold; }
+
+        .color-picker-modal { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        .color-picker-modal .color-option { width: 35px; height: 35px; }
+
+        /* ===== CAMPO DE GOLF ===== */
         .golf-course {
             background: linear-gradient(180deg, #7cb342 0%, #558b2f 100%);
             border-radius: 15px;
             padding: 15px;
         }
 
-        .course-title {
-            text-align: center;
-            color: white;
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-        }
+        .course-title { text-align: center; color: white; font-size: 1.1rem; margin-bottom: 15px; }
 
-        .holes-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
+        .holes-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 
         .nine-section-visual { display: flex; flex-direction: column; gap: 6px; }
         .nine-section-visual.back-nine { flex-direction: column-reverse; }
@@ -425,18 +410,13 @@
             background: rgba(255,255,255,0.15);
             padding: 8px 12px;
             border-radius: 20px;
-            position: relative;
         }
 
-        .hole.current {
-            background: rgba(255,255,255,0.95);
-            transform: scale(1.02);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
+        .hole.current { background: rgba(255,255,255,0.95); transform: scale(1.02); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .hole.watch-hole { background: rgba(255, 152, 0, 0.85); }
         .hole.tournament-hole { background: rgba(25, 118, 210, 0.85); }
         .hole.greenmonday-hole { background: rgba(76, 175, 80, 0.85); }
+        .hole.skipped-hole { background: rgba(156, 39, 176, 0.85); }
 
         .hole-number {
             width: 28px;
@@ -455,6 +435,7 @@
         .hole.watch-hole .hole-number { background: #e65100; color: white; }
         .hole.tournament-hole .hole-number { background: #0d47a1; color: white; }
         .hole.greenmonday-hole .hole-number { background: #2e7d32; color: white; }
+        .hole.skipped-hole .hole-number { background: #7b1fa2; color: white; }
 
         .hole-info { flex: 1; color: white; font-size: 0.75rem; }
         .hole.current .hole-info { color: #1a472a; }
@@ -480,13 +461,7 @@
         .clock-display .time { font-size: 2.5rem; font-weight: bold; color: white; }
         .clock-display .date { color: rgba(255,255,255,0.8); font-size: 0.9rem; }
 
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
+        .legend { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
 
         .legend-item {
             display: flex;
@@ -502,329 +477,244 @@
         .legend-item.watch { background: rgba(255, 152, 0, 0.7); }
         .legend-item.tournament { background: rgba(25, 118, 210, 0.7); }
         .legend-item.greenmonday { background: rgba(76, 175, 80, 0.7); }
+        .legend-item.skipped { background: rgba(156, 39, 176, 0.7); }
 
-        .legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            border: 2px solid white;
-        }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid white; }
 
-        .summary-stats {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 8px;
-            margin-top: 15px;
-        }
+        .summary-stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 15px; }
 
-        @media (max-width: 700px) {
-            .summary-stats { grid-template-columns: repeat(3, 1fr); }
-        }
+        @media (max-width: 700px) { .summary-stats { grid-template-columns: repeat(3, 1fr); } }
 
-        .stat-card {
-            background: rgba(0,0,0,0.2);
-            padding: 10px 5px;
-            border-radius: 8px;
-            text-align: center;
-            color: white;
-        }
-
+        .stat-card { background: rgba(0,0,0,0.2); padding: 10px 5px; border-radius: 8px; text-align: center; color: white; }
         .stat-card.warning { background: rgba(255, 152, 0, 0.6); }
         .stat-card.tournament { background: rgba(25, 118, 210, 0.6); }
         .stat-card.greenmonday { background: rgba(76, 175, 80, 0.6); }
         .stat-card .stat-value { font-size: 1.3rem; font-weight: bold; }
         .stat-card .stat-label { font-size: 0.6rem; }
 
-        .current-time-info {
-            background: #f0f4f0;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
+        .current-time-info { background: #f0f4f0; border-radius: 8px; padding: 10px; margin-bottom: 15px; text-align: center; }
         .current-time-info .value { font-size: 1.2rem; font-weight: bold; color: #1a472a; }
         .current-time-info .label { font-size: 0.8rem; color: #666; }
 
         .config-panel { max-width: 900px; margin: 0 auto; }
 
-        .config-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+        .config-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
 
-        .total-time-box {
-            background: linear-gradient(135deg, #1a472a, #2d5a3d);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 12px;
-            text-align: center;
-        }
-
+        .total-time-box { background: linear-gradient(135deg, #1a472a, #2d5a3d); color: white; padding: 15px 25px; border-radius: 12px; text-align: center; }
         .total-time-box .value { font-size: 1.5rem; font-weight: bold; }
 
         .preset-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
 
-        .preset-btn {
-            padding: 10px 15px;
-            border: 2px solid #2d5a3d;
-            border-radius: 8px;
-            background: white;
-            color: #2d5a3d;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
+        .preset-btn { padding: 10px 15px; border: 2px solid #2d5a3d; border-radius: 8px; background: white; color: #2d5a3d; font-weight: 600; cursor: pointer; }
         .preset-btn:hover { background: #2d5a3d; color: white; }
 
-        .times-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
+        .times-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 
         @media (max-width: 600px) { .times-grid { grid-template-columns: 1fr; } }
 
-        .nine-section {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 15px;
-        }
+        .nine-section { background: #f8f9fa; border-radius: 12px; padding: 15px; }
+        .nine-section h3 { color: #1a472a; margin-bottom: 12px; text-align: center; padding-bottom: 10px; border-bottom: 2px solid #e0e0e0; font-size: 1rem; }
 
-        .nine-section h3 {
-            color: #1a472a;
-            margin-bottom: 12px;
-            text-align: center;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e0e0e0;
-            font-size: 1rem;
-        }
+        .hole-time-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: white; border-radius: 8px; margin-bottom: 6px; }
 
-        .hole-time-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 10px;
-            background: white;
-            border-radius: 8px;
-            margin-bottom: 6px;
-        }
-
-        .hole-badge {
-            width: 30px;
-            height: 30px;
-            background: linear-gradient(135deg, #1a472a, #2d5a3d);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.85rem;
-        }
+        .hole-badge { width: 30px; height: 30px; background: linear-gradient(135deg, #1a472a, #2d5a3d); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.85rem; }
 
         .hole-details { flex: 1; }
         .hole-details .par-info { font-weight: 600; color: #333; font-size: 0.85rem; }
         .hole-details .meters-info { font-size: 0.7rem; color: #888; }
 
         .time-input-wrapper { display: flex; align-items: center; gap: 4px; }
+        .time-input-wrapper input { width: 50px; padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px; text-align: center; font-size: 1rem; font-weight: 600; color: #1a472a; }
 
-        .time-input-wrapper input {
-            width: 50px;
-            padding: 8px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            text-align: center;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #1a472a;
-        }
+        .nine-subtotal { margin-top: 12px; padding: 10px; background: #e8f5e9; border-radius: 8px; text-align: center; font-weight: 600; color: #1a472a; }
 
-        .nine-subtotal {
-            margin-top: 12px;
-            padding: 10px;
-            background: #e8f5e9;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 600;
-            color: #1a472a;
-        }
+        .save-config-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #2d5a3d, #1a472a); color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 20px; }
 
-        .save-config-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #2d5a3d, #1a472a);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-
+        /* ===== ESTILOS PARA REGLAS DEL CLUB (MARSHALL) ===== */
         .rules-panel { max-width: 900px; margin: 0 auto; }
-
+        
         .marshall-header { text-align: center; margin-bottom: 25px; }
+        .marshall-icon { font-size: 4rem; margin-bottom: 10px; animation: bounce 2s infinite; }
 
-        .marshall-icon {
-            font-size: 4rem;
-            margin-bottom: 10px;
-            animation: bounce 2s infinite;
-        }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .marshall-title {
-            font-size: 2rem;
-            color: #1a472a;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 5px;
-        }
-
+        .marshall-title { font-size: 2rem; color: #1a472a; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 5px; }
         .marshall-subtitle { color: #666; font-size: 1rem; }
 
-        .notebook {
-            background: #fffef0;
-            border-radius: 15px;
-            box-shadow: 0 0 0 2px #8b4513, 0 0 0 4px #654321, 0 10px 30px rgba(0,0,0,0.3);
-            position: relative;
-            overflow: hidden;
-        }
+        .notebook { background: #fffef0; border-radius: 15px; box-shadow: 0 0 0 2px #8b4513, 0 0 0 4px #654321, 0 10px 30px rgba(0,0,0,0.3); position: relative; overflow: hidden; }
 
-        .notebook-binding {
-            position: absolute;
-            left: 30px;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: linear-gradient(to bottom, 
-                #dc3545 0%, #dc3545 10%, transparent 10%, transparent 20%,
-                #dc3545 20%, #dc3545 30%, transparent 30%, transparent 40%,
-                #dc3545 40%, #dc3545 50%, transparent 50%, transparent 60%,
-                #dc3545 60%, #dc3545 70%, transparent 70%, transparent 80%,
-                #dc3545 80%, #dc3545 90%, transparent 90%, transparent 100%
-            );
-        }
+        .notebook-binding { position: absolute; left: 30px; top: 0; bottom: 0; width: 4px; background: linear-gradient(to bottom, #dc3545 0%, #dc3545 10%, transparent 10%, transparent 20%, #dc3545 20%, #dc3545 30%, transparent 30%, transparent 40%, #dc3545 40%, #dc3545 50%, transparent 50%, transparent 60%, #dc3545 60%, #dc3545 70%, transparent 70%, transparent 80%, #dc3545 80%, #dc3545 90%, transparent 90%, transparent 100%); }
 
-        .notebook-header {
-            background: linear-gradient(135deg, #1a472a, #2d5a3d);
-            color: white;
-            padding: 20px 20px 20px 50px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
+        .notebook-header { background: linear-gradient(135deg, #1a472a, #2d5a3d); color: white; padding: 20px 20px 20px 50px; display: flex; align-items: center; gap: 15px; }
         .notebook-header-icon { font-size: 2rem; }
         .notebook-header-text h3 { font-size: 1.3rem; margin-bottom: 3px; }
         .notebook-header-text p { font-size: 0.85rem; opacity: 0.9; }
 
-        .notebook-content {
-            padding: 25px 25px 25px 50px;
-            background: repeating-linear-gradient(transparent, transparent 27px, #e0e0e0 27px, #e0e0e0 28px);
-            min-height: 400px;
-        }
+        .notebook-content { padding: 25px 25px 25px 50px; background: repeating-linear-gradient(transparent, transparent 27px, #e0e0e0 27px, #e0e0e0 28px); min-height: 400px; }
 
         .rule-section { margin-bottom: 25px; }
-
-        .rule-section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #1a472a;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 2px dashed #2d5a3d;
-        }
-
+        .rule-section-title { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: bold; color: #1a472a; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px dashed #2d5a3d; }
         .rule-section-title .section-icon { font-size: 1.3rem; }
 
-        .rule-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 10px;
-            padding: 8px 12px;
-            background: rgba(255,255,255,0.7);
-            border-radius: 8px;
-            border-left: 3px solid #2d5a3d;
-            line-height: 1.6;
-        }
+        .rule-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; padding: 8px 12px; background: rgba(255,255,255,0.7); border-radius: 8px; border-left: 3px solid #2d5a3d; line-height: 1.6; }
 
-        .rule-number {
-            background: #1a472a;
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
+        .rule-number { background: #1a472a; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; flex-shrink: 0; }
 
         .rule-text { color: #333; font-size: 0.9rem; }
         .rule-text strong { color: #1a472a; }
         .rule-highlight { background: #fff3cd; border-left-color: #ff9800; }
         .rule-important { background: #ffebee; border-left-color: #dc3545; }
 
+        /* ===== CONTACTO MARSHALL ===== */
         .notebook-footer {
-            background: #f5f5dc;
-            padding: 15px 25px 15px 50px;
+            background: linear-gradient(135deg, #1a472a, #2d5a3d);
+            padding: 20px 25px 20px 50px;
             border-top: 2px solid #e0e0e0;
+        }
+
+        .contact-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .contact-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: rgba(255,255,255,0.15);
+            padding: 12px 15px;
+            border-radius: 10px;
             flex-wrap: wrap;
             gap: 10px;
         }
 
-        .marshall-badge {
+        .contact-info-left {
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #1a472a, #2d5a3d);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.85rem;
+            gap: 12px;
         }
 
-        .marshall-badge .badge-icon { font-size: 1.2rem; }
-        .contact-info { font-size: 0.8rem; color: #666; text-align: right; }
+        .contact-icon {
+            font-size: 1.5rem;
+        }
 
-        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
+        .contact-details {
+            color: white;
+        }
 
-        .toast {
+        .contact-details .contact-label {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .contact-details .contact-value {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .contact-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .contact-btn.phone {
             background: #4caf50;
             color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
         }
 
+        .contact-btn.phone:hover {
+            background: #43a047;
+            transform: scale(1.05);
+        }
+
+        .contact-btn.web {
+            background: #2196f3;
+            color: white;
+        }
+
+        .contact-btn.web:hover {
+            background: #1e88e5;
+            transform: scale(1.05);
+        }
+
+        .contact-btn-icon {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 500px) {
+            .contact-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            .contact-info-left {
+                flex-direction: column;
+            }
+        }
+
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
+        .toast { background: #4caf50; color: white; padding: 12px 20px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
         .toast.blue { background: #1976d2; }
         .toast.green { background: #4caf50; }
+        .toast.purple { background: #9c27b0; }
     </style>
 </head>
 <body>
     <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Modal de Edición -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>✏️ Editar Grupo</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="current-hole-display">
+                    <div class="label">Hoyo Actual</div>
+                    <div class="value" id="modalCurrentHole">-</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Nombre del Grupo</label>
+                    <input type="text" id="editName" placeholder="Nuevo nombre">
+                </div>
+
+                <div class="form-group">
+                    <label>🎨 Color</label>
+                    <div class="color-picker-modal" id="editColorPicker"></div>
+                </div>
+
+                <div class="skip-info">
+                    <div class="skip-info-title">
+                        <span>⏭️</span>
+                        <span>Saltar Hoyo</span>
+                    </div>
+                    <div class="skip-info-text">
+                        Si el grupo va muy lento, puedes hacer que salte al siguiente hoyo.
+                    </div>
+                    <button class="btn btn-skip" style="margin-top: 10px;" onclick="skipHole()">
+                        ⏭️ Saltar al Siguiente Hoyo
+                    </button>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button class="btn btn-primary" onclick="saveEdit()">💾 Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <header>
@@ -838,10 +728,10 @@
         <div class="tabs">
             <button class="tab-btn active" id="tabPlay" onclick="showTab('play')">🏌️ Control</button>
             <button class="tab-btn" id="tabConfig" onclick="showTab('config')">⏱️ Tiempos</button>
-            <button class="tab-btn" id="tabRules" onclick="showTab('rules')">👮 Reglas</button>
+            <button class="tab-btn" id="tabRules" onclick="showTab('rules')">👮 Marshall</button>
         </div>
 
-        <!-- TAB REGLAS -->
+        <!-- TAB REGLAS / MARSHALL -->
         <div id="rulesTab" class="tab-content">
             <div class="panel rules-panel">
                 <div class="marshall-header">
@@ -855,10 +745,11 @@
                         <div class="notebook-header-icon">📋</div>
                         <div class="notebook-header-text">
                             <h3>Normas de Juego - Golf Barcelona</h3>
-                            <p>Por favor, respete las siguientes normas para una mejor experiencia</p>
+                            <p>Por favor, respete las siguientes normas</p>
                         </div>
                     </div>
                     <div class="notebook-content">
+                        <!-- Ritmo de Juego -->
                         <div class="rule-section">
                             <div class="rule-section-title"><span class="section-icon">⏱️</span>Ritmo de Juego</div>
                             <div class="rule-item rule-important"><div class="rule-number">1</div><div class="rule-text"><strong>Tiempo máximo:</strong> 4h 28min para 18 hoyos.</div></div>
@@ -866,36 +757,88 @@
                             <div class="rule-item"><div class="rule-number">3</div><div class="rule-text">Esté preparado para jugar cuando sea su turno.</div></div>
                             <div class="rule-item"><div class="rule-number">4</div><div class="rule-text">Búsqueda de bolas: <strong>3 minutos</strong> máximo.</div></div>
                         </div>
+
+                        <!-- Tee de Salida -->
                         <div class="rule-section">
-                            <div class="rule-section-title"><span class="section-icon">🤝</span>Etiqueta</div>
-                            <div class="rule-item"><div class="rule-number">5</div><div class="rule-text"><strong>Silencio</strong> mientras otro jugador ejecuta su golpe.</div></div>
-                            <div class="rule-item"><div class="rule-number">6</div><div class="rule-text">Repare <strong>piques</strong> en greens y <strong>divots</strong> en calles.</div></div>
-                            <div class="rule-item"><div class="rule-number">7</div><div class="rule-text">Rastrillar los <strong>bunkers</strong> después de jugar.</div></div>
-                            <div class="rule-item rule-highlight"><div class="rule-number">8</div><div class="rule-text"><strong>Móviles en silencio</strong> durante todo el recorrido.</div></div>
+                            <div class="rule-section-title"><span class="section-icon">🏌️</span>Tee de Salida</div>
+                            <div class="rule-item rule-important"><div class="rule-number">5</div><div class="rule-text">Está <strong>totalmente prohibido</strong> jugar fuera de las marcas del tee de salida.</div></div>
+                            <div class="rule-item"><div class="rule-number">6</div><div class="rule-text">Presentarse <strong>10 minutos antes</strong> de la hora reservada.</div></div>
                         </div>
+
+                        <!-- Seguridad -->
                         <div class="rule-section">
                             <div class="rule-section-title"><span class="section-icon">⚠️</span>Seguridad</div>
-                            <div class="rule-item rule-important"><div class="rule-number">9</div><div class="rule-text">Grite <strong>"¡FORE!"</strong> si su bola puede alcanzar a otros.</div></div>
-                            <div class="rule-item"><div class="rule-number">10</div><div class="rule-text">No golpee hasta que el grupo de delante esté fuera de alcance.</div></div>
-                            <div class="rule-item"><div class="rule-number">11</div><div class="rule-text"><strong>Buggys</strong> en caminos señalizados.</div></div>
+                            <div class="rule-item rule-important"><div class="rule-number">7</div><div class="rule-text"><strong>¡BOLA O FORE!</strong> Grite "¡BOLA!" o "¡FORE!" en voz alta si su bola puede alcanzar a otros jugadores.</div></div>
+                            <div class="rule-item"><div class="rule-number">8</div><div class="rule-text">No golpee hasta que el grupo de delante esté fuera de alcance.</div></div>
+                            <div class="rule-item rule-important"><div class="rule-number">9</div><div class="rule-text">Está <strong>totalmente prohibido</strong> acercarse al ante-green con buggys y motos.</div></div>
                         </div>
+
+                        <!-- Etiqueta -->
                         <div class="rule-section">
-                            <div class="rule-section-title"><span class="section-icon">👔</span>Vestimenta</div>
-                            <div class="rule-item"><div class="rule-number">12</div><div class="rule-text">Polo con cuello obligatorio.</div></div>
-                            <div class="rule-item"><div class="rule-number">13</div><div class="rule-text">Pantalón largo o bermudas tipo golf.</div></div>
-                            <div class="rule-item"><div class="rule-number">14</div><div class="rule-text">Zapatos de golf con tacos blandos.</div></div>
+                            <div class="rule-section-title"><span class="section-icon">🤝</span>Etiqueta</div>
+                            <div class="rule-item"><div class="rule-number">10</div><div class="rule-text"><strong>Silencio</strong> mientras otro jugador ejecuta su golpe.</div></div>
+                            <div class="rule-item"><div class="rule-number">11</div><div class="rule-text">Repare <strong>piques</strong> en greens y <strong>divots</strong> en calles.</div></div>
+                            <div class="rule-item"><div class="rule-number">12</div><div class="rule-text">Rastrillar los <strong>bunkers</strong> después de jugar.</div></div>
+                            <div class="rule-item rule-highlight"><div class="rule-number">13</div><div class="rule-text"><strong>Móviles en silencio</strong> durante todo el recorrido.</div></div>
                         </div>
+
+                        <!-- General -->
                         <div class="rule-section">
                             <div class="rule-section-title"><span class="section-icon">📌</span>General</div>
-                            <div class="rule-item"><div class="rule-number">15</div><div class="rule-text">Presentarse <strong>10 min antes</strong> de la hora reservada.</div></div>
-                            <div class="rule-item rule-highlight"><div class="rule-number">16</div><div class="rule-text"><strong>Máximo 4 jugadores</strong> por grupo.</div></div>
-                            <div class="rule-item"><div class="rule-number">17</div><div class="rule-text">Respete las indicaciones del <strong>Marshall</strong>.</div></div>
-                            <div class="rule-item rule-important"><div class="rule-number">18</div><div class="rule-text">Incumplimiento reiterado = <strong>expulsión</strong>.</div></div>
+                            <div class="rule-item rule-highlight"><div class="rule-number">14</div><div class="rule-text"><strong>Máximo 4 jugadores</strong> por grupo.</div></div>
+                            <div class="rule-item"><div class="rule-number">15</div><div class="rule-text">Respete las indicaciones del <strong>Marshall</strong> en todo momento.</div></div>
+                            <div class="rule-item rule-important"><div class="rule-number">16</div><div class="rule-text">El incumplimiento reiterado puede suponer la <strong>expulsión del campo</strong>.</div></div>
                         </div>
                     </div>
+
+                    <!-- Footer con contactos -->
                     <div class="notebook-footer">
-                        <div class="marshall-badge"><span class="badge-icon">👮</span><span>MARSHALL - Golf Barcelona</span></div>
-                        <div class="contact-info"><div>📞 Marshall: Ext. 100</div><div>⛳ Casa Club: Ext. 101</div></div>
+                        <div class="contact-section">
+                            <!-- Marshall -->
+                            <div class="contact-item">
+                                <div class="contact-info-left">
+                                    <div class="contact-icon">👮</div>
+                                    <div class="contact-details">
+                                        <div class="contact-label">MARSHALL</div>
+                                        <div class="contact-value">(+34) 937 728 802</div>
+                                    </div>
+                                </div>
+                                <a href="tel:+34937728802" class="contact-btn phone">
+                                    <span class="contact-btn-icon">📞</span>
+                                    <span>Llamar</span>
+                                </a>
+                            </div>
+
+                            <!-- Casa Club -->
+                            <div class="contact-item">
+                                <div class="contact-info-left">
+                                    <div class="contact-icon">🏠</div>
+                                    <div class="contact-details">
+                                        <div class="contact-label">CASA CLUB</div>
+                                        <div class="contact-value">(+34) 937 728 800</div>
+                                    </div>
+                                </div>
+                                <a href="tel:+34937728800" class="contact-btn phone">
+                                    <span class="contact-btn-icon">📞</span>
+                                    <span>Llamar</span>
+                                </a>
+                            </div>
+
+                            <!-- Web -->
+                            <div class="contact-item">
+                                <div class="contact-info-left">
+                                    <div class="contact-icon">🌐</div>
+                                    <div class="contact-details">
+                                        <div class="contact-label">PÁGINA WEB</div>
+                                        <div class="contact-value">golfbarcelona.com</div>
+                                    </div>
+                                </div>
+                                <a href="https://www.golfbarcelona.com" target="_blank" class="contact-btn web">
+                                    <span class="contact-btn-icon">🌍</span>
+                                    <span>Visitar</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -960,7 +903,10 @@
                         </div>
                     </div>
                     <button class="btn btn-primary" onclick="addPlayer()">➕ Añadir Grupo</button>
-                    <div class="players-list"><h3 style="margin-top:15px;margin-bottom:10px;color:#1a472a;font-size:0.95rem;">📋 Grupos en Campo</h3><div id="playersContainer"><div class="no-players">No hay grupos</div></div></div>
+                    <div class="players-list">
+                        <h3 style="margin-top:15px;margin-bottom:10px;color:#1a472a;font-size:0.95rem;">📋 Grupos en Campo <span style="font-size:0.8rem;color:#666;font-weight:normal;">(arrastra para reordenar)</span></h3>
+                        <div id="playersContainer"><div class="no-players">No hay grupos</div></div>
+                    </div>
                     <button class="btn btn-danger" onclick="clearAllPlayers()">🗑️ Limpiar</button>
                 </div>
 
@@ -987,24 +933,12 @@
 
     <script>
         const holesData = [
-            { n: 1,  par: 5, m: 478, t: 16 },
-            { n: 2,  par: 3, m: 141, t: 13 },
-            { n: 3,  par: 4, m: 272, t: 14 },
-            { n: 4,  par: 4, m: 353, t: 15 },
-            { n: 5,  par: 3, m: 150, t: 14 },
-            { n: 6,  par: 4, m: 379, t: 15 },
-            { n: 7,  par: 5, m: 492, t: 16 },
-            { n: 8,  par: 4, m: 322, t: 15 },
-            { n: 9,  par: 4, m: 255, t: 15 },
-            { n: 10, par: 5, m: 466, t: 16 },
-            { n: 11, par: 4, m: 311, t: 15 },
-            { n: 12, par: 4, m: 357, t: 15 },
-            { n: 13, par: 5, m: 483, t: 16 },
-            { n: 14, par: 3, m: 127, t: 14 },
-            { n: 15, par: 4, m: 317, t: 15 },
-            { n: 16, par: 3, m: 139, t: 13 },
-            { n: 17, par: 4, m: 361, t: 16 },
-            { n: 18, par: 4, m: 321, t: 15 }
+            { n: 1,  par: 5, m: 478, t: 16 }, { n: 2,  par: 3, m: 141, t: 13 }, { n: 3,  par: 4, m: 272, t: 14 },
+            { n: 4,  par: 4, m: 353, t: 15 }, { n: 5,  par: 3, m: 150, t: 14 }, { n: 6,  par: 4, m: 379, t: 15 },
+            { n: 7,  par: 5, m: 492, t: 16 }, { n: 8,  par: 4, m: 322, t: 15 }, { n: 9,  par: 4, m: 255, t: 15 },
+            { n: 10, par: 5, m: 466, t: 16 }, { n: 11, par: 4, m: 311, t: 15 }, { n: 12, par: 4, m: 357, t: 15 },
+            { n: 13, par: 5, m: 483, t: 16 }, { n: 14, par: 3, m: 127, t: 14 }, { n: 15, par: 4, m: 317, t: 15 },
+            { n: 16, par: 3, m: 139, t: 13 }, { n: 17, par: 4, m: 361, t: 16 }, { n: 18, par: 4, m: 321, t: 15 }
         ];
 
         const colors = ['#e53935','#1e88e5','#fdd835','#7b1fa2','#fb8c00','#00897b','#d81b60','#5e35b1'];
@@ -1019,6 +953,7 @@
         let holeTimes = {}, players = [], selectedTee = 1, selectedNumHoles = 18, selectedColor = colors[0];
         let watchGroup = false, tournamentGroup = false, greenMondayGroup = false;
         let qty = {players:4,buggys:0,moto3:0,moto4:0};
+        let editingPlayerId = null, editSelectedColor = null, draggedItem = null;
 
         document.addEventListener('DOMContentLoaded', function() {
             loadData(); initColors(); renderTimesConfig(); render(); updateClock(); updateHolesDetail();
@@ -1055,7 +990,7 @@
         }
 
         function selectColor(el, c) {
-            document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+            document.querySelectorAll('#colorPicker .color-option').forEach(o => o.classList.remove('selected'));
             el.classList.add('selected'); selectedColor = c;
         }
 
@@ -1122,17 +1057,14 @@
             players.push({
                 id: Date.now(), name, startTime: time, startTee: selectedTee, numHoles: selectedNumHoles,
                 color: selectedColor, watchGroup, tournamentGroup, greenMondayGroup,
-                numPlayers: qty.players, numBuggys: qty.buggys, numMoto3: qty.moto3, numMoto4: qty.moto4
+                numPlayers: qty.players, numBuggys: qty.buggys, numMoto3: qty.moto3, numMoto4: qty.moto4,
+                skippedHoles: 0
             });
 
             saveData(); render();
             document.getElementById('playerName').value = '';
             resetForm(); rotateColor();
-            
-            let msg = '✅ '+name+' añadido';
-            if(greenMondayGroup) msg = '🏆 '+name+' (Green Monday) añadido';
-            else if(tournamentGroup) msg = '🏆 '+name+' (Torneo) añadido';
-            showToast(msg, greenMondayGroup ? 'green' : (tournamentGroup ? 'blue' : ''));
+            showToast('✅ '+name+' añadido', '');
         }
 
         function rotateColor() {
@@ -1140,12 +1072,82 @@
             const avail = colors.filter(c => !used.includes(c));
             if(avail.length > 0) {
                 selectedColor = avail[0];
-                document.querySelectorAll('.color-option').forEach(o => o.classList.toggle('selected', o.style.background === selectedColor));
+                document.querySelectorAll('#colorPicker .color-option').forEach(o => o.classList.toggle('selected', o.style.background === selectedColor));
             }
         }
 
         function deletePlayer(id) { players = players.filter(p => p.id !== id); saveData(); render(); }
         function clearAllPlayers() { if(confirm('¿Eliminar todos?')) { players = []; saveData(); render(); } }
+
+        function openEditModal(id) {
+            const player = players.find(p => p.id === id);
+            if (!player) return;
+            editingPlayerId = id;
+            editSelectedColor = player.color;
+            document.getElementById('editName').value = player.name;
+            const exp = calcHole(player);
+            document.getElementById('modalCurrentHole').textContent = exp.hole > 0 && exp.hole <= 18 ? exp.hole : '-';
+            document.getElementById('editColorPicker').innerHTML = colors.map(c => 
+                '<div class="color-option '+(c === player.color ? 'selected' : '')+'" style="background:'+c+'" onclick="selectEditColor(this,\''+c+'\')"></div>'
+            ).join('');
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('editModal').classList.remove('active'); editingPlayerId = null; }
+
+        function selectEditColor(el, c) {
+            document.querySelectorAll('#editColorPicker .color-option').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+            editSelectedColor = c;
+        }
+
+        function saveEdit() {
+            if (!editingPlayerId) return;
+            const player = players.find(p => p.id === editingPlayerId);
+            if (!player) return;
+            const newName = document.getElementById('editName').value.trim();
+            if (newName) player.name = newName;
+            if (editSelectedColor) player.color = editSelectedColor;
+            saveData(); render(); closeModal();
+            showToast('✅ Grupo actualizado', '');
+        }
+
+        function skipHole() {
+            if (!editingPlayerId) return;
+            const player = players.find(p => p.id === editingPlayerId);
+            if (!player) return;
+            player.skippedHoles = (player.skippedHoles || 0) + 1;
+            if (!player.name.includes('(Saltó')) player.name = player.name + ' (Saltó hoyo)';
+            else player.name = player.name.replace(/\(Saltó.*\)/, '(Saltó ' + player.skippedHoles + ' hoyos)');
+            saveData(); render(); closeModal();
+            showToast('⏭️ Grupo saltó al siguiente hoyo', 'purple');
+        }
+
+        function quickSkip(id) {
+            const player = players.find(p => p.id === id);
+            if (!player) return;
+            player.skippedHoles = (player.skippedHoles || 0) + 1;
+            if (!player.name.includes('(Saltó')) player.name = player.name + ' (Saltó hoyo)';
+            else player.name = player.name.replace(/\(Saltó.*\)/, '(Saltó ' + player.skippedHoles + ' hoyos)');
+            saveData(); render();
+            showToast('⏭️ '+player.name.split(' (')[0]+' saltó hoyo', 'purple');
+        }
+
+        function handleDragStart(e, id) { draggedItem = id; e.target.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; }
+        function handleDragEnd(e) { e.target.classList.remove('dragging'); document.querySelectorAll('.player-card').forEach(card => card.classList.remove('drag-over')); draggedItem = null; }
+        function handleDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
+        function handleDragEnter(e, id) { if (draggedItem !== id) e.target.closest('.player-card').classList.add('drag-over'); }
+        function handleDragLeave(e) { e.target.closest('.player-card')?.classList.remove('drag-over'); }
+        function handleDrop(e, targetId) {
+            e.preventDefault();
+            if (draggedItem === targetId) return;
+            const draggedIndex = players.findIndex(p => p.id === draggedItem);
+            const targetIndex = players.findIndex(p => p.id === targetId);
+            if (draggedIndex === -1 || targetIndex === -1) return;
+            const [removed] = players.splice(draggedIndex, 1);
+            players.splice(targetIndex, 0, removed);
+            saveData(); render();
+        }
 
         function getHoleTime(holeNum, isGreenMonday) {
             let time = holeTimes[holeNum] || holesData[holeNum-1].t;
@@ -1157,31 +1159,26 @@
             const now = new Date();
             const [h,m] = p.startTime.split(':').map(Number);
             const start = new Date(); start.setHours(h,m,0,0);
-            const elapsed = (now - start) / 60000;
-
+            const skippedTime = (p.skippedHoles || 0) * 15;
+            const elapsed = ((now - start) / 60000) + skippedTime;
             if(elapsed < 0) return {hole:0, status:'pending', diff:Math.round(-elapsed)};
-
             const numHoles = p.numHoles || 18;
             const isGreenMonday = p.greenMondayGroup || false;
             let order = p.startTee === 1 
                 ? (numHoles === 9 ? [1,2,3,4,5,6,7,8,9] : [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18])
                 : (numHoles === 9 ? [10,11,12,13,14,15,16,17,18] : [10,11,12,13,14,15,16,17,18,1,2,3,4,5,6,7,8,9]);
-
             let total = 0;
             for(const ho of order) total += getHoleTime(ho, isGreenMonday);
             if(elapsed >= total) return {hole:19, status:'finished', diff:0};
-
             let acc = 0, curr = order[0], into = 0, ht = 0;
             for(const ho of order) {
                 ht = getHoleTime(ho, isGreenMonday);
                 if(acc + ht > elapsed) { curr = ho; into = elapsed - acc; break; }
                 acc += ht;
             }
-
             let status = 'ontime';
             if(into > ht * 0.8) status = 'delayed';
             else if(into < ht * 0.3) status = 'ahead';
-
             return {hole:curr, status, diff:Math.round(into), holeTime:ht};
         }
 
@@ -1193,45 +1190,41 @@
             return parts.join(' • ');
         }
 
-        function getHolesRange(p) {
-            const numHoles = p.numHoles || 18;
-            return p.startTee === 1 ? (numHoles === 9 ? '1-9' : '1-18') : (numHoles === 9 ? '10-18' : '10-18, 1-9');
-        }
-
         function render() { renderPlayers(); renderCourse(); }
 
         function renderPlayers() {
             const c = document.getElementById('playersContainer');
             if(players.length === 0) { c.innerHTML = '<div class="no-players">No hay grupos</div>'; updateStats(); return; }
-
             let html = '';
             players.forEach(p => {
                 const exp = calcHole(p);
                 let sc = '', st = '', bc = '';
-
                 if(exp.status==='pending') { st='Sale en '+exp.diff+' min'; bc='status-ontime'; }
                 else if(exp.status==='finished') { st='Finalizado'; bc='status-ahead'; }
                 else if(exp.status==='delayed') { sc='delayed'; st=exp.diff+'/'+exp.holeTime+' min'; bc='status-delayed'; }
                 else if(exp.status==='ahead') { st='Adelantado'; bc='status-ahead'; }
                 else { st='En tiempo'; bc='status-ontime'; }
-
                 if(p.watchGroup) sc += ' watch-group';
                 if(p.tournamentGroup) sc += ' tournament-group';
                 if(p.greenMondayGroup) sc += ' greenmonday-group';
-
+                if(p.skippedHoles > 0) sc += ' skipped-group';
                 const numHoles = p.numHoles || 18;
-
-                html += '<div class="player-card '+sc+'">';
-                html += '<button class="delete-btn" onclick="deletePlayer('+p.id+')">✕</button>';
+                html += '<div class="player-card '+sc+'" draggable="true" ondragstart="handleDragStart(event,'+p.id+')" ondragend="handleDragEnd(event)" ondragover="handleDragOver(event)" ondragenter="handleDragEnter(event,'+p.id+')" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event,'+p.id+')">';
+                html += '<div class="player-actions">';
+                html += '<button class="action-btn edit" onclick="openEditModal('+p.id+')" title="Editar">✏️</button>';
+                html += '<button class="action-btn skip" onclick="quickSkip('+p.id+')" title="Saltar hoyo">⏭️</button>';
+                html += '<button class="action-btn delete" onclick="deletePlayer('+p.id+')" title="Eliminar">✕</button>';
+                html += '</div>';
                 html += '<div class="player-header">';
                 html += '<div class="player-color" style="background:'+p.color+'"></div>';
                 html += '<div class="player-name">'+p.name+'</div>';
                 if(numHoles === 9) html += '<span class="badge nine-holes">9H</span>';
+                if(p.skippedHoles > 0) html += '<span class="badge skipped">⏭️ '+p.skippedHoles+'</span>';
                 if(p.tournamentGroup) html += '<span class="badge tournament">🏆</span>';
                 if(p.greenMondayGroup) html += '<span class="badge greenmonday">🏆 GM</span>';
                 if(p.watchGroup) html += '<span class="badge watch">⚠️</span>';
                 html += '</div>';
-                html += '<div class="player-info">🕐 '+p.startTime+' • Tee '+p.startTee+' • 🏌️ '+numHoles+'H ('+getHolesRange(p)+')';
+                html += '<div class="player-info">🕐 '+p.startTime+' • Tee '+p.startTee+' • 🏌️ '+numHoles+'H';
                 if(p.greenMondayGroup) html += ' • <span style="color:#4caf50;font-weight:600;">+10min H16</span>';
                 html += '</div>';
                 html += '<div class="player-details">'+getDetails(p)+'</div>';
@@ -1241,7 +1234,6 @@
                 html += '<span class="player-status '+bc+'">'+st+'</span>';
                 html += '</div></div>';
             });
-
             c.innerHTML = html;
             updateStats();
         }
@@ -1267,7 +1259,6 @@
         function renderCourse() {
             const front = document.getElementById('frontNineVisual');
             const back = document.getElementById('backNineVisual');
-
             const byHole = {};
             players.forEach(p => {
                 const exp = calcHole(p);
@@ -1276,27 +1267,24 @@
                     byHole[exp.hole].push(p);
                 }
             });
-
             let fh = '<div class="nine-title">IDA (1-9)</div>';
             let bh = '<div class="nine-title">VUELTA (10-18)</div>';
-
             holesData.forEach(h => {
                 const pls = byHole[h.n] || [];
                 const hasW = pls.some(p => p.watchGroup);
                 const hasT = pls.some(p => p.tournamentGroup);
                 const hasGM = pls.some(p => p.greenMondayGroup);
+                const hasSkipped = pls.some(p => p.skippedHoles > 0);
                 const hasC = pls.length > 0;
-
                 let hc = '';
-                if(hasW) hc = 'watch-hole';
+                if(hasSkipped) hc = 'skipped-hole';
+                else if(hasW) hc = 'watch-hole';
                 else if(hasGM) hc = 'greenmonday-hole';
                 else if(hasT) hc = 'tournament-hole';
                 else if(hasC) hc = 'current';
-
                 let ht = holeTimes[h.n] || h.t;
                 let timeDisplay = ht + ' min';
                 if(h.n === 16 && hasGM) timeDisplay = ht + '+10 min';
-
                 let holeHtml = '<div class="hole '+hc+'">';
                 holeHtml += '<div class="hole-number">'+h.n+'</div>';
                 holeHtml += '<div class="hole-info">Par '+h.par+' • '+h.m+'m<br>⏱️ '+timeDisplay+'</div>';
@@ -1306,10 +1294,8 @@
                     holeHtml += '</div>';
                 }
                 holeHtml += '</div>';
-
                 if(h.n <= 9) fh += holeHtml; else bh += holeHtml;
             });
-
             front.innerHTML = fh;
             back.innerHTML = bh;
             renderLegend();
@@ -1318,12 +1304,16 @@
         function renderLegend() {
             const leg = document.getElementById('legend');
             if(players.length === 0) { leg.innerHTML = ''; return; }
-
             leg.innerHTML = players.map(p => {
                 const exp = calcHole(p);
                 const txt = exp.status==='pending' ? 'Pend.' : (exp.status==='finished' ? 'Fin' : 'H'+exp.hole);
-                let ic = p.greenMondayGroup ? 'greenmonday' : (p.tournamentGroup ? 'tournament' : (p.watchGroup ? 'watch' : ''));
-                return '<div class="legend-item '+ic+'"><div class="legend-dot" style="background:'+p.color+'"></div><span>'+p.name+' ('+(p.numHoles||18)+'H) - '+txt+'</span></div>';
+                let ic = '';
+                if(p.skippedHoles > 0) ic = 'skipped';
+                else if(p.greenMondayGroup) ic = 'greenmonday';
+                else if(p.tournamentGroup) ic = 'tournament';
+                else if(p.watchGroup) ic = 'watch';
+                const displayName = p.name.split(' (')[0];
+                return '<div class="legend-item '+ic+'"><div class="legend-dot" style="background:'+p.color+'"></div><span>'+displayName+' - '+txt+'</span></div>';
             }).join('');
         }
 
@@ -1331,13 +1321,11 @@
             const f = document.getElementById('frontNineTimes');
             const b = document.getElementById('backNineTimes');
             let fh = '', bh = '';
-
             holesData.forEach(h => {
                 const t = holeTimes[h.n] || h.t;
                 const html = '<div class="hole-time-row"><div class="hole-badge">'+h.n+'</div><div class="hole-details"><div class="par-info">Par '+h.par+'</div><div class="meters-info">'+h.m+'m</div></div><div class="time-input-wrapper"><input type="number" id="ht'+h.n+'" value="'+t+'" min="5" max="30" onchange="updateTotals()"><span>min</span></div></div>';
                 if(h.n <= 9) fh += html; else bh += html;
             });
-
             f.innerHTML = fh; b.innerHTML = bh;
             updateTotals();
         }
@@ -1362,10 +1350,10 @@
                 if(inp) holeTimes[i] = parseInt(inp.value) || holesData[i-1].t;
             }
             saveData(); render();
-            showToast('✅ Tiempos guardados');
+            showToast('✅ Tiempos guardados', '');
         }
 
-        function applyPreset(name) { holeTimes = {...presets[name]}; renderTimesConfig(); showToast('📊 Preset aplicado'); }
+        function applyPreset(name) { holeTimes = {...presets[name]}; renderTimesConfig(); showToast('📊 Preset aplicado', ''); }
 
         function updateClock() {
             const now = new Date();
