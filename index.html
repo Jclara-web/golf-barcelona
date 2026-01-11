@@ -256,6 +256,7 @@
         .player-card.tournament-group { border-left-color: #1976d2; background: #e3f2fd; }
         .player-card.greenmonday-group { border-left-color: #4caf50; background: #e8f5e9; }
         .player-card.skipped-group { border-left-color: #9c27b0; background: #f3e5f5; }
+        .player-card.has-notes { border-left-color: #ff5722; }
 
         .player-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
 
@@ -275,9 +276,30 @@
         .badge.watch { background: #ff9800; }
         .badge.nine-holes { background: #9c27b0; }
         .badge.skipped { background: #9c27b0; }
+        .badge.has-notes { background: #ff5722; }
 
         .player-info { font-size: 0.8rem; color: #666; margin-bottom: 3px; }
         .player-details { font-size: 0.75rem; color: #888; background: #f0f0f0; padding: 4px 8px; border-radius: 4px; }
+
+        .player-notes {
+            margin-top: 8px;
+            padding: 8px 10px;
+            background: #fff3e0;
+            border-radius: 6px;
+            border-left: 3px solid #ff5722;
+            font-size: 0.8rem;
+            color: #e65100;
+        }
+
+        .player-notes-title {
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: #bf360c;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
         .player-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
         .expected-hole { font-size: 1.4rem; font-weight: bold; color: #1a472a; }
@@ -322,7 +344,7 @@
             background: white;
             border-radius: 15px;
             padding: 25px;
-            max-width: 400px;
+            max-width: 450px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -347,6 +369,148 @@
 
         .modal-actions { display: flex; gap: 10px; margin-top: 25px; }
         .modal-actions .btn { flex: 1; }
+
+        /* ===== NOTAS SECTION ===== */
+        .notes-section {
+            background: #fff8e1;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+
+        .notes-section-title {
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .quick-notes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .quick-note-btn {
+            padding: 6px 10px;
+            border: 2px solid #ffcc80;
+            background: white;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #e65100;
+        }
+
+        .quick-note-btn:hover {
+            background: #ff9800;
+            color: white;
+            border-color: #ff9800;
+        }
+
+        .quick-note-btn.warning {
+            border-color: #ffab40;
+            background: #fff3e0;
+        }
+
+        .quick-note-btn.danger {
+            border-color: #ff5722;
+            background: #fbe9e7;
+            color: #d84315;
+        }
+
+        .quick-note-btn.danger:hover {
+            background: #ff5722;
+            color: white;
+        }
+
+        .quick-note-btn.success {
+            border-color: #4caf50;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .quick-note-btn.success:hover {
+            background: #4caf50;
+            color: white;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 2px solid #ffcc80;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            border-color: #ff9800;
+        }
+
+        .notes-history {
+            margin-top: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .note-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
+            border-left: 3px solid #ff9800;
+        }
+
+        .note-item .note-time {
+            font-size: 0.7rem;
+            color: #999;
+            white-space: nowrap;
+        }
+
+        .note-item .note-text {
+            flex: 1;
+            color: #333;
+        }
+
+        .note-item .note-delete {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0;
+        }
+
+        .note-item .note-delete:hover {
+            color: #dc3545;
+        }
+
+        .clear-notes-btn {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 0.75rem;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .clear-notes-btn:hover {
+            color: #dc3545;
+            text-decoration: underline;
+        }
 
         /* ===== CAMPO DE GOLF ===== */
         .golf-course { background: linear-gradient(180deg, #7cb342 0%, #558b2f 100%); border-radius: 15px; padding: 15px; }
@@ -386,6 +550,7 @@
         .legend-item.tournament { background: rgba(25, 118, 210, 0.7); }
         .legend-item.greenmonday { background: rgba(76, 175, 80, 0.7); }
         .legend-item.skipped { background: rgba(156, 39, 176, 0.7); }
+        .legend-item.has-notes { background: rgba(255, 87, 34, 0.7); }
         .legend-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid white; }
 
         .summary-stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 15px; }
@@ -551,6 +716,7 @@
         .toast { background: #4caf50; color: white; padding: 12px 20px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); animation: slideIn 0.3s ease; }
         .toast.blue { background: #1976d2; }
         .toast.purple { background: #9c27b0; }
+        .toast.orange { background: #ff5722; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
@@ -577,6 +743,31 @@
                     <label>🎨 Color</label>
                     <div class="color-picker-modal" id="editColorPicker"></div>
                 </div>
+
+                <!-- SECCIÓN DE NOTAS -->
+                <div class="notes-section">
+                    <div class="notes-section-title">
+                        <span>📝</span>
+                        <span>Notas / Incidencias</span>
+                    </div>
+                    <div class="quick-notes">
+                        <button class="quick-note-btn warning" onclick="addQuickNote('⚠️ 1º aviso por lentitud')">⚠️ 1º Aviso</button>
+                        <button class="quick-note-btn danger" onclick="addQuickNote('🚨 2º aviso por lentitud')">🚨 2º Aviso</button>
+                        <button class="quick-note-btn danger" onclick="addQuickNote('⏭️ Obligado a saltar hoyo')">⏭️ Saltar hoyo</button>
+                        <button class="quick-note-btn danger" onclick="addQuickNote('🚫 Sanción: Circular zona prohibida')">🚫 Zona prohibida</button>
+                        <button class="quick-note-btn danger" onclick="addQuickNote('🚫 Sanción: Buggy en ante-green')">🚫 Ante-green</button>
+                        <button class="quick-note-btn warning" onclick="addQuickNote('📢 Llamada de atención')">📢 Atención</button>
+                        <button class="quick-note-btn success" onclick="addQuickNote('✅ Grupo ejemplar')">✅ Ejemplar</button>
+                    </div>
+                    <textarea class="notes-textarea" id="editNotes" placeholder="Escribe una nota personalizada..."></textarea>
+                    <button class="btn btn-info" style="margin-top: 8px; padding: 8px;" onclick="addCustomNote()">➕ Añadir Nota</button>
+                    
+                    <div class="notes-history" id="notesHistory">
+                        <!-- Las notas se mostrarán aquí -->
+                    </div>
+                    <button class="clear-notes-btn" id="clearNotesBtn" onclick="clearAllNotes()" style="display: none;">🗑️ Borrar todas las notas</button>
+                </div>
+
                 <div class="skip-info">
                     <div class="skip-info-title"><span>⏭️</span><span>Saltar Hoyo</span></div>
                     <div class="skip-info-text">Si el grupo va muy lento, puedes hacer que salte al siguiente hoyo.</div>
@@ -907,6 +1098,10 @@ Formato esperado (separado por tabulaciones):
             try {
                 holeTimes = JSON.parse(localStorage.getItem('golf_times')) || {...presets.standard};
                 players = JSON.parse(localStorage.getItem('golf_players')) || [];
+                // Asegurar que todos los jugadores tengan el array de notas
+                players.forEach(p => {
+                    if (!p.notes) p.notes = [];
+                });
             } catch(e) { holeTimes = {...presets.standard}; players = []; }
         }
 
@@ -993,7 +1188,8 @@ Formato esperado (separado por tabulaciones):
                 id: Date.now(), name, startTime: time, startTee: selectedTee, numHoles: selectedNumHoles,
                 color: selectedColor, watchGroup, tournamentGroup, greenMondayGroup,
                 numPlayers: qty.players, numBuggys: qty.buggys, numMoto3: qty.moto3, numMoto4: qty.moto4,
-                skippedHoles: 0
+                skippedHoles: 0,
+                notes: []
             });
 
             saveData(); render();
@@ -1019,6 +1215,13 @@ Formato esperado (separado por tabulaciones):
             document.getElementById('editColorPicker').innerHTML = colors.map(c => 
                 '<div class="color-option '+(c === player.color ? 'selected' : '')+'" style="background:'+c+'" onclick="selectEditColor(this,\''+c+'\')"></div>'
             ).join('');
+            
+            // Limpiar textarea de notas
+            document.getElementById('editNotes').value = '';
+            
+            // Renderizar historial de notas
+            renderNotesHistory(player);
+            
             document.getElementById('editModal').classList.add('active');
         }
 
@@ -1028,6 +1231,107 @@ Formato esperado (separado por tabulaciones):
             document.querySelectorAll('#editColorPicker .color-option').forEach(o => o.classList.remove('selected'));
             el.classList.add('selected');
             editSelectedColor = c;
+        }
+
+        // ===== FUNCIONES DE NOTAS =====
+        function addQuickNote(noteText) {
+            if (!editingPlayerId) return;
+            const player = players.find(p => p.id === editingPlayerId);
+            if (!player) return;
+            
+            if (!player.notes) player.notes = [];
+            
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            
+            player.notes.push({
+                id: Date.now(),
+                text: noteText,
+                time: timeStr
+            });
+            
+            saveData();
+            renderNotesHistory(player);
+            render();
+            showToast('📝 Nota añadida', 'orange');
+        }
+
+        function addCustomNote() {
+            if (!editingPlayerId) return;
+            const player = players.find(p => p.id === editingPlayerId);
+            if (!player) return;
+            
+            const noteText = document.getElementById('editNotes').value.trim();
+            if (!noteText) {
+                showToast('⚠️ Escribe una nota', 'orange');
+                return;
+            }
+            
+            if (!player.notes) player.notes = [];
+            
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            
+            player.notes.push({
+                id: Date.now(),
+                text: noteText,
+                time: timeStr
+            });
+            
+            document.getElementById('editNotes').value = '';
+            saveData();
+            renderNotesHistory(player);
+            render();
+            showToast('📝 Nota añadida', 'orange');
+        }
+
+        function deleteNote(noteId) {
+            if (!editingPlayerId) return;
+            const player = players.find(p => p.id === editingPlayerId);
+            if (!player || !player.notes) return;
+            
+            player.notes = player.notes.filter(n => n.id !== noteId);
+            saveData();
+            renderNotesHistory(player);
+            render();
+        }
+
+        function clearAllNotes() {
+            if (!editingPlayerId) return;
+            const player = players.find(p => p.id === editingPlayerId);
+            if (!player) return;
+            
+            if (confirm('¿Borrar todas las notas de este grupo?')) {
+                player.notes = [];
+                saveData();
+                renderNotesHistory(player);
+                render();
+                showToast('🗑️ Notas borradas', '');
+            }
+        }
+
+        function renderNotesHistory(player) {
+            const container = document.getElementById('notesHistory');
+            const clearBtn = document.getElementById('clearNotesBtn');
+            
+            if (!player.notes || player.notes.length === 0) {
+                container.innerHTML = '<div style="text-align:center;color:#999;font-size:0.8rem;padding:10px;">Sin notas</div>';
+                clearBtn.style.display = 'none';
+                return;
+            }
+            
+            clearBtn.style.display = 'block';
+            
+            // Mostrar notas en orden inverso (más reciente primero)
+            const sortedNotes = [...player.notes].reverse();
+            
+            container.innerHTML = sortedNotes.map(note => `
+                <div class="note-item">
+                    <span class="note-time">${note.time}</span>
+                    <span class="note-text">${note.text}</span>
+                    <button class="note-delete" onclick="deleteNote(${note.id})">✕</button>
+                </div>
+            `).join('');
         }
 
         function saveEdit() {
@@ -1046,8 +1350,17 @@ Formato esperado (separado por tabulaciones):
             const player = players.find(p => p.id === editingPlayerId);
             if (!player) return;
             player.skippedHoles = (player.skippedHoles || 0) + 1;
-            if (!player.name.includes('(Saltó')) player.name += ' (Saltó hoyo)';
-            else player.name = player.name.replace(/\(Saltó.*\)/, '(Saltó ' + player.skippedHoles + ' hoyos)');
+            
+            // Añadir nota automática
+            if (!player.notes) player.notes = [];
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            player.notes.push({
+                id: Date.now(),
+                text: '⏭️ Saltó hoyo #' + player.skippedHoles,
+                time: timeStr
+            });
+            
             saveData(); render(); closeModal();
             showToast('⏭️ Grupo saltó hoyo', 'purple');
         }
@@ -1056,8 +1369,17 @@ Formato esperado (separado por tabulaciones):
             const player = players.find(p => p.id === id);
             if (!player) return;
             player.skippedHoles = (player.skippedHoles || 0) + 1;
-            if (!player.name.includes('(Saltó')) player.name += ' (Saltó hoyo)';
-            else player.name = player.name.replace(/\(Saltó.*\)/, '(Saltó ' + player.skippedHoles + ' hoyos)');
+            
+            // Añadir nota automática
+            if (!player.notes) player.notes = [];
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            player.notes.push({
+                id: Date.now(),
+                text: '⏭️ Saltó hoyo #' + player.skippedHoles,
+                time: timeStr
+            });
+            
             saveData(); render();
             showToast('⏭️ Saltó hoyo', 'purple');
         }
@@ -1224,7 +1546,8 @@ Formato esperado (separado por tabulaciones):
                     numBuggys: 0,
                     numMoto3: 0,
                     numMoto4: 0,
-                    skippedHoles: 0
+                    skippedHoles: 0,
+                    notes: []
                 });
             });
 
