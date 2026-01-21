@@ -1,4 +1,4 @@
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -180,7 +180,15 @@
             letter-spacing: 2px;
         }
 
-        .color-picker { display: flex; gap: 6px; flex-wrap: wrap; }
+        /* ===== COLOR PICKER MEJORADO ===== */
+        .color-picker-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .color-picker { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
 
         .color-option {
             width: 28px;
@@ -194,11 +202,53 @@
         .color-option:hover { transform: scale(1.1); }
         .color-option.selected { border-color: #333; }
 
+        .custom-color-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .custom-color-wrapper.active {
+            border-color: #1a472a;
+            background: #e8f5e9;
+        }
+
+        .custom-color-wrapper label {
+            font-size: 0.8rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .custom-color-input {
+            width: 35px;
+            height: 35px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .custom-color-input::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .custom-color-input::-webkit-color-swatch {
+            border: 2px solid white;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* ===== MARCADORES DE GRUPO ===== */
         .group-markers { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
 
         .marker-box {
             flex: 1;
-            min-width: 80px;
+            min-width: 70px;
             padding: 10px 8px;
             border-radius: 10px;
             cursor: pointer;
@@ -212,6 +262,12 @@
         .marker-box.greenmonday.active { background: #4caf50; color: white; }
         .marker-box.watch { background: #fff3e0; border: 2px solid #ff9800; color: #e65100; }
         .marker-box.watch.active { background: #ff9800; color: white; }
+        
+        /* Nuevos marcadores */
+        .marker-box.warned { background: #fce4ec; border: 2px solid #e91e63; color: #c2185b; }
+        .marker-box.warned.active { background: #e91e63; color: white; }
+        .marker-box.pacer { background: #e0f7fa; border: 2px solid #00bcd4; color: #00838f; }
+        .marker-box.pacer.active { background: #00bcd4; color: white; }
 
         .marker-icon { font-size: 1.3rem; }
         .marker-text { font-size: 0.7rem; font-weight: 600; margin-top: 3px; }
@@ -256,6 +312,8 @@
         .player-card.tournament-group { border-left-color: #1976d2; background: #e3f2fd; }
         .player-card.greenmonday-group { border-left-color: #4caf50; background: #e8f5e9; }
         .player-card.skipped-group { border-left-color: #9c27b0; background: #f3e5f5; }
+        .player-card.warned-group { border-left-color: #e91e63; background: #fce4ec; }
+        .player-card.pacer-group { border-left-color: #00bcd4; background: #e0f7fa; }
         .player-card.has-notes { border-left-color: #ff5722; }
 
         .player-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
@@ -270,6 +328,8 @@
 
         .player-name { font-weight: 600; color: #333; flex: 1; }
 
+        .player-badges { display: flex; flex-wrap: wrap; gap: 3px; }
+
         .badge { padding: 2px 6px; border-radius: 8px; font-size: 0.65rem; font-weight: 600; color: white; }
         .badge.tournament { background: #1976d2; }
         .badge.greenmonday { background: #4caf50; }
@@ -277,6 +337,8 @@
         .badge.nine-holes { background: #9c27b0; }
         .badge.skipped { background: #9c27b0; }
         .badge.has-notes { background: #ff5722; }
+        .badge.warned { background: #e91e63; }
+        .badge.pacer { background: #00bcd4; }
 
         .player-info { font-size: 0.8rem; color: #666; margin-bottom: 3px; }
         .player-details { font-size: 0.75rem; color: #888; background: #f0f0f0; padding: 4px 8px; border-radius: 4px; }
@@ -344,7 +406,7 @@
             background: white;
             border-radius: 15px;
             padding: 25px;
-            max-width: 450px;
+            max-width: 500px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -360,6 +422,76 @@
 
         .color-picker-modal { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
         .color-picker-modal .color-option { width: 35px; height: 35px; }
+
+        /* ===== TEE SELECTOR EN MODAL ===== */
+        .tee-selector-modal {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tee-option-modal {
+            padding: 10px 5px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            background: #f5f5f5;
+            transition: all 0.2s;
+            font-weight: bold;
+            color: #1a472a;
+        }
+
+        .tee-option-modal:hover { border-color: #2d5a3d; background: #e8f5e9; }
+        .tee-option-modal.active { border-color: #1a472a; background: #1a472a; color: white; }
+
+        /* ===== MARCADORES EN MODAL ===== */
+        .markers-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .markers-section-title {
+            font-weight: 600;
+            color: #1a472a;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .markers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .marker-option {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .marker-option:hover { transform: scale(1.02); }
+        
+        .marker-option.tournament { border-color: #1976d2; }
+        .marker-option.tournament.active { background: #1976d2; color: white; }
+        .marker-option.greenmonday { border-color: #4caf50; }
+        .marker-option.greenmonday.active { background: #4caf50; color: white; }
+        .marker-option.watch { border-color: #ff9800; }
+        .marker-option.watch.active { background: #ff9800; color: white; }
+        .marker-option.warned { border-color: #e91e63; }
+        .marker-option.warned.active { background: #e91e63; color: white; }
+        .marker-option.pacer { border-color: #00bcd4; }
+        .marker-option.pacer.active { background: #00bcd4; color: white; }
+
+        .marker-option .marker-icon { font-size: 1.2rem; }
+        .marker-option .marker-label { font-size: 0.7rem; margin-top: 3px; }
 
         .skip-info { background: #f3e5f5; border: 2px solid #9c27b0; border-radius: 10px; padding: 12px; margin-top: 15px; }
         .skip-info-title { font-weight: 600; color: #7b1fa2; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
@@ -526,6 +658,8 @@
         .hole.tournament-hole { background: rgba(25, 118, 210, 0.85); }
         .hole.greenmonday-hole { background: rgba(76, 175, 80, 0.85); }
         .hole.skipped-hole { background: rgba(156, 39, 176, 0.85); }
+        .hole.warned-hole { background: rgba(233, 30, 99, 0.85); }
+        .hole.pacer-hole { background: rgba(0, 188, 212, 0.85); }
 
         .hole-number { width: 28px; height: 28px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #1a472a; font-size: 0.85rem; }
         .hole.current .hole-number { background: #1a472a; color: white; }
@@ -533,12 +667,27 @@
         .hole.tournament-hole .hole-number { background: #0d47a1; color: white; }
         .hole.greenmonday-hole .hole-number { background: #2e7d32; color: white; }
         .hole.skipped-hole .hole-number { background: #7b1fa2; color: white; }
+        .hole.warned-hole .hole-number { background: #c2185b; color: white; }
+        .hole.pacer-hole .hole-number { background: #00838f; color: white; }
 
         .hole-info { flex: 1; color: white; font-size: 0.75rem; }
         .hole.current .hole-info { color: #1a472a; }
 
-        .player-markers { display: flex; gap: 2px; }
-        .player-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .player-markers { display: flex; gap: 2px; flex-wrap: wrap; align-items: center; }
+        .player-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3); position: relative; }
+        
+        .player-dot-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+        }
+        
+        .player-dot-badges {
+            display: flex;
+            gap: 1px;
+            font-size: 0.5rem;
+        }
 
         .clock-display { text-align: center; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 10px; margin-top: 15px; }
         .clock-display .time { font-size: 2.5rem; font-weight: bold; color: white; }
@@ -551,15 +700,19 @@
         .legend-item.greenmonday { background: rgba(76, 175, 80, 0.7); }
         .legend-item.skipped { background: rgba(156, 39, 176, 0.7); }
         .legend-item.has-notes { background: rgba(255, 87, 34, 0.7); }
+        .legend-item.warned { background: rgba(233, 30, 99, 0.7); }
+        .legend-item.pacer { background: rgba(0, 188, 212, 0.7); }
         .legend-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid white; }
 
-        .summary-stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 15px; }
-        @media (max-width: 700px) { .summary-stats { grid-template-columns: repeat(3, 1fr); } }
+        .summary-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 15px; }
+        @media (max-width: 700px) { .summary-stats { grid-template-columns: repeat(2, 1fr); } }
 
         .stat-card { background: rgba(0,0,0,0.2); padding: 10px 5px; border-radius: 8px; text-align: center; color: white; }
         .stat-card.warning { background: rgba(255, 152, 0, 0.6); }
         .stat-card.tournament { background: rgba(25, 118, 210, 0.6); }
         .stat-card.greenmonday { background: rgba(76, 175, 80, 0.6); }
+        .stat-card.warned { background: rgba(233, 30, 99, 0.6); }
+        .stat-card.pacer { background: rgba(0, 188, 212, 0.6); }
         .stat-card .stat-value { font-size: 1.3rem; font-weight: bold; }
         .stat-card .stat-label { font-size: 0.6rem; }
 
@@ -717,6 +870,8 @@
         .toast.blue { background: #1976d2; }
         .toast.purple { background: #9c27b0; }
         .toast.orange { background: #ff5722; }
+        .toast.pink { background: #e91e63; }
+        .toast.cyan { background: #00bcd4; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
@@ -735,13 +890,56 @@
                     <div class="label">Hoyo Actual</div>
                     <div class="value" id="modalCurrentHole">-</div>
                 </div>
+                
                 <div class="form-group">
                     <label>Nombre del Grupo</label>
                     <input type="text" id="editName" placeholder="Nuevo nombre">
                 </div>
+                
                 <div class="form-group">
                     <label>🎨 Color</label>
-                    <div class="color-picker-modal" id="editColorPicker"></div>
+                    <div class="color-picker-container">
+                        <div class="color-picker-modal" id="editColorPicker"></div>
+                        <div class="custom-color-wrapper" id="editCustomColorWrapper">
+                            <label>🎨</label>
+                            <input type="color" class="custom-color-input" id="editCustomColor" value="#ff6b6b">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SELECTOR DE TEE 1-18 -->
+                <div class="form-group">
+                    <label>⛳ Tee de Salida (Hoyo 1-18)</label>
+                    <div class="tee-selector-modal" id="editTeeSelector">
+                        <!-- Se genera dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- MARCADORES EN MODAL -->
+                <div class="markers-section">
+                    <div class="markers-section-title">🏷️ Marcadores del Grupo</div>
+                    <div class="markers-grid" id="editMarkersGrid">
+                        <div class="marker-option tournament" data-marker="tournament" onclick="toggleEditMarker('tournament')">
+                            <div class="marker-icon">🏆</div>
+                            <div class="marker-label">Torneo</div>
+                        </div>
+                        <div class="marker-option greenmonday" data-marker="greenmonday" onclick="toggleEditMarker('greenmonday')">
+                            <div class="marker-icon">🏆</div>
+                            <div class="marker-label">Green Monday</div>
+                        </div>
+                        <div class="marker-option watch" data-marker="watch" onclick="toggleEditMarker('watch')">
+                            <div class="marker-icon">⚠️</div>
+                            <div class="marker-label">Vigilar</div>
+                        </div>
+                        <div class="marker-option warned" data-marker="warned" onclick="toggleEditMarker('warned')">
+                            <div class="marker-icon">🔔</div>
+                            <div class="marker-label">Amonestado</div>
+                        </div>
+                        <div class="marker-option pacer" data-marker="pacer" onclick="toggleEditMarker('pacer')">
+                            <div class="marker-icon">🐇</div>
+                            <div class="marker-label">Ritmo</div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- SECCIÓN DE NOTAS -->
@@ -1023,15 +1221,31 @@ Formato esperado (separado por tabulaciones):
                             <div class="group-summary" id="groupSummary">👤👤👤👤</div>
                         </div>
                     </div>
-                    <div class="form-group"><label>🎨 Color</label><div class="color-picker" id="colorPicker"></div></div>
+                    
+                    <!-- COLOR PICKER MEJORADO CON COLOR PERSONALIZADO -->
                     <div class="form-group">
-                        <label>🏷️ Tipo</label>
-                        <div class="group-markers">
-                            <div class="marker-box tournament" id="markerTournament" onclick="toggleMarker('tournament')"><div class="marker-icon">🏆</div><div class="marker-text">Torneo</div></div>
-                            <div class="marker-box greenmonday" id="markerGreenMonday" onclick="toggleMarker('greenmonday')"><div class="marker-icon">🏆</div><div class="marker-text">Green Monday</div></div>
-                            <div class="marker-box watch" id="markerWatch" onclick="toggleMarker('watch')"><div class="marker-icon">⚠️</div><div class="marker-text">Vigilar</div></div>
+                        <label>🎨 Color</label>
+                        <div class="color-picker-container">
+                            <div class="color-picker" id="colorPicker"></div>
+                            <div class="custom-color-wrapper" id="customColorWrapper" onclick="selectCustomColor()">
+                                <label>🎨</label>
+                                <input type="color" class="custom-color-input" id="customColorInput" value="#ff6b6b" onclick="event.stopPropagation()" onchange="updateCustomColor()">
+                            </div>
                         </div>
                     </div>
+                    
+                    <!-- MARCADORES AMPLIADOS -->
+                    <div class="form-group">
+                        <label>🏷️ Tipo / Marcadores</label>
+                        <div class="group-markers">
+                            <div class="marker-box tournament" id="markerTournament" onclick="toggleMarker('tournament')"><div class="marker-icon">🏆</div><div class="marker-text">Torneo</div></div>
+                            <div class="marker-box greenmonday" id="markerGreenMonday" onclick="toggleMarker('greenmonday')"><div class="marker-icon">🏆</div><div class="marker-text">Green M.</div></div>
+                            <div class="marker-box watch" id="markerWatch" onclick="toggleMarker('watch')"><div class="marker-icon">⚠️</div><div class="marker-text">Vigilar</div></div>
+                            <div class="marker-box warned" id="markerWarned" onclick="toggleMarker('warned')"><div class="marker-icon">🔔</div><div class="marker-text">Amonest.</div></div>
+                            <div class="marker-box pacer" id="markerPacer" onclick="toggleMarker('pacer')"><div class="marker-icon">🐇</div><div class="marker-text">Ritmo</div></div>
+                        </div>
+                    </div>
+                    
                     <button class="btn btn-primary" onclick="addPlayer()">➕ Añadir Grupo</button>
                     <div class="players-list">
                         <h3 style="margin-top:15px;margin-bottom:10px;color:#1a472a;font-size:0.95rem;">📋 Grupos en Campo</h3>
@@ -1052,9 +1266,11 @@ Formato esperado (separado por tabulaciones):
                         <div class="stat-card"><div class="stat-value" id="totalGroups">0</div><div class="stat-label">Grupos</div></div>
                         <div class="stat-card"><div class="stat-value" id="totalJugadores">0</div><div class="stat-label">Jugadores</div></div>
                         <div class="stat-card"><div class="stat-value" id="delayedCount">0</div><div class="stat-label">Retrasados</div></div>
+                        <div class="stat-card warning"><div class="stat-value" id="watchCount">0</div><div class="stat-label">⚠️ Vigilar</div></div>
+                        <div class="stat-card warned"><div class="stat-value" id="warnedCount">0</div><div class="stat-label">🔔 Amonest.</div></div>
+                        <div class="stat-card pacer"><div class="stat-value" id="pacerCount">0</div><div class="stat-label">🐇 Ritmo</div></div>
                         <div class="stat-card tournament"><div class="stat-value" id="tournamentCount">0</div><div class="stat-label">🏆 Torneo</div></div>
                         <div class="stat-card greenmonday"><div class="stat-value" id="greenMondayCount">0</div><div class="stat-label">🏆 Green M.</div></div>
-                        <div class="stat-card warning"><div class="stat-value" id="watchCount">0</div><div class="stat-label">⚠️ Vigilar</div></div>
                     </div>
                 </div>
             </div>
@@ -1081,9 +1297,11 @@ Formato esperado (separado por tabulaciones):
         const GREEN_MONDAY_EXTRA = 10;
 
         let holeTimes = {}, players = [], selectedTee = 1, selectedNumHoles = 18, selectedColor = colors[0];
-        let watchGroup = false, tournamentGroup = false, greenMondayGroup = false;
+        let watchGroup = false, tournamentGroup = false, greenMondayGroup = false, warnedGroup = false, pacerGroup = false;
+        let useCustomColor = false;
         let qty = {players:4,buggys:0,moto3:0,moto4:0};
-        let editingPlayerId = null, editSelectedColor = null, draggedItem = null;
+        let editingPlayerId = null, editSelectedColor = null, editSelectedTee = null, draggedItem = null;
+        let editMarkers = {};
 
         // Variables para importación
         let importTee = 1, importHoles = 18, importType = 'normal';
@@ -1098,9 +1316,11 @@ Formato esperado (separado por tabulaciones):
             try {
                 holeTimes = JSON.parse(localStorage.getItem('golf_times')) || {...presets.standard};
                 players = JSON.parse(localStorage.getItem('golf_players')) || [];
-                // Asegurar que todos los jugadores tengan el array de notas
+                // Asegurar que todos los jugadores tengan los campos necesarios
                 players.forEach(p => {
                     if (!p.notes) p.notes = [];
+                    if (p.warnedGroup === undefined) p.warnedGroup = false;
+                    if (p.pacerGroup === undefined) p.pacerGroup = false;
                 });
             } catch(e) { holeTimes = {...presets.standard}; players = []; }
         }
@@ -1121,13 +1341,29 @@ Formato esperado (separado por tabulaciones):
 
         function initColors() {
             document.getElementById('colorPicker').innerHTML = colors.map((c,i) => 
-                '<div class="color-option '+(i===0?'selected':'')+'" style="background:'+c+'" onclick="selectColor(this,\''+c+'\')"></div>'
+                '<div class="color-option '+(i===0 && !useCustomColor?'selected':'')+'" style="background:'+c+'" onclick="selectColor(this,\''+c+'\')"></div>'
             ).join('');
         }
 
         function selectColor(el, c) {
             document.querySelectorAll('#colorPicker .color-option').forEach(o => o.classList.remove('selected'));
-            el.classList.add('selected'); selectedColor = c;
+            el.classList.add('selected'); 
+            selectedColor = c;
+            useCustomColor = false;
+            document.getElementById('customColorWrapper').classList.remove('active');
+        }
+
+        function selectCustomColor() {
+            document.querySelectorAll('#colorPicker .color-option').forEach(o => o.classList.remove('selected'));
+            document.getElementById('customColorWrapper').classList.add('active');
+            useCustomColor = true;
+            selectedColor = document.getElementById('customColorInput').value;
+        }
+
+        function updateCustomColor() {
+            if (useCustomColor) {
+                selectedColor = document.getElementById('customColorInput').value;
+            }
         }
 
         function selectTee(el, t) {
@@ -1164,14 +1400,18 @@ Formato esperado (separado por tabulaciones):
             if(type==='watch') { watchGroup = !watchGroup; document.getElementById('markerWatch').classList.toggle('active', watchGroup); }
             else if(type==='tournament') { tournamentGroup = !tournamentGroup; document.getElementById('markerTournament').classList.toggle('active', tournamentGroup); }
             else if(type==='greenmonday') { greenMondayGroup = !greenMondayGroup; document.getElementById('markerGreenMonday').classList.toggle('active', greenMondayGroup); }
+            else if(type==='warned') { warnedGroup = !warnedGroup; document.getElementById('markerWarned').classList.toggle('active', warnedGroup); }
+            else if(type==='pacer') { pacerGroup = !pacerGroup; document.getElementById('markerPacer').classList.toggle('active', pacerGroup); }
         }
 
         function resetForm() {
             qty = {players:4,buggys:0,moto3:0,moto4:0}; updateQtyDisplay();
-            watchGroup = tournamentGroup = greenMondayGroup = false;
+            watchGroup = tournamentGroup = greenMondayGroup = warnedGroup = pacerGroup = false;
             document.querySelectorAll('.marker-box').forEach(m => m.classList.remove('active'));
             selectedNumHoles = 18;
             document.querySelectorAll('.main-content .holes-option').forEach((o, i) => o.classList.toggle('active', i === 1));
+            useCustomColor = false;
+            document.getElementById('customColorWrapper').classList.remove('active');
         }
 
         function getNextColor() {
@@ -1186,7 +1426,7 @@ Formato esperado (separado por tabulaciones):
 
             players.push({
                 id: Date.now(), name, startTime: time, startTee: selectedTee, numHoles: selectedNumHoles,
-                color: selectedColor, watchGroup, tournamentGroup, greenMondayGroup,
+                color: selectedColor, watchGroup, tournamentGroup, greenMondayGroup, warnedGroup, pacerGroup,
                 numPlayers: qty.players, numBuggys: qty.buggys, numMoto3: qty.moto3, numMoto4: qty.moto4,
                 skippedHoles: 0,
                 notes: []
@@ -1209,12 +1449,41 @@ Formato esperado (separado por tabulaciones):
             if (!player) return;
             editingPlayerId = id;
             editSelectedColor = player.color;
+            editSelectedTee = player.startTee;
+            
             document.getElementById('editName').value = player.name;
             const exp = calcHole(player);
             document.getElementById('modalCurrentHole').textContent = exp.hole > 0 && exp.hole <= 18 ? exp.hole : '-';
+            
+            // Color picker en modal
             document.getElementById('editColorPicker').innerHTML = colors.map(c => 
                 '<div class="color-option '+(c === player.color ? 'selected' : '')+'" style="background:'+c+'" onclick="selectEditColor(this,\''+c+'\')"></div>'
             ).join('');
+            
+            // Custom color en modal
+            const isCustom = !colors.includes(player.color);
+            document.getElementById('editCustomColor').value = isCustom ? player.color : '#ff6b6b';
+            document.getElementById('editCustomColorWrapper').classList.toggle('active', isCustom);
+            if (isCustom) {
+                document.querySelectorAll('#editColorPicker .color-option').forEach(o => o.classList.remove('selected'));
+            }
+            
+            // Selector de Tee 1-18
+            let teeHtml = '';
+            for (let i = 1; i <= 18; i++) {
+                teeHtml += `<div class="tee-option-modal ${player.startTee === i ? 'active' : ''}" onclick="selectEditTee(${i})">${i}</div>`;
+            }
+            document.getElementById('editTeeSelector').innerHTML = teeHtml;
+            
+            // Marcadores
+            editMarkers = {
+                tournament: player.tournamentGroup || false,
+                greenmonday: player.greenMondayGroup || false,
+                watch: player.watchGroup || false,
+                warned: player.warnedGroup || false,
+                pacer: player.pacerGroup || false
+            };
+            updateEditMarkersUI();
             
             // Limpiar textarea de notas
             document.getElementById('editNotes').value = '';
@@ -1231,6 +1500,45 @@ Formato esperado (separado por tabulaciones):
             document.querySelectorAll('#editColorPicker .color-option').forEach(o => o.classList.remove('selected'));
             el.classList.add('selected');
             editSelectedColor = c;
+            document.getElementById('editCustomColorWrapper').classList.remove('active');
+        }
+
+        function selectEditCustomColor() {
+            document.querySelectorAll('#editColorPicker .color-option').forEach(o => o.classList.remove('selected'));
+            document.getElementById('editCustomColorWrapper').classList.add('active');
+            editSelectedColor = document.getElementById('editCustomColor').value;
+        }
+
+        // Evento para el color personalizado en edición
+        document.getElementById('editCustomColor')?.addEventListener('input', function() {
+            if (document.getElementById('editCustomColorWrapper').classList.contains('active')) {
+                editSelectedColor = this.value;
+            }
+        });
+
+        document.getElementById('editCustomColorWrapper')?.addEventListener('click', function() {
+            selectEditCustomColor();
+        });
+
+        function selectEditTee(tee) {
+            editSelectedTee = tee;
+            document.querySelectorAll('.tee-option-modal').forEach((el, i) => {
+                el.classList.toggle('active', (i + 1) === tee);
+            });
+        }
+
+        function toggleEditMarker(type) {
+            editMarkers[type] = !editMarkers[type];
+            updateEditMarkersUI();
+        }
+
+        function updateEditMarkersUI() {
+            Object.keys(editMarkers).forEach(type => {
+                const el = document.querySelector(`.marker-option[data-marker="${type}"]`);
+                if (el) {
+                    el.classList.toggle('active', editMarkers[type]);
+                }
+            });
         }
 
         // ===== FUNCIONES DE NOTAS =====
@@ -1338,9 +1646,19 @@ Formato esperado (separado por tabulaciones):
             if (!editingPlayerId) return;
             const player = players.find(p => p.id === editingPlayerId);
             if (!player) return;
+            
             const newName = document.getElementById('editName').value.trim();
             if (newName) player.name = newName;
             if (editSelectedColor) player.color = editSelectedColor;
+            if (editSelectedTee) player.startTee = editSelectedTee;
+            
+            // Guardar marcadores
+            player.tournamentGroup = editMarkers.tournament;
+            player.greenMondayGroup = editMarkers.greenmonday;
+            player.watchGroup = editMarkers.watch;
+            player.warnedGroup = editMarkers.warned;
+            player.pacerGroup = editMarkers.pacer;
+            
             saveData(); render(); closeModal();
             showToast('✅ Grupo actualizado', '');
         }
@@ -1542,6 +1860,8 @@ Formato esperado (separado por tabulaciones):
                     watchGroup: importType === 'watch',
                     tournamentGroup: importType === 'tournament',
                     greenMondayGroup: importType === 'greenmonday',
+                    warnedGroup: false,
+                    pacerGroup: false,
                     numPlayers: g.numPlayers,
                     numBuggys: 0,
                     numMoto3: 0,
@@ -1578,9 +1898,27 @@ Formato esperado (separado por tabulaciones):
             if(elapsed < 0) return {hole:0, status:'pending', diff:Math.round(-elapsed)};
             const numHoles = p.numHoles || 18;
             const isGreenMonday = p.greenMondayGroup || false;
-            let order = p.startTee === 1 
-                ? (numHoles === 9 ? [1,2,3,4,5,6,7,8,9] : [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18])
-                : (numHoles === 9 ? [10,11,12,13,14,15,16,17,18] : [10,11,12,13,14,15,16,17,18,1,2,3,4,5,6,7,8,9]);
+            
+            // Construir orden de hoyos basado en startTee
+            let order = [];
+            const startTee = p.startTee || 1;
+            
+            if (numHoles === 9) {
+                // Para 9 hoyos, empezar desde el tee de salida
+                for (let i = 0; i < 9; i++) {
+                    let hole = startTee + i;
+                    if (hole > 18) hole -= 18;
+                    order.push(hole);
+                }
+            } else {
+                // Para 18 hoyos, empezar desde el tee de salida
+                for (let i = 0; i < 18; i++) {
+                    let hole = startTee + i;
+                    if (hole > 18) hole -= 18;
+                    order.push(hole);
+                }
+            }
+            
             let total = 0;
             for(const ho of order) total += getHoleTime(ho, isGreenMonday);
             if(elapsed >= total) return {hole:19, status:'finished', diff:0};
@@ -1618,11 +1956,27 @@ Formato esperado (separado por tabulaciones):
                 else if(exp.status==='delayed') { sc='delayed'; st=exp.diff+'/'+exp.holeTime+' min'; bc='status-delayed'; }
                 else if(exp.status==='ahead') { st='Adelantado'; bc='status-ahead'; }
                 else { st='En tiempo'; bc='status-ontime'; }
+                
+                // Añadir clases de marcadores
                 if(p.watchGroup) sc += ' watch-group';
                 if(p.tournamentGroup) sc += ' tournament-group';
                 if(p.greenMondayGroup) sc += ' greenmonday-group';
                 if(p.skippedHoles > 0) sc += ' skipped-group';
+                if(p.warnedGroup) sc += ' warned-group';
+                if(p.pacerGroup) sc += ' pacer-group';
+                
                 const numHoles = p.numHoles || 18;
+                
+                // Construir badges
+                let badges = '';
+                if(numHoles===9) badges += '<span class="badge nine-holes">9H</span>';
+                if(p.skippedHoles>0) badges += '<span class="badge skipped">⏭️'+p.skippedHoles+'</span>';
+                if(p.pacerGroup) badges += '<span class="badge pacer">🐇</span>';
+                if(p.warnedGroup) badges += '<span class="badge warned">🔔</span>';
+                if(p.tournamentGroup) badges += '<span class="badge tournament">🏆</span>';
+                if(p.greenMondayGroup) badges += '<span class="badge greenmonday">🏆GM</span>';
+                if(p.watchGroup) badges += '<span class="badge watch">⚠️</span>';
+                
                 html += `<div class="player-card ${sc}" draggable="true" ondragstart="handleDragStart(event,${p.id})" ondragend="handleDragEnd(event)" ondragover="handleDragOver(event)" ondragenter="handleDragEnter(event,${p.id})" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event,${p.id})">
                     <div class="player-actions">
                         <button class="action-btn" onclick="openEditModal(${p.id})" title="Editar">✏️</button>
@@ -1632,11 +1986,7 @@ Formato esperado (separado por tabulaciones):
                     <div class="player-header">
                         <div class="player-color" style="background:${p.color}"></div>
                         <div class="player-name">${p.name}</div>
-                        ${numHoles===9?'<span class="badge nine-holes">9H</span>':''}
-                        ${p.skippedHoles>0?'<span class="badge skipped">⏭️'+p.skippedHoles+'</span>':''}
-                        ${p.tournamentGroup?'<span class="badge tournament">🏆</span>':''}
-                        ${p.greenMondayGroup?'<span class="badge greenmonday">🏆GM</span>':''}
-                        ${p.watchGroup?'<span class="badge watch">⚠️</span>':''}
+                        <div class="player-badges">${badges}</div>
                     </div>
                     <div class="player-info">🕐 ${p.startTime} • Tee ${p.startTee} • 🏌️ ${numHoles}H${p.greenMondayGroup?' • <span style="color:#4caf50">+10min H16</span>':''}</div>
                     <div class="player-details">${getDetails(p)}</div>
@@ -1651,7 +2001,7 @@ Formato esperado (separado por tabulaciones):
         }
 
         function updateStats() {
-            let g=0,j=0,d=0,w=0,t=0,gm=0;
+            let g=0,j=0,d=0,w=0,t=0,gm=0,warned=0,pacer=0;
             players.forEach(p => {
                 const exp = calcHole(p);
                 if(exp.status!=='pending'&&exp.status!=='finished'){g++;if(exp.status==='delayed')d++;}
@@ -1659,6 +2009,8 @@ Formato esperado (separado por tabulaciones):
                 if(p.watchGroup)w++;
                 if(p.tournamentGroup)t++;
                 if(p.greenMondayGroup)gm++;
+                if(p.warnedGroup)warned++;
+                if(p.pacerGroup)pacer++;
             });
             document.getElementById('totalGroups').textContent = g;
             document.getElementById('totalJugadores').textContent = j;
@@ -1666,6 +2018,8 @@ Formato esperado (separado por tabulaciones):
             document.getElementById('watchCount').textContent = w;
             document.getElementById('tournamentCount').textContent = t;
             document.getElementById('greenMondayCount').textContent = gm;
+            document.getElementById('warnedCount').textContent = warned;
+            document.getElementById('pacerCount').textContent = pacer;
         }
 
         function renderCourse() {
@@ -1677,18 +2031,48 @@ Formato esperado (separado por tabulaciones):
             let bh = '<div class="nine-title">VUELTA (10-18)</div>';
             holesData.forEach(h => {
                 const pls = byHole[h.n]||[];
-                const hasW = pls.some(p=>p.watchGroup);
-                const hasT = pls.some(p=>p.tournamentGroup);
-                const hasGM = pls.some(p=>p.greenMondayGroup);
+                
+                // Determinar clase del hoyo basada en prioridad de marcadores
+                const hasPacer = pls.some(p=>p.pacerGroup);
+                const hasWarned = pls.some(p=>p.warnedGroup);
                 const hasS = pls.some(p=>p.skippedHoles>0);
+                const hasW = pls.some(p=>p.watchGroup);
+                const hasGM = pls.some(p=>p.greenMondayGroup);
+                const hasT = pls.some(p=>p.tournamentGroup);
                 const hasC = pls.length>0;
+                
                 let hc = '';
-                if(hasS)hc='skipped-hole';else if(hasW)hc='watch-hole';else if(hasGM)hc='greenmonday-hole';else if(hasT)hc='tournament-hole';else if(hasC)hc='current';
+                if(hasPacer) hc='pacer-hole';
+                else if(hasWarned) hc='warned-hole';
+                else if(hasS) hc='skipped-hole';
+                else if(hasW) hc='watch-hole';
+                else if(hasGM) hc='greenmonday-hole';
+                else if(hasT) hc='tournament-hole';
+                else if(hasC) hc='current';
+                
                 let ht = holeTimes[h.n]||h.t;
                 let td = ht+' min';
                 if(h.n===16&&hasGM)td=ht+'+10';
+                
                 let holeHtml = `<div class="hole ${hc}"><div class="hole-number">${h.n}</div><div class="hole-info">Par ${h.par} • ${h.m}m<br>⏱️ ${td}</div>`;
-                if(pls.length>0){holeHtml+='<div class="player-markers">'+pls.map(p=>`<div class="player-dot" style="background:${p.color}"></div>`).join('')+'</div>';}
+                
+                if(pls.length>0){
+                    holeHtml+='<div class="player-markers">';
+                    pls.forEach(p => {
+                        let badges = '';
+                        if(p.pacerGroup) badges += '🐇';
+                        if(p.warnedGroup) badges += '🔔';
+                        if(p.watchGroup) badges += '⚠️';
+                        if(p.tournamentGroup) badges += '🏆';
+                        if(p.greenMondayGroup) badges += '🏆';
+                        
+                        holeHtml += `<div class="player-dot-container">
+                            <div class="player-dot" style="background:${p.color}" title="${p.name}"></div>
+                            ${badges ? '<div class="player-dot-badges">'+badges+'</div>' : ''}
+                        </div>`;
+                    });
+                    holeHtml+='</div>';
+                }
                 holeHtml+='</div>';
                 if(h.n<=9)fh+=holeHtml;else bh+=holeHtml;
             });
@@ -1703,13 +2087,25 @@ Formato esperado (separado por tabulaciones):
             leg.innerHTML = players.map(p => {
                 const exp = calcHole(p);
                 const txt = exp.status==='pending' ? 'Pend.' : (exp.status==='finished' ? 'Fin' : 'H'+exp.hole);
+                
+                // Determinar clase de leyenda basada en marcadores
                 let ic = '';
-                if(p.skippedHoles > 0) ic = 'skipped';
+                if(p.pacerGroup) ic = 'pacer';
+                else if(p.warnedGroup) ic = 'warned';
+                else if(p.skippedHoles > 0) ic = 'skipped';
                 else if(p.greenMondayGroup) ic = 'greenmonday';
                 else if(p.tournamentGroup) ic = 'tournament';
                 else if(p.watchGroup) ic = 'watch';
+                
                 const displayName = p.name.split(' (')[0];
-                return '<div class="legend-item '+ic+'"><div class="legend-dot" style="background:'+p.color+'"></div><span>'+displayName+' - '+txt+'</span></div>';
+                
+                // Añadir iconos de marcadores
+                let icons = '';
+                if(p.pacerGroup) icons += '🐇';
+                if(p.warnedGroup) icons += '🔔';
+                if(p.watchGroup) icons += '⚠️';
+                
+                return '<div class="legend-item '+ic+'"><div class="legend-dot" style="background:'+p.color+'"></div><span>'+displayName+' '+icons+' - '+txt+'</span></div>';
             }).join('');
         }
 
