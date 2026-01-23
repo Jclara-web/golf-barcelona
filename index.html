@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+                 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -862,9 +862,16 @@
                     <div class="label">Hoyo Actual</div>
                     <div class="value" id="modalCurrentHole">-</div>
                 </div>
+                
                 <div class="form-group">
                     <label>Nombre del Grupo</label>
                     <input type="text" id="editName" placeholder="Nuevo nombre">
+                </div>
+                
+                <!-- HORA DE SALIDA -->
+                <div class="form-group">
+                    <label>🕐 Hora de Salida</label>
+                    <input type="time" id="editStartTime">
                 </div>
                 
                 <!-- TEE DE SALIDA EN MODAL -->
@@ -872,6 +879,70 @@
                     <label>⛳ Tee de Salida (Hoyo)</label>
                     <div class="tee-grid-selector" id="editTeeSelector">
                         <!-- Se genera dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- JUGADORES Y VEHÍCULOS -->
+                <div class="form-group">
+                    <label>👥 Jugadores y Vehículos</label>
+                    <div class="group-config" id="editGroupConfig">
+                        <div class="config-row has-value" id="editRowPlayers">
+                            <div class="config-label">
+                                <span class="config-icon">👥</span>
+                                <div>
+                                    <div class="config-text">Jugadores</div>
+                                    <div class="config-subtext">1-4</div>
+                                </div>
+                            </div>
+                            <div class="quantity-selector">
+                                <button class="qty-btn" onclick="changeEditQty('players',-1)">−</button>
+                                <div class="qty-value" id="editQtyPlayers">4</div>
+                                <button class="qty-btn" onclick="changeEditQty('players',1)">+</button>
+                            </div>
+                        </div>
+                        <div class="config-row" id="editRowBuggys">
+                            <div class="config-label">
+                                <span class="config-icon">🚗</span>
+                                <div>
+                                    <div class="config-text">Buggys</div>
+                                    <div class="config-subtext">0-2</div>
+                                </div>
+                            </div>
+                            <div class="quantity-selector">
+                                <button class="qty-btn" onclick="changeEditQty('buggys',-1)">−</button>
+                                <div class="qty-value zero" id="editQtyBuggys">0</div>
+                                <button class="qty-btn" onclick="changeEditQty('buggys',1)">+</button>
+                            </div>
+                        </div>
+                        <div class="config-row" id="editRowMoto3">
+                            <div class="config-label">
+                                <span class="config-icon">🛵</span>
+                                <div>
+                                    <div class="config-text">Moto 3R</div>
+                                    <div class="config-subtext">0-4</div>
+                                </div>
+                            </div>
+                            <div class="quantity-selector">
+                                <button class="qty-btn" onclick="changeEditQty('moto3',-1)">−</button>
+                                <div class="qty-value zero" id="editQtyMoto3">0</div>
+                                <button class="qty-btn" onclick="changeEditQty('moto3',1)">+</button>
+                            </div>
+                        </div>
+                        <div class="config-row" id="editRowMoto4">
+                            <div class="config-label">
+                                <span class="config-icon">🏍️</span>
+                                <div>
+                                    <div class="config-text">Moto 4R</div>
+                                    <div class="config-subtext">0-4</div>
+                                </div>
+                            </div>
+                            <div class="quantity-selector">
+                                <button class="qty-btn" onclick="changeEditQty('moto4',-1)">−</button>
+                                <div class="qty-value zero" id="editQtyMoto4">0</div>
+                                <button class="qty-btn" onclick="changeEditQty('moto4',1)">+</button>
+                            </div>
+                        </div>
+                        <div class="group-summary" id="editGroupSummary">👤👤👤👤</div>
                     </div>
                 </div>
 
@@ -1278,6 +1349,9 @@ Formato esperado (separado por tabulaciones):
         let qty = {players:4,buggys:0,moto3:0,moto4:0};
         let editingPlayerId = null, editSelectedColor = null, editSelectedTee = 1, draggedItem = null;
         let editMarkers = {};
+        
+        // Variables para edición de jugadores/vehículos
+        let editQty = {players:4,buggys:0,moto3:0,moto4:0};
 
         // Variables para importación
         let importTee = 1, importHoles = 18, importType = 'normal';
@@ -1381,6 +1455,34 @@ Formato esperado (separado por tabulaciones):
             document.getElementById('groupSummary').textContent = s || '👤';
         }
 
+        // ===== FUNCIONES DE EDICIÓN DE CANTIDAD =====
+        function changeEditQty(type, delta) {
+            const nv = editQty[type] + delta;
+            if (nv >= limits[type].min && nv <= limits[type].max) { 
+                editQty[type] = nv; 
+                updateEditQtyDisplay(); 
+            }
+        }
+
+        function updateEditQtyDisplay() {
+            ['players','buggys','moto3','moto4'].forEach(t => {
+                const el = document.getElementById('editQty'+t.charAt(0).toUpperCase()+t.slice(1));
+                const row = document.getElementById('editRow'+t.charAt(0).toUpperCase()+t.slice(1));
+                if (el && row) { 
+                    el.textContent = editQty[t]; 
+                    el.classList.toggle('zero', editQty[t] === 0); 
+                    row.classList.toggle('has-value', editQty[t] > 0); 
+                }
+            });
+            let s = '';
+            for(let i=0;i<editQty.players;i++) s+='👤';
+            if(editQty.buggys+editQty.moto3+editQty.moto4>0) s+=' ';
+            for(let i=0;i<editQty.buggys;i++) s+='🚗';
+            for(let i=0;i<editQty.moto3;i++) s+='🛵';
+            for(let i=0;i<editQty.moto4;i++) s+='🏍️';
+            document.getElementById('editGroupSummary').textContent = s || '👤';
+        }
+
         function toggleMarker(type) {
             switch(type) {
                 case 'watch': 
@@ -1456,7 +1558,19 @@ Formato esperado (separado por tabulaciones):
             editingPlayerId = id;
             editSelectedColor = player.color;
             editSelectedTee = player.startTee;
+            
             document.getElementById('editName').value = player.name;
+            document.getElementById('editStartTime').value = player.startTime;
+            
+            // Cargar cantidades de jugadores y vehículos
+            editQty = {
+                players: player.numPlayers || 4,
+                buggys: player.numBuggys || 0,
+                moto3: player.numMoto3 || 0,
+                moto4: player.numMoto4 || 0
+            };
+            updateEditQtyDisplay();
+            
             const exp = calcHole(player);
             document.getElementById('modalCurrentHole').textContent = exp.hole > 0 && exp.hole <= 18 ? exp.hole : '-';
             
@@ -1634,10 +1748,20 @@ Formato esperado (separado por tabulaciones):
             if (!editingPlayerId) return;
             const player = players.find(p => p.id === editingPlayerId);
             if (!player) return;
+            
             const newName = document.getElementById('editName').value.trim();
+            const newTime = document.getElementById('editStartTime').value;
+            
             if (newName) player.name = newName;
+            if (newTime) player.startTime = newTime;
             if (editSelectedColor) player.color = editSelectedColor;
             player.startTee = editSelectedTee;
+            
+            // Guardar jugadores y vehículos
+            player.numPlayers = editQty.players;
+            player.numBuggys = editQty.buggys;
+            player.numMoto3 = editQty.moto3;
+            player.numMoto4 = editQty.moto4;
             
             // Guardar marcadores
             player.tournamentGroup = editMarkers.tournament;
@@ -1647,7 +1771,9 @@ Formato esperado (separado por tabulaciones):
             player.warnedGroup = editMarkers.warned;
             player.pacesetterGroup = editMarkers.pacesetter;
             
-            saveData(); render(); closeModal();
+            saveData(); 
+            render(); 
+            closeModal();
             showToast('✅ Grupo actualizado', '');
         }
 
