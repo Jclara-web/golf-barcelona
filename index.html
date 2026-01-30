@@ -891,11 +891,11 @@
 
                 <!-- JUGADORES Y VEHÍCULOS -->
                 <div class="form-group">
-                    <label>👥 Jugadores y Vehículos</label>
+                    <label>🏌️ Jugadores y Vehículos</label>
                     <div class="group-config" id="editGroupConfig">
                         <div class="config-row has-value" id="editRowPlayers">
                             <div class="config-label">
-                                <span class="config-icon">👥</span>
+                                <span class="config-icon">👦</span>
                                 <div>
                                     <div class="config-text">Jugadores</div>
                                     <div class="config-subtext">1-4</div>
@@ -949,7 +949,7 @@
                                 <button class="qty-btn" onclick="changeEditQty('moto4',1)">+</button>
                             </div>
                         </div>
-                        <div class="group-summary" id="editGroupSummary">👤👤👤👤</div>
+                        <div class="group-summary" id="editGroupSummary">👦👦👦👦</div>
                     </div>
                 </div>
 
@@ -1094,7 +1094,7 @@ Formato esperado (separado por tabulaciones):
                     </div>
 
                     <div class="option-box">
-                        <h4>🕳️ Elige los Hoyos que van a jugar</h4>
+                        <h4>⛳ Elige los Hoyos que van a jugar</h4>
                         <div class="holes-selector">
                             <div class="holes-option" onclick="selectImportHoles(this,9)">
                                 <div class="holes-number">9</div>
@@ -1269,13 +1269,13 @@ Formato esperado (separado por tabulaciones):
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>👥 Jugadores y Vehículos</label>
+                        <label>🏌️ Jugadores y Vehículos</label>
                         <div class="group-config">
-                            <div class="config-row has-value" id="rowPlayers"><div class="config-label"><span class="config-icon">👥</span><div><div class="config-text">Jugadores</div><div class="config-subtext">1-4</div></div></div><div class="quantity-selector"><button class="qty-btn" onclick="changeQty('players',-1)">−</button><div class="qty-value" id="qtyPlayers">4</div><button class="qty-btn" onclick="changeQty('players',1)">+</button></div></div>
+                            <div class="config-row has-value" id="rowPlayers"><div class="config-label"><span class="config-icon">🏌️‍♂️</span><div><div class="config-text">Jugadores</div><div class="config-subtext">1-4</div></div></div><div class="quantity-selector"><button class="qty-btn" onclick="changeQty('players',-1)">−</button><div class="qty-value" id="qtyPlayers">4</div><button class="qty-btn" onclick="changeQty('players',1)">+</button></div></div>
                             <div class="config-row" id="rowBuggys"><div class="config-label"><span class="config-icon">🚗</span><div><div class="config-text">Buggys</div><div class="config-subtext">0-2</div></div></div><div class="quantity-selector"><button class="qty-btn" onclick="changeQty('buggys',-1)">−</button><div class="qty-value zero" id="qtyBuggys">0</div><button class="qty-btn" onclick="changeQty('buggys',1)">+</button></div></div>
                             <div class="config-row" id="rowMoto3"><div class="config-label"><span class="config-icon">🛵</span><div><div class="config-text">Scooter 3R</div><div class="config-subtext">0-4</div></div></div><div class="quantity-selector"><button class="qty-btn" onclick="changeQty('moto3',-1)">−</button><div class="qty-value zero" id="qtyMoto3">0</div><button class="qty-btn" onclick="changeQty('moto3',1)">+</button></div></div>
                             <div class="config-row" id="rowMoto4"><div class="config-label"><span class="config-icon">🏍️</span><div><div class="config-text">Scooter 4R</div><div class="config-subtext">0-4</div></div></div><div class="quantity-selector"><button class="qty-btn" onclick="changeQty('moto4',-1)">−</button><div class="qty-value zero" id="qtyMoto4">0</div><button class="qty-btn" onclick="changeQty('moto4',1)">+</button></div></div>
-                            <div class="group-summary" id="groupSummary">👤👤👤👤</div>
+                            <div class="group-summary" id="groupSummary">👦👦👦👦</div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -1450,7 +1450,7 @@ Formato esperado (separado por tabulaciones):
                 if (el && row) { el.textContent = qty[t]; el.classList.toggle('zero', qty[t] === 0); row.classList.toggle('has-value', qty[t] > 0); }
             });
             let s = '';
-            for(let i=0;i<qty.players;i++) s+='👤';
+            for(let i=0;i<qty.players;i++) s+='👦';
             if(qty.buggys+qty.moto3+qty.moto4>0) s+=' ';
             for(let i=0;i<qty.buggys;i++) s+='🚗';
             for(let i=0;i<qty.moto3;i++) s+='🛵';
