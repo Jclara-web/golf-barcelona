@@ -274,12 +274,34 @@
             background: #f8f9fa;
             border-radius: 10px;
             padding: 12px;
+            padding-left: 40px; /* espacio para la barra de arrastre */
             margin-bottom: 10px;
             border-left: 4px solid #2d5a3d;
             position: relative;
             cursor: grab;
             transition: all 0.2s;
             user-select: none;
+            touch-action: auto; /* importante en móviles para que no haga scroll al arrastrar */
+            .drag-handle {
+            position: absolute;
+            left: 6px;
+            top: 6px;
+            bottom: 6px;
+            width: 32px;                    /* barra relativamente ancha */
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #888;
+            background: rgba(0,0,0,0.04);
+            cursor: grab;
+        }
+
+.drag-handle:active {
+    cursor: grabbing;
+    background: rgba(0,0,0,0.10);
+}
         }
 
         .player-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
@@ -852,6 +874,18 @@
         .toast.orange { background: #ff5722; }
         .toast.red { background: #f44336; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        #playersContainer {
+    position: relative;
+}
+
+.player-card.placeholder {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    cursor: default;
+}
     </style>
 </head>
 <body>
@@ -1330,916 +1364,1258 @@ Formato esperado (separado por tabulaciones):
         </div>
     </div>
 
-    <script>
-        const holesData = [
-            { n: 1,  par: 5, m: 478, t: 16 }, { n: 2,  par: 3, m: 141, t: 13 }, { n: 3,  par: 4, m: 272, t: 14 },
-            { n: 4,  par: 4, m: 353, t: 15 }, { n: 5,  par: 3, m: 150, t: 14 }, { n: 6,  par: 4, m: 379, t: 15 },
-            { n: 7,  par: 5, m: 492, t: 16 }, { n: 8,  par: 4, m: 322, t: 15 }, { n: 9,  par: 4, m: 255, t: 15 },
-            { n: 10, par: 5, m: 466, t: 16 }, { n: 11, par: 4, m: 311, t: 15 }, { n: 12, par: 4, m: 357, t: 15 },
-            { n: 13, par: 5, m: 483, t: 16 }, { n: 14, par: 3, m: 127, t: 14 }, { n: 15, par: 4, m: 317, t: 15 },
-            { n: 16, par: 3, m: 139, t: 13 }, { n: 17, par: 4, m: 361, t: 16 }, { n: 18, par: 4, m: 321, t: 15 }
-        ];
+ <script>
+    const holesData = [
+        { n: 1,  par: 5, m: 478, t: 16 }, { n: 2,  par: 3, m: 141, t: 13 }, { n: 3,  par: 4, m: 272, t: 14 },
+        { n: 4,  par: 4, m: 353, t: 15 }, { n: 5,  par: 3, m: 150, t: 14 }, { n: 6,  par: 4, m: 379, t: 15 },
+        { n: 7,  par: 5, m: 492, t: 16 }, { n: 8,  par: 4, m: 322, t: 15 }, { n: 9,  par: 4, m: 255, t: 15 },
+        { n: 10, par: 5, m: 466, t: 16 }, { n: 11, par: 4, m: 311, t: 15 }, { n: 12, par: 4, m: 357, t: 15 },
+        { n: 13, par: 5, m: 483, t: 16 }, { n: 14, par: 3, m: 127, t: 14 }, { n: 15, par: 4, m: 317, t: 15 },
+        { n: 16, par: 3, m: 139, t: 13 }, { n: 17, par: 4, m: 361, t: 16 }, { n: 18, par: 4, m: 321, t: 15 }
+    ];
 
-        const colors = ['#e53935','#1e88e5','#fdd835','#7b1fa2','#fb8c00','#00897b','#d81b60','#5e35b1','#43a047','#00acc1','#8e24aa','#f4511e'];
-        const presets = {
-            standard: {1:16,2:13,3:14,4:15,5:14,6:15,7:16,8:15,9:15,10:16,11:15,12:15,13:16,14:14,15:15,16:13,17:16,18:15},
-            fast: {1:13,2:10,3:11,4:12,5:11,6:12,7:13,8:12,9:12,10:13,11:12,12:12,13:13,14:11,15:12,16:10,17:13,18:12},
-            slow: {1:19,2:16,3:17,4:18,5:17,6:18,7:19,8:18,9:18,10:19,11:18,12:18,13:19,14:17,15:18,16:16,17:19,18:18}
-        };
-        const limits = {players:{min:1,max:4},buggys:{min:0,max:2},moto3:{min:0,max:4},moto4:{min:0,max:4}};
-        const GREEN_MONDAY_EXTRA = 10;
+    const colors = ['#e53935','#1e88e5','#fdd835','#7b1fa2','#fb8c00','#00897b','#d81b60','#5e35b1','#43a047','#00acc1','#8e24aa','#f4511e'];
+    const presets = {
+        standard: {1:16,2:13,3:14,4:15,5:14,6:15,7:16,8:15,9:15,10:16,11:15,12:15,13:16,14:14,15:15,16:13,17:16,18:15},
+        fast: {1:13,2:10,3:11,4:12,5:11,6:12,7:13,8:12,9:12,10:13,11:12,12:12,13:13,14:11,15:12,16:10,17:13,18:12},
+        slow: {1:19,2:16,3:17,4:18,5:17,6:18,7:19,8:18,9:18,10:19,11:18,12:18,13:19,14:17,15:18,16:16,17:19,18:18}
+    };
+    const limits = {players:{min:1,max:4},buggys:{min:0,max:2},moto3:{min:0,max:4},moto4:{min:0,max:4}};
+    const GREEN_MONDAY_EXTRA = 10;
 
-        let holeTimes = {}, players = [], selectedTee = 1, selectedNumHoles = 18, selectedColor = colors[0];
-        let useCustomColor = false;
-        let watchGroup = false, tournamentGroup = false, greenMonday10Group = false, greenMonday1Group = false;
-        let warnedGroup = false, pacesetterGroup = false;
-        let qty = {players:4,buggys:0,moto3:0,moto4:0};
-        let editingPlayerId = null, editSelectedColor = null, editSelectedTee = 1, draggedItem = null;
-        let editMarkers = {};
+    let holeTimes = {}, players = [], selectedTee = 1, selectedNumHoles = 18, selectedColor = colors[0];
+    let useCustomColor = false;
+    let watchGroup = false, tournamentGroup = false, greenMonday10Group = false, greenMonday1Group = false;
+    let warnedGroup = false, pacesetterGroup = false;
+    let qty = {players:4,buggys:0,moto3:0,moto4:0};
+
+    let editingPlayerId = null, editSelectedColor = null, editSelectedTee = 1;
+    let editMarkers = {};
+    let editQty = {players:4,buggys:0,moto3:0,moto4:0};
+
+    let importTee = 1, importHoles = 18, importType = 'normal';
+    let parsedGroups = [];
+
+    // Estado para drag & drop de la lista (PC + móvil)
+    let isListDragging = false;
+    let dragCard = null;
+    let dragPlaceholder = null;
+    let dragStartY = 0;
+    let dragStartTop = 0;
+    let dragStartScrollTop = 0;
+    let dragContainer = null;
+    let dragListEl = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadData(); 
+        initColors(); 
+        renderTimesConfig(); 
+        render(); 
+        updateClock();
+        setInterval(updateClock, 1000);
         
-        let editQty = {players:4,buggys:0,moto3:0,moto4:0};
+        initListDragAndDrop();
 
-        let importTee = 1, importHoles = 18, importType = 'normal';
-        let parsedGroups = [];
-
-        document.addEventListener('DOMContentLoaded', function() {
-            loadData(); initColors(); renderTimesConfig(); render(); updateClock();
-            setInterval(updateClock, 1000);
-            
-            document.getElementById('editCustomColor').addEventListener('input', function() {
-                document.getElementById('editCustomColorWrapper').classList.add('selected');
-                document.querySelectorAll('#editColorPicker .color-option').forEach(o => o.classList.remove('selected'));
-                editSelectedColor = this.value;
-            });
+        document.getElementById('editCustomColor').addEventListener('input', function() {
+            document.getElementById('editCustomColorWrapper').classList.add('selected');
+            document.querySelectorAll('#editColorPicker .color-option').forEach(o => o.classList.remove('selected'));
+            editSelectedColor = this.value;
         });
+    });
 
-        function loadData() {
-            try {
-                holeTimes = JSON.parse(localStorage.getItem('golf_times')) || {...presets.standard};
-                players = JSON.parse(localStorage.getItem('golf_players')) || [];
-                players.forEach(p => {
-                    if (!p.notes) p.notes = [];
-                    if (p.greenMondayGroup && !p.greenMonday10Group && !p.greenMonday1Group) {
-                        p.greenMonday10Group = true;
-                        delete p.greenMondayGroup;
-                    }
-                });
-            } catch(e) { holeTimes = {...presets.standard}; players = []; }
-        }
-
-        function saveData() {
-            localStorage.setItem('golf_times', JSON.stringify(holeTimes));
-            localStorage.setItem('golf_players', JSON.stringify(players));
-        }
-
-        function showTab(tab) {
-            ['play','salidas','config','rules'].forEach(t => {
-                document.getElementById(t+'Tab')?.classList.remove('active');
-                document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1))?.classList.remove('active');
-            });
-            document.getElementById(tab+'Tab')?.classList.add('active');
-            document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1))?.classList.add('active');
-        }
-
-        function initColors() {
-            document.getElementById('colorPicker').innerHTML = colors.map((c,i) => 
-                '<div class="color-option '+(i===0&&!useCustomColor?'selected':'')+'" style="background:'+c+'" onclick="selectColor(this,\''+c+'\')"></div>'
-            ).join('');
-        }
-
-        function selectColor(el, c) {
-            document.querySelectorAll('#colorPicker .color-option').forEach(o => o.classList.remove('selected'));
-            document.getElementById('customColorWrapper').classList.remove('selected');
-            el.classList.add('selected'); 
-            selectedColor = c;
-            useCustomColor = false;
-        }
-
-        function selectCustomColor() {
-            document.querySelectorAll('#colorPicker .color-option').forEach(o => o.classList.remove('selected'));
-            document.getElementById('customColorWrapper').classList.add('selected');
-            selectedColor = document.getElementById('customColorInput').value;
-            useCustomColor = true;
-        }
-
-        function updateCustomColor() {
-            if (useCustomColor) {
-                selectedColor = document.getElementById('customColorInput').value;
-            }
-        }
-
-        function selectTee(el, t) {
-            document.querySelectorAll('.main-content .tee-option').forEach(o => o.classList.remove('active'));
-            el.classList.add('active'); selectedTee = t;
-        }
-
-        function selectNumHoles(el, num) {
-            document.querySelectorAll('.main-content .holes-option').forEach(o => o.classList.remove('active'));
-            el.classList.add('active'); selectedNumHoles = num;
-        }
-
-        function changeQty(type, delta) {
-            const nv = qty[type] + delta;
-            if (nv >= limits[type].min && nv <= limits[type].max) { qty[type] = nv; updateQtyDisplay(); }
-        }
-
-        function updateQtyDisplay() {
-            ['players','buggys','moto3','moto4'].forEach(t => {
-                const el = document.getElementById('qty'+t.charAt(0).toUpperCase()+t.slice(1));
-                const row = document.getElementById('row'+t.charAt(0).toUpperCase()+t.slice(1));
-                if (el && row) { el.textContent = qty[t]; el.classList.toggle('zero', qty[t] === 0); row.classList.toggle('has-value', qty[t] > 0); }
-            });
-            let s = '';
-            for(let i=0;i<qty.players;i++) s+='👦';
-            if(qty.buggys+qty.moto3+qty.moto4>0) s+=' ';
-            for(let i=0;i<qty.buggys;i++) s+='🚗';
-            for(let i=0;i<qty.moto3;i++) s+='🛵';
-            for(let i=0;i<qty.moto4;i++) s+='🏍️';
-            document.getElementById('groupSummary').textContent = s || '👤';
-        }
-
-        function changeEditQty(type, delta) {
-            const nv = editQty[type] + delta;
-            if (nv >= limits[type].min && nv <= limits[type].max) { 
-                editQty[type] = nv; 
-                updateEditQtyDisplay(); 
-            }
-        }
-
-        function updateEditQtyDisplay() {
-            ['players','buggys','moto3','moto4'].forEach(t => {
-                const el = document.getElementById('editQty'+t.charAt(0).toUpperCase()+t.slice(1));
-                const row = document.getElementById('editRow'+t.charAt(0).toUpperCase()+t.slice(1));
-                if (el && row) { 
-                    el.textContent = editQty[t]; 
-                    el.classList.toggle('zero', editQty[t] === 0); 
-                    row.classList.toggle('has-value', editQty[t] > 0); 
+    function loadData() {
+        try {
+            holeTimes = JSON.parse(localStorage.getItem('golf_times')) || {...presets.standard};
+            players = JSON.parse(localStorage.getItem('golf_players')) || [];
+            players.forEach(p => {
+                if (!p.notes) p.notes = [];
+                if (p.greenMondayGroup && !p.greenMonday10Group && !p.greenMonday1Group) {
+                    p.greenMonday10Group = true;
+                    delete p.greenMondayGroup;
                 }
             });
-            let s = '';
-            for(let i=0;i<editQty.players;i++) s+='👤';
-            if(editQty.buggys+editQty.moto3+editQty.moto4>0) s+=' ';
-            for(let i=0;i<editQty.buggys;i++) s+='🚗';
-            for(let i=0;i<editQty.moto3;i++) s+='🛵';
-            for(let i=0;i<editQty.moto4;i++) s+='🏍️';
-            document.getElementById('editGroupSummary').textContent = s || '👤';
-        }
+        } catch(e) { holeTimes = {...presets.standard}; players = []; }
+    }
 
-        function toggleMarker(type) {
-            switch(type) {
-                case 'watch': 
-                    watchGroup = !watchGroup; 
-                    document.getElementById('markerWatch').classList.toggle('active', watchGroup); 
-                    break;
-                case 'tournament': 
-                    tournamentGroup = !tournamentGroup; 
-                    document.getElementById('markerTournament').classList.toggle('active', tournamentGroup); 
-                    break;
-                case 'greenmonday10': 
-                    greenMonday10Group = !greenMonday10Group; 
-                    document.getElementById('markerGreenMonday10').classList.toggle('active', greenMonday10Group); 
-                    break;
-                case 'greenmonday1': 
-                    greenMonday1Group = !greenMonday1Group; 
-                    document.getElementById('markerGreenMonday1').classList.toggle('active', greenMonday1Group); 
-                    break;
-                case 'warned': 
-                    warnedGroup = !warnedGroup; 
-                    document.getElementById('markerWarned').classList.toggle('active', warnedGroup); 
-                    break;
-                case 'pacesetter': 
-                    pacesetterGroup = !pacesetterGroup; 
-                    document.getElementById('markerPacesetter').classList.toggle('active', pacesetterGroup); 
-                    break;
+    function saveData() {
+        localStorage.setItem('golf_times', JSON.stringify(holeTimes));
+        localStorage.setItem('golf_players', JSON.stringify(players));
+    }
+
+    function showTab(tab) {
+        ['play','salidas','config','rules'].forEach(t => {
+            document.getElementById(t+'Tab')?.classList.remove('active');
+            document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1))?.classList.remove('active');
+        });
+        document.getElementById(tab+'Tab')?.classList.add('active');
+        document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1))?.classList.add('active');
+    }
+
+    function initColors() {
+        document.getElementById('colorPicker').innerHTML = colors.map((c,i) => 
+            '<div class="color-option '+(i===0&&!useCustomColor?'selected':'')+'" style="background:'+c+'" onclick="selectColor(this,\''+c+'\')"></div>'
+        ).join('');
+    }
+
+    function selectColor(el, c) {
+        document.querySelectorAll('#colorPicker .color-option').forEach(o => o.classList.remove('selected'));
+        document.getElementById('customColorWrapper').classList.remove('selected');
+        el.classList.add('selected'); 
+        selectedColor = c;
+        useCustomColor = false;
+    }
+
+    function selectCustomColor() {
+        document.querySelectorAll('#colorPicker .color-option').forEach(o => o.classList.remove('selected'));
+        document.getElementById('customColorWrapper').classList.add('selected');
+        selectedColor = document.getElementById('customColorInput').value;
+        useCustomColor = true;
+    }
+
+    function updateCustomColor() {
+        if (useCustomColor) {
+            selectedColor = document.getElementById('customColorInput').value;
+        }
+    }
+
+    function selectTee(el, t) {
+        document.querySelectorAll('.main-content .tee-option').forEach(o => o.classList.remove('active'));
+        el.classList.add('active'); selectedTee = t;
+    }
+
+    function selectNumHoles(el, num) {
+        document.querySelectorAll('.main-content .holes-option').forEach(o => o.classList.remove('active'));
+        el.classList.add('active'); selectedNumHoles = num;
+    }
+
+    function changeQty(type, delta) {
+        const nv = qty[type] + delta;
+        if (nv >= limits[type].min && nv <= limits[type].max) { qty[type] = nv; updateQtyDisplay(); }
+    }
+
+    function updateQtyDisplay() {
+        ['players','buggys','moto3','moto4'].forEach(t => {
+            const el = document.getElementById('qty'+t.charAt(0).toUpperCase()+t.slice(1));
+            const row = document.getElementById('row'+t.charAt(0).toUpperCase()+t.slice(1));
+            if (el && row) { el.textContent = qty[t]; el.classList.toggle('zero', qty[t] === 0); row.classList.toggle('has-value', qty[t] > 0); }
+        });
+        let s = '';
+        for(let i=0;i<qty.players;i++) s+='👦';
+        if(qty.buggys+qty.moto3+qty.moto4>0) s+=' ';
+        for(let i=0;i<qty.buggys;i++) s+='🚗';
+        for(let i=0;i<qty.moto3;i++) s+='🛵';
+        for(let i=0;i<qty.moto4;i++) s+='🏍️';
+        document.getElementById('groupSummary').textContent = s || '👤';
+    }
+
+    function changeEditQty(type, delta) {
+        const nv = editQty[type] + delta;
+        if (nv >= limits[type].min && nv <= limits[type].max) { 
+            editQty[type] = nv; 
+            updateEditQtyDisplay(); 
+        }
+    }
+
+    function updateEditQtyDisplay() {
+        ['players','buggys','moto3','moto4'].forEach(t => {
+            const el = document.getElementById('editQty'+t.charAt(0).toUpperCase()+t.slice(1));
+            const row = document.getElementById('editRow'+t.charAt(0).toUpperCase()+t.slice(1));
+            if (el && row) { 
+                el.textContent = editQty[t]; 
+                el.classList.toggle('zero', editQty[t] === 0); 
+                row.classList.toggle('has-value', editQty[t] > 0); 
             }
+        });
+        let s = '';
+        for(let i=0;i<editQty.players;i++) s+='👤';
+        if(editQty.buggys+editQty.moto3+editQty.moto4>0) s+=' ';
+        for(let i=0;i<editQty.buggys;i++) s+='🚗';
+        for(let i=0;i<editQty.moto3;i++) s+='🛵';
+        for(let i=0;i<editQty.moto4;i++) s+='🏍️';
+        document.getElementById('editGroupSummary').textContent = s || '👤';
+    }
+
+    function toggleMarker(type) {
+        switch(type) {
+            case 'watch': 
+                watchGroup = !watchGroup; 
+                document.getElementById('markerWatch').classList.toggle('active', watchGroup); 
+                break;
+            case 'tournament': 
+                tournamentGroup = !tournamentGroup; 
+                document.getElementById('markerTournament').classList.toggle('active', tournamentGroup); 
+                break;
+            case 'greenmonday10': 
+                greenMonday10Group = !greenMonday10Group; 
+                document.getElementById('markerGreenMonday10').classList.toggle('active', greenMonday10Group); 
+                break;
+            case 'greenmonday1': 
+                greenMonday1Group = !greenMonday1Group; 
+                document.getElementById('markerGreenMonday1').classList.toggle('active', greenMonday1Group); 
+                break;
+            case 'warned': 
+                warnedGroup = !warnedGroup; 
+                document.getElementById('markerWarned').classList.toggle('active', warnedGroup); 
+                break;
+            case 'pacesetter': 
+                pacesetterGroup = !pacesetterGroup; 
+                document.getElementById('markerPacesetter').classList.toggle('active', pacesetterGroup); 
+                break;
+        }
+    }
+
+    function resetForm() {
+        qty = {players:4,buggys:0,moto3:0,moto4:0}; updateQtyDisplay();
+        watchGroup = tournamentGroup = greenMonday10Group = greenMonday1Group = warnedGroup = pacesetterGroup = false;
+        document.querySelectorAll('.marker-box').forEach(m => m.classList.remove('active'));
+        selectedNumHoles = 18;
+        document.querySelectorAll('.main-content .holes-option').forEach((o, i) => o.classList.toggle('active', i === 1));
+    }
+
+    function getNextColor() {
+        const used = players.map(p => p.color);
+        return colors.find(c => !used.includes(c)) || colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    function addPlayer() {
+        const name = document.getElementById('playerName').value.trim();
+        const time = document.getElementById('startTime').value;
+        if(!name) { alert('Introduce un nombre'); return; }
+
+        players.push({
+            id: Date.now(), name, startTime: time, startTee: selectedTee, numHoles: selectedNumHoles,
+            color: selectedColor, watchGroup, tournamentGroup, greenMonday10Group, greenMonday1Group,
+            warnedGroup, pacesetterGroup,
+            numPlayers: qty.players, numBuggys: qty.buggys, numMoto3: qty.moto3, numMoto4: qty.moto4,
+            skippedHoles: 0,
+            notes: []
+        });
+
+        saveData(); render();
+        document.getElementById('playerName').value = '';
+        resetForm();
+        selectedColor = getNextColor();
+        useCustomColor = false;
+        initColors();
+        document.querySelectorAll('#colorPicker .color-option').forEach(o => o.classList.toggle('selected', o.style.background === selectedColor));
+        showToast('✅ '+name+' añadido', '');
+    }
+
+    function deletePlayer(id) { players = players.filter(p => p.id !== id); saveData(); render(); }
+    function clearAllPlayers() { if(confirm('¿Eliminar todos?')) { players = []; saveData(); render(); } }
+
+    function openEditModal(id) {
+        const player = players.find(p => p.id === id);
+        if (!player) return;
+        editingPlayerId = id;
+        editSelectedColor = player.color;
+        editSelectedTee = player.startTee;
+        
+        document.getElementById('editName').value = player.name;
+        document.getElementById('editStartTime').value = player.startTime;
+        
+        editQty = {
+            players: player.numPlayers || 4,
+            buggys: player.numBuggys || 0,
+            moto3: player.numMoto3 || 0,
+            moto4: player.numMoto4 || 0
+        };
+        updateEditQtyDisplay();
+        
+        const exp = calcHole(player);
+        document.getElementById('modalCurrentHole').textContent = exp.hole > 0 && exp.hole <= 18 ? exp.hole : '-';
+        
+        document.getElementById('editColorPicker').innerHTML = colors.map(c => 
+            '<div class="color-option '+(c === player.color ? 'selected' : '')+'" style="background:'+c+'" onclick="selectEditColor(this,\''+c+'\')"></div>'
+        ).join('');
+        
+        if (!colors.includes(player.color)) {
+            document.getElementById('editCustomColor').value = player.color;
+            document.getElementById('editCustomColorWrapper').classList.add('selected');
+            document.querySelectorAll('#editColorPicker .color-option').forEach(o => o.classList.remove('selected'));
+        } else {
+            document.getElementById('editCustomColorWrapper').classList.remove('selected');
+        }
+        
+        let teeHtml = '';
+        for (let i = 1; i <= 18; i++) {
+            teeHtml += `<div class="tee-grid-option ${i === player.startTee ? 'active' : ''}" onclick="selectEditTee(${i})">${i}</div>`;
+        }
+        document.getElementById('editTeeSelector').innerHTML = teeHtml;
+        
+        editMarkers = {
+            tournament: player.tournamentGroup || false,
+            greenmonday10: player.greenMonday10Group || false,
+            greenmonday1: player.greenMonday1Group || false,
+            watch: player.watchGroup || false,
+            warned: player.warnedGroup || false,
+            pacesetter: player.pacesetterGroup || false
+        };
+        updateEditMarkers();
+        
+        document.getElementById('editNotes').value = '';
+        
+        renderNotesHistory(player);
+        
+        document.getElementById('editModal').classList.add('active');
+    }
+
+    function closeModal() { document.getElementById('editModal').classList.remove('active'); editingPlayerId = null; }
+
+    function selectEditColor(el, c) {
+        document.querySelectorAll('#editColorPicker .color-option').forEach(o => o.classList.remove('selected'));
+        document.getElementById('editCustomColorWrapper').classList.remove('selected');
+        el.classList.add('selected');
+        editSelectedColor = c;
+    }
+
+    function selectEditTee(tee) {
+        document.querySelectorAll('.tee-grid-option').forEach(o => o.classList.remove('active'));
+        event.target.classList.add('active');
+        editSelectedTee = tee;
+    }
+
+    function toggleEditMarker(type) {
+        editMarkers[type] = !editMarkers[type];
+        updateEditMarkers();
+    }
+
+    function updateEditMarkers() {
+        Object.keys(editMarkers).forEach(type => {
+            const el = document.querySelector(`.modal-marker[data-type="${type}"]`);
+            if (el) {
+                el.classList.toggle('active', editMarkers[type]);
+            }
+        });
+    }
+
+    function addQuickNote(noteText) {
+        if (!editingPlayerId) return;
+        const player = players.find(p => p.id === editingPlayerId);
+        if (!player) return;
+        
+        if (!player.notes) player.notes = [];
+        
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        
+        player.notes.push({
+            id: Date.now(),
+            text: noteText,
+            time: timeStr
+        });
+        
+        saveData();
+        renderNotesHistory(player);
+        render();
+        showToast('📝 Nota añadida', 'orange');
+    }
+
+    function addCustomNote() {
+        if (!editingPlayerId) return;
+        const player = players.find(p => p.id === editingPlayerId);
+        if (!player) return;
+        
+        const noteText = document.getElementById('editNotes').value.trim();
+        if (!noteText) {
+            showToast('⚠️ Escribe una nota', 'orange');
+            return;
+        }
+        
+        if (!player.notes) player.notes = [];
+        
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        
+        player.notes.push({
+            id: Date.now(),
+            text: noteText,
+            time: timeStr
+        });
+        
+        document.getElementById('editNotes').value = '';
+        saveData();
+        renderNotesHistory(player);
+        render();
+        showToast('📝 Nota añadida', 'orange');
+    }
+
+    function deleteNote(noteId) {
+        if (!editingPlayerId) return;
+        const player = players.find(p => p.id === editingPlayerId);
+        if (!player || !player.notes) return;
+        
+        player.notes = player.notes.filter(n => n.id !== noteId);
+        saveData();
+        renderNotesHistory(player);
+        render();
+    }
+
+    function clearAllNotes() {
+        if (!editingPlayerId) return;
+        const player = players.find(p => p.id === editingPlayerId);
+        if (!player) return;
+        
+        if (confirm('¿Borrar todas las notas de este grupo?')) {
+            player.notes = [];
+            saveData();
+            renderNotesHistory(player);
+            render();
+            showToast('🗑️ Notas borradas', '');
+        }
+    }
+
+    function renderNotesHistory(player) {
+        const container = document.getElementById('notesHistory');
+        const clearBtn = document.getElementById('clearNotesBtn');
+        
+        if (!player.notes || player.notes.length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:#999;font-size:0.8rem;padding:10px;">Sin notas</div>';
+            clearBtn.style.display = 'none';
+            return;
+        }
+        
+        clearBtn.style.display = 'block';
+        
+        const sortedNotes = [...player.notes].reverse();
+        
+        container.innerHTML = sortedNotes.map(note => `
+            <div class="note-item">
+                <span class="note-time">${note.time}</span>
+                <span class="note-text">${note.text}</span>
+                <button class="note-delete" onclick="deleteNote(${note.id})">✕</button>
+            </div>
+        `).join('');
+    }
+
+    function saveEdit() {
+        if (!editingPlayerId) return;
+        const player = players.find(p => p.id === editingPlayerId);
+        if (!player) return;
+        
+        const newName = document.getElementById('editName').value.trim();
+        const newTime = document.getElementById('editStartTime').value;
+        
+        if (newName) player.name = newName;
+        if (newTime) player.startTime = newTime;
+        if (editSelectedColor) player.color = editSelectedColor;
+        player.startTee = editSelectedTee;
+        
+        player.numPlayers = editQty.players;
+        player.numBuggys = editQty.buggys;
+        player.numMoto3 = editQty.moto3;
+        player.numMoto4 = editQty.moto4;
+        
+        player.tournamentGroup = editMarkers.tournament;
+        player.greenMonday10Group = editMarkers.greenmonday10;
+        player.greenMonday1Group = editMarkers.greenmonday1;
+        player.watchGroup = editMarkers.watch;
+        player.warnedGroup = editMarkers.warned;
+        player.pacesetterGroup = editMarkers.pacesetter;
+        
+        saveData(); 
+        render(); 
+        closeModal();
+        showToast('✅ Grupo actualizado', '');
+    }
+
+    function skipHole() {
+        if (!editingPlayerId) return;
+        const player = players.find(p => p.id === editingPlayerId);
+        if (!player) return;
+        player.skippedHoles = (player.skippedHoles || 0) + 1;
+        
+        if (!player.notes) player.notes = [];
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        player.notes.push({
+            id: Date.now(),
+            text: '⏭️ Saltó hoyo #' + player.skippedHoles,
+            time: timeStr
+        });
+        
+        saveData(); render(); closeModal();
+        showToast('⏭️ Grupo saltó hoyo', 'purple');
+    }
+
+    function quickSkip(id) {
+        const player = players.find(p => p.id === id);
+        if (!player) return;
+        player.skippedHoles = (player.skippedHoles || 0) + 1;
+        
+        if (!player.notes) player.notes = [];
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        player.notes.push({
+            id: Date.now(),
+            text: '⏭️ Saltó hoyo #' + player.skippedHoles,
+            time: timeStr
+        });
+        
+        saveData(); render();
+        showToast('⏭️ Saltó hoyo', 'purple');
+    }
+
+    function selectImportTee(el, t) {
+        document.querySelectorAll('.salidas-panel .tee-option').forEach(o => o.classList.remove('active'));
+        el.classList.add('active');
+        importTee = t;
+    }
+
+    function selectImportHoles(el, num) {
+        document.querySelectorAll('.salidas-panel .holes-option').forEach(o => o.classList.remove('active'));
+        el.classList.add('active');
+        importHoles = num;
+    }
+
+    function selectImportType(el, type) {
+        document.querySelectorAll('.type-option').forEach(o => {
+            o.classList.remove('active', 'normal', 'tournament', 'greenmonday10', 'greenmonday1', 'watch');
+        });
+        el.classList.add('active', type);
+        importType = type;
+    }
+
+    function parseExcelData() {
+        const data = document.getElementById('excelData').value.trim();
+        if (!data) { alert('Pega los datos del Excel primero'); return; }
+
+        parsedGroups = [];
+        const lines = data.split('\n');
+
+        lines.forEach((line, index) => {
+            if (!line.trim()) return;
+
+            const parts = line.split(/\t+|\s{2,}/).map(p => p.trim()).filter(p => p);
+            
+            if (parts.length < 2) {
+                const match = line.match(/^(\d{1,2}:\d{2})\s+(.+?)(?:\s+(\d+))?$/);
+                if (match) {
+                    parts[0] = match[1];
+                    parts[1] = match[2];
+                    if (match[3]) parts[2] = match[3];
+                }
+            }
+
+            if (parts.length >= 2) {
+                let time = parts[0];
+                let name = parts[1];
+                let numPlayers = parts[2] ? parseInt(parts[2]) : 4;
+
+                if (!/^\d{1,2}:\d{2}$/.test(time)) return;
+
+                const [h, m] = time.split(':');
+                time = h.padStart(2, '0') + ':' + m;
+
+                if (numPlayers < 1 || numPlayers > 4 || isNaN(numPlayers)) numPlayers = 4;
+
+                parsedGroups.push({
+                    time,
+                    name,
+                    numPlayers,
+                    color: getNextColorForImport(parsedGroups.length)
+                });
+            }
+        });
+
+        parsedGroups.sort((a, b) => a.time.localeCompare(b.time));
+
+        renderPreview();
+    }
+
+    function getNextColorForImport(index) {
+        const usedColors = players.map(p => p.color);
+        const availableColors = colors.filter(c => !usedColors.includes(c));
+        return availableColors[index % availableColors.length] || colors[index % colors.length];
+    }
+
+    function renderPreview() {
+        const section = document.getElementById('previewSection');
+        const list = document.getElementById('previewList');
+        const count = document.getElementById('previewCount');
+
+        if (parsedGroups.length === 0) {
+            section.style.display = 'none';
+            showToast('⚠️ No se encontraron grupos válidos', '');
+            return;
         }
 
-        function resetForm() {
-            qty = {players:4,buggys:0,moto3:0,moto4:0}; updateQtyDisplay();
-            watchGroup = tournamentGroup = greenMonday10Group = greenMonday1Group = warnedGroup = pacesetterGroup = false;
-            document.querySelectorAll('.marker-box').forEach(m => m.classList.remove('active'));
-            selectedNumHoles = 18;
-            document.querySelectorAll('.main-content .holes-option').forEach((o, i) => o.classList.toggle('active', i === 1));
-        }
+        section.style.display = 'block';
+        count.textContent = parsedGroups.length + ' grupos';
 
-        function getNextColor() {
-            const used = players.map(p => p.color);
-            return colors.find(c => !used.includes(c)) || colors[Math.floor(Math.random() * colors.length)];
-        }
+        let typeClass = '';
+        if (importType === 'tournament') typeClass = 'tournament';
+        else if (importType === 'greenmonday10') typeClass = 'greenmonday';
+        else if (importType === 'greenmonday1') typeClass = 'greenmonday1';
+        else if (importType === 'watch') typeClass = 'watch';
 
-        function addPlayer() {
-            const name = document.getElementById('playerName').value.trim();
-            const time = document.getElementById('startTime').value;
-            if(!name) { alert('Introduce un nombre'); return; }
+        list.innerHTML = parsedGroups.map((g, i) => `
+            <div class="preview-item ${typeClass}">
+                <div class="preview-time">${g.time}</div>
+                <div class="preview-name">${g.name}</div>
+                <div class="preview-players">👤 ${g.numPlayers}</div>
+                <button class="preview-remove" onclick="removeFromPreview(${i})">✕</button>
+            </div>
+        `).join('');
+
+        showToast('✅ ' + parsedGroups.length + ' grupos detectados', '');
+    }
+
+    function removeFromPreview(index) {
+        parsedGroups.splice(index, 1);
+        renderPreview();
+    }
+
+    function clearPreview() {
+        parsedGroups = [];
+        document.getElementById('excelData').value = '';
+        document.getElementById('previewSection').style.display = 'none';
+    }
+
+    function importAllGroups() {
+        if (parsedGroups.length === 0) { alert('No hay grupos para importar'); return; }
+
+        let colorIndex = 0;
+        const usedColors = players.map(p => p.color);
+
+        parsedGroups.forEach(g => {
+            let color = colors.find(c => !usedColors.includes(c));
+            if (!color) color = colors[colorIndex % colors.length];
+            usedColors.push(color);
+            colorIndex++;
 
             players.push({
-                id: Date.now(), name, startTime: time, startTee: selectedTee, numHoles: selectedNumHoles,
-                color: selectedColor, watchGroup, tournamentGroup, greenMonday10Group, greenMonday1Group,
-                warnedGroup, pacesetterGroup,
-                numPlayers: qty.players, numBuggys: qty.buggys, numMoto3: qty.moto3, numMoto4: qty.moto4,
+                id: Date.now() + Math.random(),
+                name: g.name,
+                startTime: g.time,
+                startTee: importTee,
+                numHoles: importHoles,
+                color: color,
+                watchGroup: importType === 'watch',
+                tournamentGroup: importType === 'tournament',
+                greenMonday10Group: importType === 'greenmonday10',
+                greenMonday1Group: importType === 'greenmonday1',
+                warnedGroup: false,
+                pacesetterGroup: false,
+                numPlayers: g.numPlayers,
+                numBuggys: 0,
+                numMoto3: 0,
+                numMoto4: 0,
                 skippedHoles: 0,
                 notes: []
             });
+        });
 
-            saveData(); render();
-            document.getElementById('playerName').value = '';
-            resetForm();
-            selectedColor = getNextColor();
-            useCustomColor = false;
-            initColors();
-            document.querySelectorAll('#colorPicker .color-option').forEach(o => o.classList.toggle('selected', o.style.background === selectedColor));
-            showToast('✅ '+name+' añadido', '');
-        }
+        players.sort((a, b) => a.startTime.localeCompare(b.startTime));
 
-        function deletePlayer(id) { players = players.filter(p => p.id !== id); saveData(); render(); }
-        function clearAllPlayers() { if(confirm('¿Eliminar todos?')) { players = []; saveData(); render(); } }
+        saveData();
+        render();
+        clearPreview();
+        showTab('play');
+        showToast('✅ ' + parsedGroups.length + ' grupos importados', '');
+        parsedGroups = [];
+    }
 
-        function openEditModal(id) {
-            const player = players.find(p => p.id === id);
-            if (!player) return;
-            editingPlayerId = id;
-            editSelectedColor = player.color;
-            editSelectedTee = player.startTee;
-            
-            document.getElementById('editName').value = player.name;
-            document.getElementById('editStartTime').value = player.startTime;
-            
-            editQty = {
-                players: player.numPlayers || 4,
-                buggys: player.numBuggys || 0,
-                moto3: player.numMoto3 || 0,
-                moto4: player.numMoto4 || 0
-            };
-            updateEditQtyDisplay();
-            
-            const exp = calcHole(player);
-            document.getElementById('modalCurrentHole').textContent = exp.hole > 0 && exp.hole <= 18 ? exp.hole : '-';
-            
-            document.getElementById('editColorPicker').innerHTML = colors.map(c => 
-                '<div class="color-option '+(c === player.color ? 'selected' : '')+'" style="background:'+c+'" onclick="selectEditColor(this,\''+c+'\')"></div>'
-            ).join('');
-            
-            if (!colors.includes(player.color)) {
-                document.getElementById('editCustomColor').value = player.color;
-                document.getElementById('editCustomColorWrapper').classList.add('selected');
-                document.querySelectorAll('#editColorPicker .color-option').forEach(o => o.classList.remove('selected'));
-            } else {
-                document.getElementById('editCustomColorWrapper').classList.remove('selected');
+    function getHoleTime(holeNum, player) {
+        let time = holeTimes[holeNum] || holesData[holeNum-1].t;
+        if (holeNum === 16 && player.greenMonday10Group) time += GREEN_MONDAY_EXTRA;
+        if (holeNum === 9 && player.greenMonday1Group) time += GREEN_MONDAY_EXTRA;
+        return time;
+    }
+
+    function calcHole(p) {
+        const now = new Date();
+        const [h,m] = p.startTime.split(':').map(Number);
+        const start = new Date(); start.setHours(h,m,0,0);
+        const skippedTime = (p.skippedHoles || 0) * 15;
+        const elapsed = ((now - start) / 60000) + skippedTime;
+        if(elapsed < 0) return {hole:0, status:'pending', diff:Math.round(-elapsed)};
+        const numHoles = p.numHoles || 18;
+        
+        let order = [];
+        const startTee = p.startTee || 1;
+        
+        if (numHoles === 9) {
+            for (let i = 0; i < 9; i++) {
+                order.push(((startTee - 1 + i) % 18) + 1);
             }
-            
-            let teeHtml = '';
-            for (let i = 1; i <= 18; i++) {
-                teeHtml += `<div class="tee-grid-option ${i === player.startTee ? 'active' : ''}" onclick="selectEditTee(${i})">${i}</div>`;
-            }
-            document.getElementById('editTeeSelector').innerHTML = teeHtml;
-            
-            editMarkers = {
-                tournament: player.tournamentGroup || false,
-                greenmonday10: player.greenMonday10Group || false,
-                greenmonday1: player.greenMonday1Group || false,
-                watch: player.watchGroup || false,
-                warned: player.warnedGroup || false,
-                pacesetter: player.pacesetterGroup || false
-            };
-            updateEditMarkers();
-            
-            document.getElementById('editNotes').value = '';
-            
-            renderNotesHistory(player);
-            
-            document.getElementById('editModal').classList.add('active');
-        }
-
-        function closeModal() { document.getElementById('editModal').classList.remove('active'); editingPlayerId = null; }
-
-        function selectEditColor(el, c) {
-            document.querySelectorAll('#editColorPicker .color-option').forEach(o => o.classList.remove('selected'));
-            document.getElementById('editCustomColorWrapper').classList.remove('selected');
-            el.classList.add('selected');
-            editSelectedColor = c;
-        }
-
-        function selectEditTee(tee) {
-            document.querySelectorAll('.tee-grid-option').forEach(o => o.classList.remove('active'));
-            event.target.classList.add('active');
-            editSelectedTee = tee;
-        }
-
-        function toggleEditMarker(type) {
-            editMarkers[type] = !editMarkers[type];
-            updateEditMarkers();
-        }
-
-        function updateEditMarkers() {
-            Object.keys(editMarkers).forEach(type => {
-                const el = document.querySelector(`.modal-marker[data-type="${type}"]`);
-                if (el) {
-                    el.classList.toggle('active', editMarkers[type]);
-                }
-            });
-        }
-
-        function addQuickNote(noteText) {
-            if (!editingPlayerId) return;
-            const player = players.find(p => p.id === editingPlayerId);
-            if (!player) return;
-            
-            if (!player.notes) player.notes = [];
-            
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-            
-            player.notes.push({
-                id: Date.now(),
-                text: noteText,
-                time: timeStr
-            });
-            
-            saveData();
-            renderNotesHistory(player);
-            render();
-            showToast('📝 Nota añadida', 'orange');
-        }
-
-        function addCustomNote() {
-            if (!editingPlayerId) return;
-            const player = players.find(p => p.id === editingPlayerId);
-            if (!player) return;
-            
-            const noteText = document.getElementById('editNotes').value.trim();
-            if (!noteText) {
-                showToast('⚠️ Escribe una nota', 'orange');
-                return;
-            }
-            
-            if (!player.notes) player.notes = [];
-            
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-            
-            player.notes.push({
-                id: Date.now(),
-                text: noteText,
-                time: timeStr
-            });
-            
-            document.getElementById('editNotes').value = '';
-            saveData();
-            renderNotesHistory(player);
-            render();
-            showToast('📝 Nota añadida', 'orange');
-        }
-
-        function deleteNote(noteId) {
-            if (!editingPlayerId) return;
-            const player = players.find(p => p.id === editingPlayerId);
-            if (!player || !player.notes) return;
-            
-            player.notes = player.notes.filter(n => n.id !== noteId);
-            saveData();
-            renderNotesHistory(player);
-            render();
-        }
-
-        function clearAllNotes() {
-            if (!editingPlayerId) return;
-            const player = players.find(p => p.id === editingPlayerId);
-            if (!player) return;
-            
-            if (confirm('¿Borrar todas las notas de este grupo?')) {
-                player.notes = [];
-                saveData();
-                renderNotesHistory(player);
-                render();
-                showToast('🗑️ Notas borradas', '');
+        } else {
+            for (let i = 0; i < 18; i++) {
+                order.push(((startTee - 1 + i) % 18) + 1);
             }
         }
-
-        function renderNotesHistory(player) {
-            const container = document.getElementById('notesHistory');
-            const clearBtn = document.getElementById('clearNotesBtn');
-            
-            if (!player.notes || player.notes.length === 0) {
-                container.innerHTML = '<div style="text-align:center;color:#999;font-size:0.8rem;padding:10px;">Sin notas</div>';
-                clearBtn.style.display = 'none';
-                return;
-            }
-            
-            clearBtn.style.display = 'block';
-            
-            const sortedNotes = [...player.notes].reverse();
-            
-            container.innerHTML = sortedNotes.map(note => `
-                <div class="note-item">
-                    <span class="note-time">${note.time}</span>
-                    <span class="note-text">${note.text}</span>
-                    <button class="note-delete" onclick="deleteNote(${note.id})">✕</button>
-                </div>
-            `).join('');
+        
+        let total = 0;
+        for(const ho of order) total += getHoleTime(ho, p);
+        if(elapsed >= total) return {hole:19, status:'finished', diff:0};
+        let acc = 0, curr = order[0], into = 0, ht = 0;
+        for(const ho of order) {
+            ht = getHoleTime(ho, p);
+            if(acc + ht > elapsed) { curr = ho; into = elapsed - acc; break; }
+            acc += ht;
         }
+        let status = 'ontime';
+        if(into > ht * 0.8) status = 'delayed';
+        else if(into < ht * 0.3) status = 'ahead';
+        return {hole:curr, status, diff:Math.round(into), holeTime:ht};
+    }
 
-        function saveEdit() {
-            if (!editingPlayerId) return;
-            const player = players.find(p => p.id === editingPlayerId);
-            if (!player) return;
-            
-            const newName = document.getElementById('editName').value.trim();
-            const newTime = document.getElementById('editStartTime').value;
-            
-            if (newName) player.name = newName;
-            if (newTime) player.startTime = newTime;
-            if (editSelectedColor) player.color = editSelectedColor;
-            player.startTee = editSelectedTee;
-            
-            player.numPlayers = editQty.players;
-            player.numBuggys = editQty.buggys;
-            player.numMoto3 = editQty.moto3;
-            player.numMoto4 = editQty.moto4;
-            
-            player.tournamentGroup = editMarkers.tournament;
-            player.greenMonday10Group = editMarkers.greenmonday10;
-            player.greenMonday1Group = editMarkers.greenmonday1;
-            player.watchGroup = editMarkers.watch;
-            player.warnedGroup = editMarkers.warned;
-            player.pacesetterGroup = editMarkers.pacesetter;
-            
-            saveData(); 
-            render(); 
-            closeModal();
-            showToast('✅ Grupo actualizado', '');
-        }
+    function getDetails(p) {
+        let parts = [(p.numPlayers||1)+' jug.'];
+        if(p.numBuggys>0) parts.push(p.numBuggys+' buggy');
+        if(p.numMoto3>0) parts.push(p.numMoto3+' moto3R');
+        if(p.numMoto4>0) parts.push(p.numMoto4+' moto4R');
+        return parts.join(' • ');
+    }
 
-        function skipHole() {
-            if (!editingPlayerId) return;
-            const player = players.find(p => p.id === editingPlayerId);
-            if (!player) return;
-            player.skippedHoles = (player.skippedHoles || 0) + 1;
-            
-            if (!player.notes) player.notes = [];
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-            player.notes.push({
-                id: Date.now(),
-                text: '⏭️ Saltó hoyo #' + player.skippedHoles,
-                time: timeStr
-            });
-            
-            saveData(); render(); closeModal();
-            showToast('⏭️ Grupo saltó hoyo', 'purple');
-        }
+    function render() { renderPlayers(); renderCourse(); }
 
-        function quickSkip(id) {
-            const player = players.find(p => p.id === id);
-            if (!player) return;
-            player.skippedHoles = (player.skippedHoles || 0) + 1;
-            
-            if (!player.notes) player.notes = [];
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-            player.notes.push({
-                id: Date.now(),
-                text: '⏭️ Saltó hoyo #' + player.skippedHoles,
-                time: timeStr
-            });
-            
-            saveData(); render();
-            showToast('⏭️ Saltó hoyo', 'purple');
-        }
-
-        function handleDragStart(e, id) { draggedItem = id; e.target.classList.add('dragging'); }
-        function handleDragEnd(e) { e.target.classList.remove('dragging'); document.querySelectorAll('.player-card').forEach(c => c.classList.remove('drag-over')); draggedItem = null; }
-        function handleDragOver(e) { e.preventDefault(); }
-        function handleDragEnter(e, id) { if (draggedItem !== id) e.target.closest('.player-card')?.classList.add('drag-over'); }
-        function handleDragLeave(e) { e.target.closest('.player-card')?.classList.remove('drag-over'); }
-        function handleDrop(e, targetId) {
-            e.preventDefault();
-            if (draggedItem === targetId) return;
-            const di = players.findIndex(p => p.id === draggedItem);
-            const ti = players.findIndex(p => p.id === targetId);
-            if (di === -1 || ti === -1) return;
-            const [removed] = players.splice(di, 1);
-            players.splice(ti, 0, removed);
-            saveData(); render();
-        }
-
-        function selectImportTee(el, t) {
-            document.querySelectorAll('.salidas-panel .tee-option').forEach(o => o.classList.remove('active'));
-            el.classList.add('active');
-            importTee = t;
-        }
-
-        function selectImportHoles(el, num) {
-            document.querySelectorAll('.salidas-panel .holes-option').forEach(o => o.classList.remove('active'));
-            el.classList.add('active');
-            importHoles = num;
-        }
-
-        function selectImportType(el, type) {
-            document.querySelectorAll('.type-option').forEach(o => {
-                o.classList.remove('active', 'normal', 'tournament', 'greenmonday10', 'greenmonday1', 'watch');
-            });
-            el.classList.add('active', type);
-            importType = type;
-        }
-
-        function parseExcelData() {
-            const data = document.getElementById('excelData').value.trim();
-            if (!data) { alert('Pega los datos del Excel primero'); return; }
-
-            parsedGroups = [];
-            const lines = data.split('\n');
-
-            lines.forEach((line, index) => {
-                if (!line.trim()) return;
-
-                const parts = line.split(/\t+|\s{2,}/).map(p => p.trim()).filter(p => p);
-                
-                if (parts.length < 2) {
-                    const match = line.match(/^(\d{1,2}:\d{2})\s+(.+?)(?:\s+(\d+))?$/);
-                    if (match) {
-                        parts[0] = match[1];
-                        parts[1] = match[2];
-                        if (match[3]) parts[2] = match[3];
-                    }
-                }
-
-                if (parts.length >= 2) {
-                    let time = parts[0];
-                    let name = parts[1];
-                    let numPlayers = parts[2] ? parseInt(parts[2]) : 4;
-
-                    if (!/^\d{1,2}:\d{2}$/.test(time)) return;
-
-                    const [h, m] = time.split(':');
-                    time = h.padStart(2, '0') + ':' + m;
-
-                    if (numPlayers < 1 || numPlayers > 4 || isNaN(numPlayers)) numPlayers = 4;
-
-                    parsedGroups.push({
-                        time,
-                        name,
-                        numPlayers,
-                        color: getNextColorForImport(parsedGroups.length)
-                    });
-                }
-            });
-
-            parsedGroups.sort((a, b) => a.time.localeCompare(b.time));
-
-            renderPreview();
-        }
-
-        function getNextColorForImport(index) {
-            const usedColors = players.map(p => p.color);
-            const availableColors = colors.filter(c => !usedColors.includes(c));
-            return availableColors[index % availableColors.length] || colors[index % colors.length];
-        }
-
-        function renderPreview() {
-            const section = document.getElementById('previewSection');
-            const list = document.getElementById('previewList');
-            const count = document.getElementById('previewCount');
-
-            if (parsedGroups.length === 0) {
-                section.style.display = 'none';
-                showToast('⚠️ No se encontraron grupos válidos', '');
-                return;
-            }
-
-            section.style.display = 'block';
-            count.textContent = parsedGroups.length + ' grupos';
-
-            let typeClass = '';
-            if (importType === 'tournament') typeClass = 'tournament';
-            else if (importType === 'greenmonday10') typeClass = 'greenmonday';
-            else if (importType === 'greenmonday1') typeClass = 'greenmonday1';
-            else if (importType === 'watch') typeClass = 'watch';
-
-            list.innerHTML = parsedGroups.map((g, i) => `
-                <div class="preview-item ${typeClass}">
-                    <div class="preview-time">${g.time}</div>
-                    <div class="preview-name">${g.name}</div>
-                    <div class="preview-players">👤 ${g.numPlayers}</div>
-                    <button class="preview-remove" onclick="removeFromPreview(${i})">✕</button>
-                </div>
-            `).join('');
-
-            showToast('✅ ' + parsedGroups.length + ' grupos detectados', '');
-        }
-
-        function removeFromPreview(index) {
-            parsedGroups.splice(index, 1);
-            renderPreview();
-        }
-
-        function clearPreview() {
-            parsedGroups = [];
-            document.getElementById('excelData').value = '';
-            document.getElementById('previewSection').style.display = 'none';
-        }
-
-        function importAllGroups() {
-            if (parsedGroups.length === 0) { alert('No hay grupos para importar'); return; }
-
-            let colorIndex = 0;
-            const usedColors = players.map(p => p.color);
-
-            parsedGroups.forEach(g => {
-                let color = colors.find(c => !usedColors.includes(c));
-                if (!color) color = colors[colorIndex % colors.length];
-                usedColors.push(color);
-                colorIndex++;
-
-                players.push({
-                    id: Date.now() + Math.random(),
-                    name: g.name,
-                    startTime: g.time,
-                    startTee: importTee,
-                    numHoles: importHoles,
-                    color: color,
-                    watchGroup: importType === 'watch',
-                    tournamentGroup: importType === 'tournament',
-                    greenMonday10Group: importType === 'greenmonday10',
-                    greenMonday1Group: importType === 'greenmonday1',
-                    warnedGroup: false,
-                    pacesetterGroup: false,
-                    numPlayers: g.numPlayers,
-                    numBuggys: 0,
-                    numMoto3: 0,
-                    numMoto4: 0,
-                    skippedHoles: 0,
-                    notes: []
-                });
-            });
-
-            players.sort((a, b) => a.startTime.localeCompare(b.startTime));
-
-            saveData();
-            render();
-            clearPreview();
-            showTab('play');
-            showToast('✅ ' + parsedGroups.length + ' grupos importados', '');
-            parsedGroups = [];
-        }
-
-        function getHoleTime(holeNum, player) {
-            let time = holeTimes[holeNum] || holesData[holeNum-1].t;
-            if (holeNum === 16 && player.greenMonday10Group) time += GREEN_MONDAY_EXTRA;
-            if (holeNum === 9 && player.greenMonday1Group) time += GREEN_MONDAY_EXTRA;
-            return time;
-        }
-
-        function calcHole(p) {
-            const now = new Date();
-            const [h,m] = p.startTime.split(':').map(Number);
-            const start = new Date(); start.setHours(h,m,0,0);
-            const skippedTime = (p.skippedHoles || 0) * 15;
-            const elapsed = ((now - start) / 60000) + skippedTime;
-            if(elapsed < 0) return {hole:0, status:'pending', diff:Math.round(-elapsed)};
+    function renderPlayers() {
+        const c = document.getElementById('playersContainer');
+        if(players.length === 0) { c.innerHTML = '<div class="no-players">No hay grupos</div>'; updateStats(); return; }
+        let html = '';
+        players.forEach(p => {
+            const exp = calcHole(p);
+            let sc = '', st = '', bc = '';
+            if(exp.status==='pending') { st='Sale en '+exp.diff+' min'; bc='status-ontime'; }
+            else if(exp.status==='finished') { st='Finalizado'; bc='status-ahead'; }
+            else if(exp.status==='delayed') { sc='delayed'; st=exp.diff+'/'+exp.holeTime+' min'; bc='status-delayed'; }
+            else if(exp.status==='ahead') { st='Adelantado'; bc='status-ahead'; }
+            else { st='En tiempo'; bc='status-ontime'; }
+            if(p.watchGroup) sc += ' watch-group';
+            if(p.tournamentGroup) sc += ' tournament-group';
+            if(p.greenMonday10Group) sc += ' greenmonday-group';
+            if(p.greenMonday1Group) sc += ' greenmonday1-group';
+            if(p.skippedHoles > 0) sc += ' skipped-group';
+            if(p.warnedGroup) sc += ' warned-group';
+            if(p.pacesetterGroup) sc += ' pacesetter-group';
             const numHoles = p.numHoles || 18;
             
-            let order = [];
-            const startTee = p.startTee || 1;
+            let extraInfo = '';
+            if (p.greenMonday10Group) extraInfo = ' • <span style="color:#7e57c2">+10min H16</span>';
+            else if (p.greenMonday1Group) extraInfo = ' • <span style="color:#00897b">+10min H9</span>';
             
-            if (numHoles === 9) {
-                for (let i = 0; i < 9; i++) {
-                    order.push(((startTee - 1 + i) % 18) + 1);
-                }
-            } else {
-                for (let i = 0; i < 18; i++) {
-                    order.push(((startTee - 1 + i) % 18) + 1);
-                }
-            }
+            html += `<div class="player-card ${sc}" data-id="${p.id}">
+                <div class="drag-handle" title="Arrastrar">☰</div>
+                <div class="player-actions">
+                <button class="action-btn" onclick="openEditModal(${p.id})" title="Editar">✏️</button>
+                <button class="action-btn" onclick="quickSkip(${p.id})" title="Saltar">⏭️</button>
+                <button class="action-btn" onclick="deletePlayer(${p.id})" title="Eliminar">✕</button>
+                </div>
+                <div class="player-header">
+                ...
+                    <div class="player-color" style="background:${p.color}"></div>
+                    <div class="player-name">${p.name}</div>
+                    ${numHoles===9?'<span class="badge nine-holes">9H</span>':''}
+                    ${p.skippedHoles>0?'<span class="badge skipped">⏭️'+p.skippedHoles+'</span>':''}
+                    ${p.tournamentGroup?'<span class="badge tournament">🏆</span>':''}
+                    ${p.greenMonday10Group?'<span class="badge greenmonday">🟣GM10</span>':''}
+                    ${p.greenMonday1Group?'<span class="badge greenmonday1">🩵GM1</span>':''}
+                    ${p.watchGroup?'<span class="badge watch">⚠️</span>':''}
+                    ${p.warnedGroup?'<span class="badge warned">🔔</span>':''}
+                    ${p.pacesetterGroup?'<span class="badge pacesetter">🐇</span>':''}
+                </div>
+                <div class="player-info">🕐 ${p.startTime} • Tee ${p.startTee} • 🏌️ ${numHoles}H${extraInfo}</div>
+                <div class="player-details">${getDetails(p)}</div>
+                <div class="player-footer">
+                    ${exp.hole>0&&exp.hole<=18?'<div>Hoyo: <span class="expected-hole">'+exp.hole+'</span></div>':'<div></div>'}
+                    <span class="player-status ${bc}">${st}</span>
+                </div>
+            </div>`;
+        });
+        c.innerHTML = html;
+        updateStats();
+    }
+
+    function updateStats() {
+        let g=0,j=0,d=0,w=0,t=0,gm10=0,gm1=0,warned=0,pace=0;
+        players.forEach(p => {
+            const exp = calcHole(p);
+            if(exp.status!=='pending'&&exp.status!=='finished'){g++;if(exp.status==='delayed')d++;}
+            j += p.numPlayers||1;
+            if(p.watchGroup)w++;
+            if(p.tournamentGroup)t++;
+            if(p.greenMonday10Group)gm10++;
+            if(p.greenMonday1Group)gm1++;
+            if(p.warnedGroup)warned++;
+            if(p.pacesetterGroup)pace++;
+        });
+        document.getElementById('totalGroups').textContent = g;
+        document.getElementById('totalJugadores').textContent = j;
+        document.getElementById('delayedCount').textContent = d;
+        document.getElementById('watchCount').textContent = w;
+        document.getElementById('tournamentCount').textContent = t;
+        document.getElementById('greenMondayCount').textContent = gm10;
+        document.getElementById('greenMonday1Count').textContent = gm1;
+        document.getElementById('warnedCount').textContent = warned;
+    }
+
+    function renderCourse() {
+        const front = document.getElementById('frontNineVisual');
+        const back = document.getElementById('backNineVisual');
+        const byHole = {};
+        players.forEach(p => { const exp = calcHole(p); if(exp.hole>0&&exp.hole<=18){if(!byHole[exp.hole])byHole[exp.hole]=[];byHole[exp.hole].push(p);} });
+        let fh = '<div class="nine-title">IDA (1-9)</div>';
+        let bh = '<div class="nine-title">VUELTA (10-18)</div>';
+        holesData.forEach(h => {
+            const pls = byHole[h.n]||[];
+            const hasW = pls.some(p=>p.watchGroup);
+            const hasT = pls.some(p=>p.tournamentGroup);
+            const hasGM10 = pls.some(p=>p.greenMonday10Group);
+            const hasGM1 = pls.some(p=>p.greenMonday1Group);
+            const hasS = pls.some(p=>p.skippedHoles>0);
+            const hasWarned = pls.some(p=>p.warnedGroup);
+            const hasPace = pls.some(p=>p.pacesetterGroup);
+            const hasC = pls.length>0;
+            let hc = '';
+            if(hasPace)hc='pacesetter-hole';
+            else if(hasWarned)hc='warned-hole';
+            else if(hasS)hc='skipped-hole';
+            else if(hasW)hc='watch-hole';
+            else if(hasGM1)hc='greenmonday1-hole';
+            else if(hasGM10)hc='greenmonday-hole';
+            else if(hasT)hc='tournament-hole';
+            else if(hasC)hc='current';
             
-            let total = 0;
-            for(const ho of order) total += getHoleTime(ho, p);
-            if(elapsed >= total) return {hole:19, status:'finished', diff:0};
-            let acc = 0, curr = order[0], into = 0, ht = 0;
-            for(const ho of order) {
-                ht = getHoleTime(ho, p);
-                if(acc + ht > elapsed) { curr = ho; into = elapsed - acc; break; }
-                acc += ht;
+            let ht = holeTimes[h.n]||h.t;
+            let td = ht+' min';
+            const hasGM10Here = pls.some(p=>p.greenMonday10Group);
+            const hasGM1Here = pls.some(p=>p.greenMonday1Group);
+            if(h.n===16&&hasGM10Here)td=ht+'+10';
+            if(h.n===9&&hasGM1Here)td=ht+'+10';
+            
+            let holeHtml = `<div class="hole ${hc}"><div class="hole-number">${h.n}</div><div class="hole-info">Par ${h.par} • ${h.m}m<br>⏱️ ${td}</div>`;
+            if(pls.length>0){
+                holeHtml+='<div class="player-markers">'+pls.map(p=>{
+                    let dotClass = '';
+                    if(p.pacesetterGroup) dotClass = 'pacesetter';
+                    else if(p.warnedGroup) dotClass = 'warned';
+                    return `<div class="player-dot ${dotClass}" style="background:${p.color}" title="${p.name}"></div>`;
+                }).join('')+'</div>';
             }
-            let status = 'ontime';
-            if(into > ht * 0.8) status = 'delayed';
-            else if(into < ht * 0.3) status = 'ahead';
-            return {hole:curr, status, diff:Math.round(into), holeTime:ht};
+            holeHtml+='</div>';
+            if(h.n<=9)fh+=holeHtml;else bh+=holeHtml;
+        });
+        front.innerHTML = fh;
+        back.innerHTML = bh;
+        renderLegend();
+    }
+
+    function renderLegend() {
+        const leg = document.getElementById('legend');
+        if(players.length === 0) { leg.innerHTML = ''; return; }
+        leg.innerHTML = players.map(p => {
+            const exp = calcHole(p);
+            const txt = exp.status==='pending' ? 'Pend.' : (exp.status==='finished' ? 'Fin' : 'H'+exp.hole);
+            let ic = '';
+            if(p.pacesetterGroup) ic = 'pacesetter';
+            else if(p.warnedGroup) ic = 'warned';
+            else if(p.skippedHoles > 0) ic = 'skipped';
+            else if(p.greenMonday10Group || p.greenMonday1Group) ic = 'greenmonday';
+            else if(p.tournamentGroup) ic = 'tournament';
+            else if(p.watchGroup) ic = 'watch';
+            const displayName = p.name.split(' (')[0];
+            let badges = '';
+            if(p.pacesetterGroup) badges += '🐇';
+            if(p.warnedGroup) badges += '🔔';
+            return '<div class="legend-item '+ic+'"><div class="legend-dot" style="background:'+p.color+'"></div><span>'+displayName+' '+badges+' - '+txt+'</span></div>';
+        }).join('');
+    }
+
+    function renderTimesConfig() {
+        const f = document.getElementById('frontNineTimes');
+        const b = document.getElementById('backNineTimes');
+        let fh = '', bh = '';
+        holesData.forEach(h => {
+            const t = holeTimes[h.n] || h.t;
+            const html = '<div class="hole-time-row"><div class="hole-badge">'+h.n+'</div><div class="hole-details"><div class="par-info">Par '+h.par+'</div><div class="meters-info">'+h.m+'m</div></div><div class="time-input-wrapper"><input type="number" id="ht'+h.n+'" value="'+t+'" min="5" max="30" onchange="updateTotals()"><span>min</span></div></div>';
+            if(h.n <= 9) fh += html; else bh += html;
+        });
+        f.innerHTML = fh; b.innerHTML = bh;
+        updateTotals();
+    }
+
+    function updateTotals() {
+        let ft = 0, bt = 0;
+        for(let i=1; i<=18; i++) {
+            const inp = document.getElementById('ht'+i);
+            const v = inp ? parseInt(inp.value) || holesData[i-1].t : holeTimes[i] || holesData[i-1].t;
+            if(i <= 9) ft += v; else bt += v;
         }
+        document.getElementById('frontNineTotal').textContent = ft;
+        document.getElementById('backNineTotal').textContent = bt;
+        const tot = ft + bt;
+        document.getElementById('totalTimeDisplay').textContent = Math.floor(tot/60)+'h '+(tot%60)+'min';
+        document.getElementById('currentTotalTime').textContent = Math.floor(tot/60)+'h '+(tot%60)+'min';
+    }
 
-        function getDetails(p) {
-            let parts = [(p.numPlayers||1)+' jug.'];
-            if(p.numBuggys>0) parts.push(p.numBuggys+' buggy');
-            if(p.numMoto3>0) parts.push(p.numMoto3+' moto3R');
-            if(p.numMoto4>0) parts.push(p.numMoto4+' moto4R');
-            return parts.join(' • ');
+    function saveHoleTimes() {
+        for(let i=1; i<=18; i++) {
+            const inp = document.getElementById('ht'+i);
+            if(inp) holeTimes[i] = parseInt(inp.value) || holesData[i-1].t;
         }
+        saveData(); render();
+        showToast('✅ Tiempos guardados', '');
+    }
 
-        function render() { renderPlayers(); renderCourse(); }
+    function applyPreset(name) { holeTimes = {...presets[name]}; renderTimesConfig(); showToast('📊 Preset aplicado', ''); }
 
-        function renderPlayers() {
-            const c = document.getElementById('playersContainer');
-            if(players.length === 0) { c.innerHTML = '<div class="no-players">No hay grupos</div>'; updateStats(); return; }
-            let html = '';
-            players.forEach(p => {
-                const exp = calcHole(p);
-                let sc = '', st = '', bc = '';
-                if(exp.status==='pending') { st='Sale en '+exp.diff+' min'; bc='status-ontime'; }
-                else if(exp.status==='finished') { st='Finalizado'; bc='status-ahead'; }
-                else if(exp.status==='delayed') { sc='delayed'; st=exp.diff+'/'+exp.holeTime+' min'; bc='status-delayed'; }
-                else if(exp.status==='ahead') { st='Adelantado'; bc='status-ahead'; }
-                else { st='En tiempo'; bc='status-ontime'; }
-                if(p.watchGroup) sc += ' watch-group';
-                if(p.tournamentGroup) sc += ' tournament-group';
-                if(p.greenMonday10Group) sc += ' greenmonday-group';
-                if(p.greenMonday1Group) sc += ' greenmonday1-group';
-                if(p.skippedHoles > 0) sc += ' skipped-group';
-                if(p.warnedGroup) sc += ' warned-group';
-                if(p.pacesetterGroup) sc += ' pacesetter-group';
-                const numHoles = p.numHoles || 18;
-                
-                let extraInfo = '';
-                if (p.greenMonday10Group) extraInfo = ' • <span style="color:#7e57c2">+10min H16</span>';
-                else if (p.greenMonday1Group) extraInfo = ' • <span style="color:#00897b">+10min H9</span>';
-                
-                html += `<div class="player-card ${sc}" draggable="true" ondragstart="handleDragStart(event,${p.id})" ondragend="handleDragEnd(event)" ondragover="handleDragOver(event)" ondragenter="handleDragEnter(event,${p.id})" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event,${p.id})">
-                    <div class="player-actions">
-                        <button class="action-btn" onclick="openEditModal(${p.id})" title="Editar">✏️</button>
-                        <button class="action-btn" onclick="quickSkip(${p.id})" title="Saltar">⏭️</button>
-                        <button class="action-btn" onclick="deletePlayer(${p.id})" title="Eliminar">✕</button>
-                    </div>
-                    <div class="player-header">
-                        <div class="player-color" style="background:${p.color}"></div>
-                        <div class="player-name">${p.name}</div>
-                        ${numHoles===9?'<span class="badge nine-holes">9H</span>':''}
-                        ${p.skippedHoles>0?'<span class="badge skipped">⏭️'+p.skippedHoles+'</span>':''}
-                        ${p.tournamentGroup?'<span class="badge tournament">🏆</span>':''}
-                        ${p.greenMonday10Group?'<span class="badge greenmonday">🟣GM10</span>':''}
-                        ${p.greenMonday1Group?'<span class="badge greenmonday1">🩵GM1</span>':''}
-                        ${p.watchGroup?'<span class="badge watch">⚠️</span>':''}
-                        ${p.warnedGroup?'<span class="badge warned">🔔</span>':''}
-                        ${p.pacesetterGroup?'<span class="badge pacesetter">🐇</span>':''}
-                    </div>
-                    <div class="player-info">🕐 ${p.startTime} • Tee ${p.startTee} • 🏌️ ${numHoles}H${extraInfo}</div>
-                    <div class="player-details">${getDetails(p)}</div>
-                    <div class="player-footer">
-                        ${exp.hole>0&&exp.hole<=18?'<div>Hoyo: <span class="expected-hole">'+exp.hole+'</span></div>':'<div></div>'}
-                        <span class="player-status ${bc}">${st}</span>
-                    </div>
-                </div>`;
-            });
-            c.innerHTML = html;
-            updateStats();
-        }
-
-        function updateStats() {
-            let g=0,j=0,d=0,w=0,t=0,gm10=0,gm1=0,warned=0,pace=0;
-            players.forEach(p => {
-                const exp = calcHole(p);
-                if(exp.status!=='pending'&&exp.status!=='finished'){g++;if(exp.status==='delayed')d++;}
-                j += p.numPlayers||1;
-                if(p.watchGroup)w++;
-                if(p.tournamentGroup)t++;
-                if(p.greenMonday10Group)gm10++;
-                if(p.greenMonday1Group)gm1++;
-                if(p.warnedGroup)warned++;
-                if(p.pacesetterGroup)pace++;
-            });
-            document.getElementById('totalGroups').textContent = g;
-            document.getElementById('totalJugadores').textContent = j;
-            document.getElementById('delayedCount').textContent = d;
-            document.getElementById('watchCount').textContent = w;
-            document.getElementById('tournamentCount').textContent = t;
-            document.getElementById('greenMondayCount').textContent = gm10;
-            document.getElementById('greenMonday1Count').textContent = gm1;
-            document.getElementById('warnedCount').textContent = warned;
-        }
-
-        function renderCourse() {
-            const front = document.getElementById('frontNineVisual');
-            const back = document.getElementById('backNineVisual');
-            const byHole = {};
-            players.forEach(p => { const exp = calcHole(p); if(exp.hole>0&&exp.hole<=18){if(!byHole[exp.hole])byHole[exp.hole]=[];byHole[exp.hole].push(p);} });
-            let fh = '<div class="nine-title">IDA (1-9)</div>';
-            let bh = '<div class="nine-title">VUELTA (10-18)</div>';
-            holesData.forEach(h => {
-                const pls = byHole[h.n]||[];
-                const hasW = pls.some(p=>p.watchGroup);
-                const hasT = pls.some(p=>p.tournamentGroup);
-                const hasGM10 = pls.some(p=>p.greenMonday10Group);
-                const hasGM1 = pls.some(p=>p.greenMonday1Group);
-                const hasS = pls.some(p=>p.skippedHoles>0);
-                const hasWarned = pls.some(p=>p.warnedGroup);
-                const hasPace = pls.some(p=>p.pacesetterGroup);
-                const hasC = pls.length>0;
-                let hc = '';
-                if(hasPace)hc='pacesetter-hole';
-                else if(hasWarned)hc='warned-hole';
-                else if(hasS)hc='skipped-hole';
-                else if(hasW)hc='watch-hole';
-                else if(hasGM1)hc='greenmonday1-hole';
-                else if(hasGM10)hc='greenmonday-hole';
-                else if(hasT)hc='tournament-hole';
-                else if(hasC)hc='current';
-                
-                let ht = holeTimes[h.n]||h.t;
-                let td = ht+' min';
-                // Mostrar tiempo extra para Green Monday
-                const hasGM10Here = pls.some(p=>p.greenMonday10Group);
-                const hasGM1Here = pls.some(p=>p.greenMonday1Group);
-                if(h.n===16&&hasGM10Here)td=ht+'+10';
-                if(h.n===9&&hasGM1Here)td=ht+'+10';
-                
-                let holeHtml = `<div class="hole ${hc}"><div class="hole-number">${h.n}</div><div class="hole-info">Par ${h.par} • ${h.m}m<br>⏱️ ${td}</div>`;
-                if(pls.length>0){
-                    holeHtml+='<div class="player-markers">'+pls.map(p=>{
-                        let dotClass = '';
-                        if(p.pacesetterGroup) dotClass = 'pacesetter';
-                        else if(p.warnedGroup) dotClass = 'warned';
-                        return `<div class="player-dot ${dotClass}" style="background:${p.color}" title="${p.name}"></div>`;
-                    }).join('')+'</div>';
-                }
-                holeHtml+='</div>';
-                if(h.n<=9)fh+=holeHtml;else bh+=holeHtml;
-            });
-            front.innerHTML = fh;
-            back.innerHTML = bh;
-            renderLegend();
-        }
-
-        function renderLegend() {
-            const leg = document.getElementById('legend');
-            if(players.length === 0) { leg.innerHTML = ''; return; }
-            leg.innerHTML = players.map(p => {
-                const exp = calcHole(p);
-                const txt = exp.status==='pending' ? 'Pend.' : (exp.status==='finished' ? 'Fin' : 'H'+exp.hole);
-                let ic = '';
-                if(p.pacesetterGroup) ic = 'pacesetter';
-                else if(p.warnedGroup) ic = 'warned';
-                else if(p.skippedHoles > 0) ic = 'skipped';
-                else if(p.greenMonday10Group || p.greenMonday1Group) ic = 'greenmonday';
-                else if(p.tournamentGroup) ic = 'tournament';
-                else if(p.watchGroup) ic = 'watch';
-                const displayName = p.name.split(' (')[0];
-                let badges = '';
-                if(p.pacesetterGroup) badges += '🐇';
-                if(p.warnedGroup) badges += '🔔';
-                return '<div class="legend-item '+ic+'"><div class="legend-dot" style="background:'+p.color+'"></div><span>'+displayName+' '+badges+' - '+txt+'</span></div>';
-            }).join('');
-        }
-
-        function renderTimesConfig() {
-            const f = document.getElementById('frontNineTimes');
-            const b = document.getElementById('backNineTimes');
-            let fh = '', bh = '';
-            holesData.forEach(h => {
-                const t = holeTimes[h.n] || h.t;
-                const html = '<div class="hole-time-row"><div class="hole-badge">'+h.n+'</div><div class="hole-details"><div class="par-info">Par '+h.par+'</div><div class="meters-info">'+h.m+'m</div></div><div class="time-input-wrapper"><input type="number" id="ht'+h.n+'" value="'+t+'" min="5" max="30" onchange="updateTotals()"><span>min</span></div></div>';
-                if(h.n <= 9) fh += html; else bh += html;
-            });
-            f.innerHTML = fh; b.innerHTML = bh;
-            updateTotals();
-        }
-
-        function updateTotals() {
-            let ft = 0, bt = 0;
-            for(let i=1; i<=18; i++) {
-                const inp = document.getElementById('ht'+i);
-                const v = inp ? parseInt(inp.value) || holesData[i-1].t : holeTimes[i] || holesData[i-1].t;
-                if(i <= 9) ft += v; else bt += v;
-            }
-            document.getElementById('frontNineTotal').textContent = ft;
-            document.getElementById('backNineTotal').textContent = bt;
-            const tot = ft + bt;
-            document.getElementById('totalTimeDisplay').textContent = Math.floor(tot/60)+'h '+(tot%60)+'min';
-            document.getElementById('currentTotalTime').textContent = Math.floor(tot/60)+'h '+(tot%60)+'min';
-        }
-
-        function saveHoleTimes() {
-            for(let i=1; i<=18; i++) {
-                const inp = document.getElementById('ht'+i);
-                if(inp) holeTimes[i] = parseInt(inp.value) || holesData[i-1].t;
-            }
-            saveData(); render();
-            showToast('✅ Tiempos guardados', '');
-        }
-
-        function applyPreset(name) { holeTimes = {...presets[name]}; renderTimesConfig(); showToast('📊 Preset aplicado', ''); }
-
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('currentTime').textContent = now.toLocaleTimeString('es-ES');
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'short'});
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('currentTime').textContent = now.toLocaleTimeString('es-ES');
+        document.getElementById('currentDate').textContent = now.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'short'});
+        if (!isListDragging) {
             render();
         }
+    }
 
-        function showToast(msg, colorClass) {
-            const c = document.getElementById('toastContainer');
-            const t = document.createElement('div');
-            t.className = 'toast' + (colorClass ? ' '+colorClass : '');
-            t.textContent = msg;
-            c.appendChild(t);
-            setTimeout(() => t.remove(), 3000);
+    function showToast(msg, colorClass) {
+        const c = document.getElementById('toastContainer');
+        const t = document.createElement('div');
+        t.className = 'toast' + (colorClass ? ' '+colorClass : '');
+        t.textContent = msg;
+        c.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+    }
+
+    // === Drag & drop de la lista (PC + móvil) con mouse + touch ===
+function initListDragAndDrop() {
+    const container = document.getElementById('playersContainer');
+    if (!container) return;
+    if (!container.style.position) {
+        container.style.position = 'relative';
+    }
+    // Escuchamos ratón y táctil en el contenedor (delegación)
+    container.addEventListener('mousedown', onListMouseDown);
+    container.addEventListener('touchstart', onListTouchStart, { passive: false });
+}
+
+function onListMouseDown(e) {
+    if (e.button !== 0) return; // solo botón izquierdo
+
+    // Solo arrastrar si se hace click en la barra de arrastre
+    const handle = e.target.closest('.drag-handle');
+    if (!handle) return;
+
+    const card = handle.closest('.player-card');
+    if (!card) return;
+
+    const container = document.getElementById('playersContainer');
+    const listEl = container.parentElement; // .players-list
+
+    startListDrag(card, e.clientY, container, listEl);
+
+    document.addEventListener('mousemove', onListMouseMove);
+    document.addEventListener('mouseup', onListMouseUp);
+
+    e.preventDefault();
+}
+
+function onListTouchStart(e) {
+    const touch = e.touches[0];
+    if (!touch) return;
+
+    // Solo arrastrar si se toca la barra de arrastre
+    const handle = e.target.closest('.drag-handle');
+    if (!handle) return; // si no es el asa, dejamos que haga scroll normal
+
+    const card = handle.closest('.player-card');
+    if (!card) return;
+
+    const container = document.getElementById('playersContainer');
+    const listEl = container.parentElement;
+
+    startListDrag(card, touch.clientY, container, listEl);
+
+    document.addEventListener('touchmove', onListTouchMove, { passive: false });
+    document.addEventListener('touchend', onListTouchEnd);
+    document.addEventListener('touchcancel', onListTouchEnd);
+
+    e.preventDefault();
+}
+
+function startListDrag(card, clientY, container, listEl) {
+    dragCard = card;
+    isListDragging = true;
+    dragContainer = container;
+    dragListEl = listEl;
+
+    dragStartY = clientY;
+    dragStartTop = card.offsetTop;
+    dragStartScrollTop = listEl.scrollTop;
+
+    const rect = card.getBoundingClientRect();
+
+    // Placeholder con la misma altura
+    dragPlaceholder = document.createElement('div');
+    dragPlaceholder.className = 'player-card placeholder';
+    dragPlaceholder.style.height = rect.height + 'px';
+    container.insertBefore(dragPlaceholder, card.nextSibling);
+
+    // Hacemos la tarjeta absoluta para poder moverla
+    card.style.width = rect.width + 'px';
+    card.style.position = 'absolute';
+    card.style.left = card.offsetLeft + 'px';
+    card.style.top = dragStartTop + 'px';
+    card.style.zIndex = '1000';
+    card.classList.add('dragging');
+}
+
+function onListMouseMove(e) {
+    if (!dragCard) return;
+    moveListDrag(e.clientY);
+    e.preventDefault();
+}
+
+function onListTouchMove(e) {
+    if (!dragCard) return;
+    const touch = e.touches[0];
+    if (!touch) return;
+    moveListDrag(touch.clientY);
+    e.preventDefault();
+}
+
+function moveListDrag(clientY) {
+    const container = dragContainer;
+    const listEl = dragListEl;
+
+    const listRect = listEl.getBoundingClientRect();
+    const edge = 40;
+
+    // Auto-scroll cerca de los bordes
+    if (clientY < listRect.top + edge) {
+        listEl.scrollTop -= 10;
+    } else if (clientY > listRect.bottom - edge) {
+        listEl.scrollTop += 10;
+    }
+
+    const deltaY = clientY - dragStartY;
+    const scrollDelta = listEl.scrollTop - dragStartScrollTop;
+    let newTop = dragStartTop + deltaY + scrollDelta;
+
+    const maxTop = container.scrollHeight - dragCard.offsetHeight;
+    if (newTop < 0) newTop = 0;
+    if (newTop > maxTop) newTop = maxTop;
+
+    dragCard.style.top = newTop + 'px';
+
+    updatePlaceholderPositionList(clientY);
+}
+
+function updatePlaceholderPositionList(clientY) {
+    const container = dragContainer;
+    const cards = Array.from(container.querySelectorAll('.player-card'))
+        .filter(c => c !== dragCard && !c.classList.contains('placeholder'));
+
+    let inserted = false;
+    for (const c of cards) {
+        const rect = c.getBoundingClientRect();
+        const midpoint = rect.top + rect.height / 2;
+        if (clientY < midpoint) {
+            container.insertBefore(dragPlaceholder, c);
+            inserted = true;
+            break;
         }
-    </script>
+    }
+    if (!inserted) {
+        container.appendChild(dragPlaceholder);
+    }
+}
+
+function onListMouseUp(e) {
+    endListDrag();
+}
+
+function onListTouchEnd(e) {
+    endListDrag();
+}
+
+function endListDrag() {
+    if (!dragCard) return;
+
+    const container = dragContainer;
+
+    // Insertar la tarjeta en la posición del placeholder
+    container.insertBefore(dragCard, dragPlaceholder);
+
+    // Limpiar estilos
+    dragCard.classList.remove('dragging');
+    dragCard.style.position = '';
+    dragCard.style.top = '';
+    dragCard.style.left = '';
+    dragCard.style.width = '';
+    dragCard.style.zIndex = '';
+
+    if (dragPlaceholder && dragPlaceholder.parentNode) {
+        dragPlaceholder.parentNode.removeChild(dragPlaceholder);
+    }
+
+    // Reordenar el array players según el DOM
+    const newOrder = [];
+    container.querySelectorAll('.player-card').forEach(cardEl => {
+        const id = parseInt(cardEl.dataset.id, 10);
+        const p = players.find(pl => pl.id === id);
+        if (p) newOrder.push(p);
+    });
+
+    if (newOrder.length === players.length) {
+        players = newOrder;
+        saveData();
+    }
+
+    // Quitar listeners
+    document.removeEventListener('mousemove', onListMouseMove);
+    document.removeEventListener('mouseup', onListMouseUp);
+    document.removeEventListener('touchmove', onListTouchMove);
+    document.removeEventListener('touchend', onListTouchEnd);
+    document.removeEventListener('touchcancel', onListTouchEnd);
+
+    // Reset estado
+    dragCard = null;
+    dragPlaceholder = null;
+    dragContainer = null;
+    dragListEl = null;
+    isListDragging = false;
+
+    render();
+
+    }
+
+    function onListPointerDown(e) {
+        if (e.button !== 0 && e.button !== undefined) return;
+
+        const card = e.target.closest('.player-card');
+        if (!card) return;
+
+        if (e.target.closest('.action-btn')) return;
+
+        const container = document.getElementById('playersContainer');
+        const listEl = container.parentElement;
+
+        dragCard = card;
+        dragPointerId = e.pointerId;
+        isListDragging = true;
+
+        dragStartY = e.clientY;
+        dragStartTop = card.offsetTop;
+        dragStartScrollTop = listEl.scrollTop;
+
+        const rect = card.getBoundingClientRect();
+
+        dragPlaceholder = document.createElement('div');
+        dragPlaceholder.className = 'player-card placeholder';
+        dragPlaceholder.style.height = rect.height + 'px';
+        container.insertBefore(dragPlaceholder, card.nextSibling);
+
+        card.style.width = rect.width + 'px';
+        card.style.position = 'absolute';
+        card.style.left = card.offsetLeft + 'px';
+        card.style.top = dragStartTop + 'px';
+        card.style.zIndex = '1000';
+        card.classList.add('dragging');
+        card.style.touchAction = 'none';
+
+        card.setPointerCapture(dragPointerId);
+        card.addEventListener('pointermove', onListPointerMove);
+        card.addEventListener('pointerup', onListPointerUp);
+        card.addEventListener('pointercancel', onListPointerUp);
+
+        e.preventDefault();
+    }
+
+    function onListPointerMove(e) {
+        if (!dragCard || e.pointerId !== dragPointerId) return;
+
+        const container = document.getElementById('playersContainer');
+        const listEl = container.parentElement;
+
+        const listRect = listEl.getBoundingClientRect();
+        const edge = 40;
+
+        if (e.clientY < listRect.top + edge) {
+            listEl.scrollTop -= 10;
+        } else if (e.clientY > listRect.bottom - edge) {
+            listEl.scrollTop += 10;
+        }
+
+        const deltaY = e.clientY - dragStartY;
+        const scrollDelta = listEl.scrollTop - dragStartScrollTop;
+        let newTop = dragStartTop + deltaY + scrollDelta;
+
+        const maxTop = container.scrollHeight - dragCard.offsetHeight;
+        if (newTop < 0) newTop = 0;
+        if (newTop > maxTop) newTop = maxTop;
+
+        dragCard.style.top = newTop + 'px';
+
+        updatePlaceholderPosition(e);
+
+        e.preventDefault();
+    }
+
+    function updatePlaceholderPosition(e) {
+        const container = document.getElementById('playersContainer');
+        const cards = Array.from(container.querySelectorAll('.player-card'))
+            .filter(c => c !== dragCard && !c.classList.contains('placeholder'));
+
+        let inserted = false;
+        for (const c of cards) {
+            const rect = c.getBoundingClientRect();
+            const midpoint = rect.top + rect.height / 2;
+            if (e.clientY < midpoint) {
+                container.insertBefore(dragPlaceholder, c);
+                inserted = true;
+                break;
+            }
+        }
+        if (!inserted) {
+            container.appendChild(dragPlaceholder);
+        }
+    }
+
+    function onListPointerUp(e) {
+        if (!dragCard || e.pointerId !== dragPointerId) return;
+
+        const container = document.getElementById('playersContainer');
+
+        container.insertBefore(dragCard, dragPlaceholder);
+
+        dragCard.classList.remove('dragging');
+        dragCard.style.position = '';
+        dragCard.style.top = '';
+        dragCard.style.left = '';
+        dragCard.style.width = '';
+        dragCard.style.zIndex = '';
+        dragCard.style.touchAction = '';
+        try { dragCard.releasePointerCapture(dragPointerId); } catch (e) {}
+
+        if (dragPlaceholder && dragPlaceholder.parentNode) {
+            dragPlaceholder.parentNode.removeChild(dragPlaceholder);
+        }
+
+        const newOrder = [];
+        container.querySelectorAll('.player-card').forEach(cardEl => {
+            const id = parseInt(cardEl.dataset.id, 10);
+            const p = players.find(pl => pl.id === id);
+            if (p) newOrder.push(p);
+        });
+
+        if (newOrder.length === players.length) {
+            players = newOrder;
+            saveData();
+        }
+
+        dragCard.removeEventListener('pointermove', onListPointerMove);
+        dragCard.removeEventListener('pointerup', onListPointerUp);
+        dragCard.removeEventListener('pointercancel', onListPointerUp);
+
+        dragCard = null;
+        dragPointerId = null;
+        dragPlaceholder = null;
+        isListDragging = false;
+
+        render();
+    }
+</script>   
 </body>
 </html>
