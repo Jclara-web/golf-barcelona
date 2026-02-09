@@ -1,5 +1,4 @@
-
-<!DOCTYPE html>
+                <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -266,7 +265,7 @@
         .btn-primary { background: linear-gradient(135deg, #2d5a3d, #1a472a); color: white; }
         .btn-primary:hover { box-shadow: 0 5px 20px rgba(45, 90, 61, 0.4); }
         .btn-danger { background: #dc3545; color: white; margin-top: 10px; }
-        .btn-secondary { background: #e0e0e0; color: #333; margin-top: 10px; }
+        .btn-secondary { background: #e0e0e0; color: #333; }
         .btn-info { background: #17a2b8; color: white; }
 
         .players-list { margin-top: 20px; max-height: 350px; overflow-y: auto; }
@@ -282,6 +281,27 @@
             cursor: grab;
             transition: all 0.2s;
             user-select: none;
+            touch-action: auto; /* importante en móviles para que no haga scroll al arrastrar */
+            .drag-handle {
+            position: absolute;
+            left: 6px;
+            top: 6px;
+            bottom: 6px;
+            width: 32px;                    /* barra relativamente ancha */
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #888;
+            background: rgba(0,0,0,0.04);
+            cursor: grab;
+        }
+
+.drag-handle:active {
+    cursor: grabbing;
+    background: rgba(0,0,0,0.10);
+}
         }
 
         .player-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
@@ -297,27 +317,6 @@
         .player-card.warned-group { border-left-color: #f44336; background: #ffebee; }
         .player-card.pacesetter-group { border-left-color: #9c27b0; background: #f3e5f5; border-left-width: 6px; }
         .player-card.has-notes { border-left-color: #ff5722; }
-
-        .drag-handle {
-            position: absolute;
-            left: 6px;
-            top: 6px;
-            bottom: 6px;
-            width: 26px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            color: #888;
-            background: rgba(0,0,0,0.04);
-            cursor: grab;
-        }
-
-        .drag-handle:active {
-            cursor: grabbing;
-            background: rgba(0,0,0,0.10);
-        }
 
         .player-header { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 5px; }
 
@@ -875,19 +874,18 @@
         .toast.orange { background: #ff5722; }
         .toast.red { background: #f44336; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
         #playersContainer {
-            position: relative;
-        }
+    position: relative;
+}
 
-        .player-card.placeholder {
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            cursor: default;
-        }
+.player-card.placeholder {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    cursor: default;
+}
     </style>
 </head>
 <body>
@@ -1331,7 +1329,7 @@ Formato esperado (separado por tabulaciones):
                             <div class="marker-box greenmonday10" id="markerGreenMonday10" onclick="toggleMarker('greenmonday10')"><div class="marker-icon">🏆</div><div class="marker-text">GM TEE 10</div></div>
                             <div class="marker-box greenmonday1" id="markerGreenMonday1" onclick="toggleMarker('greenmonday1')"><div class="marker-icon">🏆</div><div class="marker-text">GM TEE 1</div></div>
                             <div class="marker-box watch" id="markerWatch" onclick="toggleMarker('watch')"><div class="marker-icon">⚠️</div><div class="marker-text">VIGILAR</div></div>
-                            <div class="marker-box warned" id="markerWarned" onclick="toggleMarker('warned')"><div enclass="marker-icon">🔔</div><div class="marker-text">AVISADO</div></div>
+                            <div class="marker-box warned" id="markerWarned" onclick="toggleMarker('warned')"><div class="marker-icon">🔔</div><div class="marker-text">AVISADO</div></div>
                             <div class="marker-box pacesetter" id="markerPacesetter" onclick="toggleMarker('pacesetter')"><div class="marker-icon">🐇</div><div class="marker-text">LIEBRE</div></div>
                         </div>
                     </div>
@@ -1341,8 +1339,6 @@ Formato esperado (separado por tabulaciones):
                         <div id="playersContainer"><div class="no-players">No hay grupos</div></div>
                     </div>
                     <button class="btn btn-danger" onclick="clearAllPlayers()">🗑️ Limpiar</button>
-                    <button class="btn btn-secondary" onclick="exportState()">📤 Exportar estado</button>
-                    <button class="btn btn-secondary" onclick="importState()">📥 Importar estado</button>
                 </div>
 
                 <div class="panel golf-course">
@@ -1368,7 +1364,7 @@ Formato esperado (separado por tabulaciones):
         </div>
     </div>
 
-<script>
+ <script>
     const holesData = [
         { n: 1,  par: 5, m: 478, t: 16 }, { n: 2,  par: 3, m: 141, t: 13 }, { n: 3,  par: 4, m: 272, t: 14 },
         { n: 4,  par: 4, m: 353, t: 15 }, { n: 5,  par: 3, m: 150, t: 14 }, { n: 6,  par: 4, m: 379, t: 15 },
@@ -2102,11 +2098,12 @@ Formato esperado (separado por tabulaciones):
             html += `<div class="player-card ${sc}" data-id="${p.id}">
                 <div class="drag-handle" title="Arrastrar">☰</div>
                 <div class="player-actions">
-                    <button class="action-btn" onclick="openEditModal(${p.id})" title="Editar">✏️</button>
-                    <button class="action-btn" onclick="quickSkip(${p.id})" title="Saltar">⏭️</button>
-                    <button class="action-btn" onclick="deletePlayer(${p.id})" title="Eliminar">✕</button>
+                <button class="action-btn" onclick="openEditModal(${p.id})" title="Editar">✏️</button>
+                <button class="action-btn" onclick="quickSkip(${p.id})" title="Saltar">⏭️</button>
+                <button class="action-btn" onclick="deletePlayer(${p.id})" title="Eliminar">✕</button>
                 </div>
                 <div class="player-header">
+                ...
                     <div class="player-color" style="background:${p.color}"></div>
                     <div class="player-name">${p.name}</div>
                     ${numHoles===9?'<span class="badge nine-holes">9H</span>':''}
@@ -2281,184 +2278,128 @@ Formato esperado (separado por tabulaciones):
         setTimeout(() => t.remove(), 3000);
     }
 
-    // ===== EXPORTAR / IMPORTAR ESTADO (tiempos + grupos) =====
-    function exportState() {
-        const data = {
-            holeTimes,
-            players
-        };
-
-        try {
-            const json = JSON.stringify(data);
-            const payload = btoa(encodeURIComponent(json));
-
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(payload).then(() => {
-                    showToast('📤 Estado copiado al portapapeles', 'blue');
-                }).catch(() => {
-                    prompt('Copia este texto y envíalo a tu compañero:', payload);
-                });
-            } else {
-                prompt('Copia este texto y envíalo a tu compañero:', payload);
-            }
-        } catch (e) {
-            alert('Error al exportar el estado: ' + e.message);
-        }
-    }
-
-    function importState() {
-        const payload = prompt('Pega aquí el texto que te han enviado:');
-        if (!payload) return;
-
-        try {
-            const json = decodeURIComponent(atob(payload));
-            const data = JSON.parse(json);
-
-            if (!data || typeof data !== 'object') {
-                alert('El texto no tiene un formato válido');
-                return;
-            }
-            if (!data.holeTimes || typeof data.holeTimes !== 'object') {
-                alert('Faltan los tiempos de hoyo en los datos importados');
-                return;
-            }
-            if (!Array.isArray(data.players)) {
-                alert('Faltan los grupos en los datos importados');
-                return;
-            }
-
-            holeTimes = data.holeTimes;
-            players = data.players;
-
-            players.forEach(p => {
-                if (!p.notes) p.notes = [];
-            });
-
-            saveData();
-            renderTimesConfig();
-            render();
-            showToast('📥 Estado importado correctamente', 'teal');
-        } catch (e) {
-            alert('Error al importar el estado: ' + e.message);
-        }
-    }
-
     // === Drag & drop de la lista (PC + móvil) con mouse + touch ===
-    function initListDragAndDrop() {
-        const container = document.getElementById('playersContainer');
-        if (!container) return;
-        if (!container.style.position) {
-            container.style.position = 'relative';
-        }
-        container.addEventListener('mousedown', onListMouseDown);
-        container.addEventListener('touchstart', onListTouchStart, { passive: false });
+function initListDragAndDrop() {
+    const container = document.getElementById('playersContainer');
+    if (!container) return;
+    if (!container.style.position) {
+        container.style.position = 'relative';
+    }
+    // Escuchamos ratón y táctil en el contenedor (delegación)
+    container.addEventListener('mousedown', onListMouseDown);
+    container.addEventListener('touchstart', onListTouchStart, { passive: false });
+}
+
+function onListMouseDown(e) {
+    if (e.button !== 0) return; // solo botón izquierdo
+
+    // Solo arrastrar si se hace click en la barra de arrastre
+    const handle = e.target.closest('.drag-handle');
+    if (!handle) return;
+
+    const card = handle.closest('.player-card');
+    if (!card) return;
+
+    const container = document.getElementById('playersContainer');
+    const listEl = container.parentElement; // .players-list
+
+    startListDrag(card, e.clientY, container, listEl);
+
+    document.addEventListener('mousemove', onListMouseMove);
+    document.addEventListener('mouseup', onListMouseUp);
+
+    e.preventDefault();
+}
+
+function onListTouchStart(e) {
+    const touch = e.touches[0];
+    if (!touch) return;
+
+    // Solo arrastrar si se toca la barra de arrastre
+    const handle = e.target.closest('.drag-handle');
+    if (!handle) return; // si no es el asa, dejamos que haga scroll normal
+
+    const card = handle.closest('.player-card');
+    if (!card) return;
+
+    const container = document.getElementById('playersContainer');
+    const listEl = container.parentElement;
+
+    startListDrag(card, touch.clientY, container, listEl);
+
+    document.addEventListener('touchmove', onListTouchMove, { passive: false });
+    document.addEventListener('touchend', onListTouchEnd);
+    document.addEventListener('touchcancel', onListTouchEnd);
+
+    e.preventDefault();
+}
+
+function startListDrag(card, clientY, container, listEl) {
+    dragCard = card;
+    isListDragging = true;
+    dragContainer = container;
+    dragListEl = listEl;
+
+    dragStartY = clientY;
+    dragStartTop = card.offsetTop;
+    dragStartScrollTop = listEl.scrollTop;
+
+    const rect = card.getBoundingClientRect();
+
+    // Placeholder con la misma altura
+    dragPlaceholder = document.createElement('div');
+    dragPlaceholder.className = 'player-card placeholder';
+    dragPlaceholder.style.height = rect.height + 'px';
+    container.insertBefore(dragPlaceholder, card.nextSibling);
+
+    // Hacemos la tarjeta absoluta para poder moverla
+    card.style.width = rect.width + 'px';
+    card.style.position = 'absolute';
+    card.style.left = card.offsetLeft + 'px';
+    card.style.top = dragStartTop + 'px';
+    card.style.zIndex = '1000';
+    card.classList.add('dragging');
+}
+
+function onListMouseMove(e) {
+    if (!dragCard) return;
+    moveListDrag(e.clientY);
+    e.preventDefault();
+}
+
+function onListTouchMove(e) {
+    if (!dragCard) return;
+    const touch = e.touches[0];
+    if (!touch) return;
+    moveListDrag(touch.clientY);
+    e.preventDefault();
+}
+
+function moveListDrag(clientY) {
+    const container = dragContainer;
+    const listEl = dragListEl;
+
+    const listRect = listEl.getBoundingClientRect();
+    const edge = 40;
+
+    // Auto-scroll cerca de los bordes
+    if (clientY < listRect.top + edge) {
+        listEl.scrollTop -= 10;
+    } else if (clientY > listRect.bottom - edge) {
+        listEl.scrollTop += 10;
     }
 
-    function onListMouseDown(e) {
-        if (e.button !== 0) return; // solo botón izquierdo
+    const deltaY = clientY - dragStartY;
+    const scrollDelta = listEl.scrollTop - dragStartScrollTop;
+    let newTop = dragStartTop + deltaY + scrollDelta;
 
-        const handle = e.target.closest('.drag-handle');
-        if (!handle) return; // no es el asa, scroll normal
+    const maxTop = container.scrollHeight - dragCard.offsetHeight;
+    if (newTop < 0) newTop = 0;
+    if (newTop > maxTop) newTop = maxTop;
 
-        const card = handle.closest('.player-card');
-        if (!card) return;
+    dragCard.style.top = newTop + 'px';
 
-        const container = document.getElementById('playersContainer');
-        const listEl = container.parentElement; // .players-list
-
-        startListDrag(card, e.clientY, container, listEl);
-
-        document.addEventListener('mousemove', onListMouseMove);
-        document.addEventListener('mouseup', onListMouseUp);
-
-        e.preventDefault();
-    }
-
-    function onListTouchStart(e) {
-        const touch = e.touches[0];
-        if (!touch) return;
-
-        const handle = e.target.closest('.drag-handle');
-        if (!handle) return; // si no es el asa, dejamos scroll
-
-        const card = handle.closest('.player-card');
-        if (!card) return;
-
-        const container = document.getElementById('playersContainer');
-        const listEl = container.parentElement;
-
-        startListDrag(card, touch.clientY, container, listEl);
-
-        document.addEventListener('touchmove', onListTouchMove, { passive: false });
-        document.addEventListener('touchend', onListTouchEnd);
-        document.addEventListener('touchcancel', onListTouchEnd);
-
-        e.preventDefault();
-    }
-
-    function startListDrag(card, clientY, container, listEl) {
-        dragCard = card;
-        isListDragging = true;
-        dragContainer = container;
-        dragListEl = listEl;
-
-        dragStartY = clientY;
-        dragStartTop = card.offsetTop;
-        dragStartScrollTop = listEl.scrollTop;
-
-        const rect = card.getBoundingClientRect();
-
-        dragPlaceholder = document.createElement('div');
-        dragPlaceholder.className = 'player-card placeholder';
-        dragPlaceholder.style.height = rect.height + 'px';
-        container.insertBefore(dragPlaceholder, card.nextSibling);
-
-        card.style.width = rect.width + 'px';
-        card.style.position = 'absolute';
-        card.style.left = card.offsetLeft + 'px';
-        card.style.top = dragStartTop + 'px';
-        card.style.zIndex = '1000';
-        card.classList.add('dragging');
-    }
-
-    function onListMouseMove(e) {
-        if (!dragCard) return;
-        moveListDrag(e.clientY);
-        e.preventDefault();
-    }
-
-    function onListTouchMove(e) {
-        if (!dragCard) return;
-        const touch = e.touches[0];
-        if (!touch) return;
-        moveListDrag(touch.clientY);
-        e.preventDefault();
-    }
-
-    function moveListDrag(clientY) {
-        const container = dragContainer;
-        const listEl = dragListEl;
-
-        const listRect = listEl.getBoundingClientRect();
-        const edge = 40;
-
-        if (clientY < listRect.top + edge) {
-            listEl.scrollTop -= 10;
-        } else if (clientY > listRect.bottom - edge) {
-            listEl.scrollTop += 10;
-        }
-
-        const deltaY = clientY - dragStartY;
-        const scrollDelta = listEl.scrollTop - dragStartScrollTop;
-        let newTop = dragStartTop + deltaY + scrollDelta;
-
-        const maxTop = container.scrollHeight - dragCard.offsetHeight;
-        if (newTop < 0) newTop = 0;
-        if (newTop > maxTop) newTop = maxTop;
-
-        dragCard.style.top = newTop + 'px';
-
-        updatePlaceholderPositionList(clientY);
+    updatePlaceholderPositionList(clientY);
 }
 
 function updatePlaceholderPositionList(clientY) {
