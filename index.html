@@ -1,4 +1,4 @@
-                <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -265,7 +265,7 @@
         .btn-primary { background: linear-gradient(135deg, #2d5a3d, #1a472a); color: white; }
         .btn-primary:hover { box-shadow: 0 5px 20px rgba(45, 90, 61, 0.4); }
         .btn-danger { background: #dc3545; color: white; margin-top: 10px; }
-        .btn-secondary { background: #e0e0e0; color: #333; }
+        .btn-secondary { background: #e0e0e0; color: #333; margin-top: 8px; }
         .btn-info { background: #17a2b8; color: white; }
 
         .players-list { margin-top: 20px; max-height: 350px; overflow-y: auto; }
@@ -281,27 +281,6 @@
             cursor: grab;
             transition: all 0.2s;
             user-select: none;
-            touch-action: auto; /* importante en móviles para que no haga scroll al arrastrar */
-            .drag-handle {
-            position: absolute;
-            left: 6px;
-            top: 6px;
-            bottom: 6px;
-            width: 32px;                    /* barra relativamente ancha */
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            color: #888;
-            background: rgba(0,0,0,0.04);
-            cursor: grab;
-        }
-
-.drag-handle:active {
-    cursor: grabbing;
-    background: rgba(0,0,0,0.10);
-}
         }
 
         .player-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
@@ -317,6 +296,27 @@
         .player-card.warned-group { border-left-color: #f44336; background: #ffebee; }
         .player-card.pacesetter-group { border-left-color: #9c27b0; background: #f3e5f5; border-left-width: 6px; }
         .player-card.has-notes { border-left-color: #ff5722; }
+
+        .drag-handle {
+            position: absolute;
+            left: 6px;
+            top: 6px;
+            bottom: 6px;
+            width: 26px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #888;
+            background: rgba(0,0,0,0.04);
+            cursor: grab;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+            background: rgba(0,0,0,0.10);
+        }
 
         .player-header { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 5px; }
 
@@ -874,18 +874,19 @@
         .toast.orange { background: #ff5722; }
         .toast.red { background: #f44336; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        #playersContainer {
-    position: relative;
-}
 
-.player-card.placeholder {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    cursor: default;
-}
+        #playersContainer {
+            position: relative;
+        }
+
+        .player-card.placeholder {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            cursor: default;
+        }
     </style>
 </head>
 <body>
@@ -1339,6 +1340,11 @@ Formato esperado (separado por tabulaciones):
                         <div id="playersContainer"><div class="no-players">No hay grupos</div></div>
                     </div>
                     <button class="btn btn-danger" onclick="clearAllPlayers()">🗑️ Limpiar</button>
+                    <button class="btn btn-secondary" onclick="exportState()">📤 Exportar estado</button>
+                    <button class="btn btn-secondary" onclick="importState()">📥 Importar estado</button>
+                    <button class="btn btn-secondary" onclick="exportStateToFile()">📁 Exportar a archivo</button>
+                    <button class="btn btn-secondary" onclick="triggerImportFile()">📂 Importar desde archivo</button>
+                    <input type="file" id="importFileInput" accept=".json,application/json" style="display:none" onchange="importStateFromFile(this.files[0])">
                 </div>
 
                 <div class="panel golf-course">
@@ -1364,7 +1370,7 @@ Formato esperado (separado por tabulaciones):
         </div>
     </div>
 
- <script>
+<script>
     const holesData = [
         { n: 1,  par: 5, m: 478, t: 16 }, { n: 2,  par: 3, m: 141, t: 13 }, { n: 3,  par: 4, m: 272, t: 14 },
         { n: 4,  par: 4, m: 353, t: 15 }, { n: 5,  par: 3, m: 150, t: 14 }, { n: 6,  par: 4, m: 379, t: 15 },
@@ -1597,7 +1603,7 @@ Formato esperado (separado por tabulaciones):
         selectedColor = getNextColor();
         useCustomColor = false;
         initColors();
-        document.querySelectorAll('#colorPicker .color-option').forEach(o => o.classList.toggle('selected', o.style.background === selectedColor));
+        document.querySelectorAll('#colorPicker .color-option').forEach(o => o.style.background === selectedColor && o.classList.add('selected'));
         showToast('✅ '+name+' añadido', '');
     }
 
@@ -1883,7 +1889,7 @@ Formato esperado (separado por tabulaciones):
         parsedGroups = [];
         const lines = data.split('\n');
 
-        lines.forEach((line, index) => {
+        lines.forEach((line) => {
             if (!line.trim()) return;
 
             const parts = line.split(/\t+|\s{2,}/).map(p => p.trim()).filter(p => p);
@@ -2098,12 +2104,11 @@ Formato esperado (separado por tabulaciones):
             html += `<div class="player-card ${sc}" data-id="${p.id}">
                 <div class="drag-handle" title="Arrastrar">☰</div>
                 <div class="player-actions">
-                <button class="action-btn" onclick="openEditModal(${p.id})" title="Editar">✏️</button>
-                <button class="action-btn" onclick="quickSkip(${p.id})" title="Saltar">⏭️</button>
-                <button class="action-btn" onclick="deletePlayer(${p.id})" title="Eliminar">✕</button>
+                    <button class="action-btn" onclick="openEditModal(${p.id})" title="Editar">✏️</button>
+                    <button class="action-btn" onclick="quickSkip(${p.id})" title="Saltar">⏭️</button>
+                    <button class="action-btn" onclick="deletePlayer(${p.id})" title="Eliminar">✕</button>
                 </div>
                 <div class="player-header">
-                ...
                     <div class="player-color" style="background:${p.color}"></div>
                     <div class="player-name">${p.name}</div>
                     ${numHoles===9?'<span class="badge nine-holes">9H</span>':''}
@@ -2278,225 +2283,154 @@ Formato esperado (separado por tabulaciones):
         setTimeout(() => t.remove(), 3000);
     }
 
-    // === Drag & drop de la lista (PC + móvil) con mouse + touch ===
-function initListDragAndDrop() {
-    const container = document.getElementById('playersContainer');
-    if (!container) return;
-    if (!container.style.position) {
-        container.style.position = 'relative';
+    // ===== EXPORTAR / IMPORTAR ESTADO COMO ARCHIVO JSON =====
+function exportStateToFile() {
+    const data = {
+        holeTimes,
+        players
+    };
+
+    try {
+        const json = JSON.stringify(data, null, 2); // con sangrado para que sea legible
+        const blob = new Blob([json], { type: 'application/json' });
+
+        // Nombre de archivo con fecha
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        const fileName = `golf-marshall-${y}${m}${d}.json`;
+
+        // Descargar archivo
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        showToast('📁 Archivo exportado. Envía este .json por WhatsApp como documento.', 'blue');
+    } catch (e) {
+        alert('Error al exportar el archivo: ' + e.message);
     }
-    // Escuchamos ratón y táctil en el contenedor (delegación)
-    container.addEventListener('mousedown', onListMouseDown);
-    container.addEventListener('touchstart', onListTouchStart, { passive: false });
 }
 
-function onListMouseDown(e) {
-    if (e.button !== 0) return; // solo botón izquierdo
-
-    // Solo arrastrar si se hace click en la barra de arrastre
-    const handle = e.target.closest('.drag-handle');
-    if (!handle) return;
-
-    const card = handle.closest('.player-card');
-    if (!card) return;
-
-    const container = document.getElementById('playersContainer');
-    const listEl = container.parentElement; // .players-list
-
-    startListDrag(card, e.clientY, container, listEl);
-
-    document.addEventListener('mousemove', onListMouseMove);
-    document.addEventListener('mouseup', onListMouseUp);
-
-    e.preventDefault();
-}
-
-function onListTouchStart(e) {
-    const touch = e.touches[0];
-    if (!touch) return;
-
-    // Solo arrastrar si se toca la barra de arrastre
-    const handle = e.target.closest('.drag-handle');
-    if (!handle) return; // si no es el asa, dejamos que haga scroll normal
-
-    const card = handle.closest('.player-card');
-    if (!card) return;
-
-    const container = document.getElementById('playersContainer');
-    const listEl = container.parentElement;
-
-    startListDrag(card, touch.clientY, container, listEl);
-
-    document.addEventListener('touchmove', onListTouchMove, { passive: false });
-    document.addEventListener('touchend', onListTouchEnd);
-    document.addEventListener('touchcancel', onListTouchEnd);
-
-    e.preventDefault();
-}
-
-function startListDrag(card, clientY, container, listEl) {
-    dragCard = card;
-    isListDragging = true;
-    dragContainer = container;
-    dragListEl = listEl;
-
-    dragStartY = clientY;
-    dragStartTop = card.offsetTop;
-    dragStartScrollTop = listEl.scrollTop;
-
-    const rect = card.getBoundingClientRect();
-
-    // Placeholder con la misma altura
-    dragPlaceholder = document.createElement('div');
-    dragPlaceholder.className = 'player-card placeholder';
-    dragPlaceholder.style.height = rect.height + 'px';
-    container.insertBefore(dragPlaceholder, card.nextSibling);
-
-    // Hacemos la tarjeta absoluta para poder moverla
-    card.style.width = rect.width + 'px';
-    card.style.position = 'absolute';
-    card.style.left = card.offsetLeft + 'px';
-    card.style.top = dragStartTop + 'px';
-    card.style.zIndex = '1000';
-    card.classList.add('dragging');
-}
-
-function onListMouseMove(e) {
-    if (!dragCard) return;
-    moveListDrag(e.clientY);
-    e.preventDefault();
-}
-
-function onListTouchMove(e) {
-    if (!dragCard) return;
-    const touch = e.touches[0];
-    if (!touch) return;
-    moveListDrag(touch.clientY);
-    e.preventDefault();
-}
-
-function moveListDrag(clientY) {
-    const container = dragContainer;
-    const listEl = dragListEl;
-
-    const listRect = listEl.getBoundingClientRect();
-    const edge = 40;
-
-    // Auto-scroll cerca de los bordes
-    if (clientY < listRect.top + edge) {
-        listEl.scrollTop -= 10;
-    } else if (clientY > listRect.bottom - edge) {
-        listEl.scrollTop += 10;
+function triggerImportFile() {
+    const input = document.getElementById('importFileInput');
+    if (input) {
+        input.value = ''; // por si se importa dos veces el mismo archivo
+        input.click();
     }
-
-    const deltaY = clientY - dragStartY;
-    const scrollDelta = listEl.scrollTop - dragStartScrollTop;
-    let newTop = dragStartTop + deltaY + scrollDelta;
-
-    const maxTop = container.scrollHeight - dragCard.offsetHeight;
-    if (newTop < 0) newTop = 0;
-    if (newTop > maxTop) newTop = maxTop;
-
-    dragCard.style.top = newTop + 'px';
-
-    updatePlaceholderPositionList(clientY);
 }
 
-function updatePlaceholderPositionList(clientY) {
-    const container = dragContainer;
-    const cards = Array.from(container.querySelectorAll('.player-card'))
-        .filter(c => c !== dragCard && !c.classList.contains('placeholder'));
+function importStateFromFile(file) {
+    if (!file) return;
 
-    let inserted = false;
-    for (const c of cards) {
-        const rect = c.getBoundingClientRect();
-        const midpoint = rect.top + rect.height / 2;
-        if (clientY < midpoint) {
-            container.insertBefore(dragPlaceholder, c);
-            inserted = true;
-            break;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const text = e.target.result;
+            const data = JSON.parse(text);
+
+            if (!data || typeof data !== 'object') {
+                alert('El archivo no tiene un formato válido');
+                return;
+            }
+            if (!data.holeTimes || typeof data.holeTimes !== 'object') {
+                alert('Faltan los tiempos de hoyo en los datos importados');
+                return;
+            }
+            if (!Array.isArray(data.players)) {
+                alert('Faltan los grupos en los datos importados');
+                return;
+            }
+
+            holeTimes = data.holeTimes;
+            players = data.players;
+
+            // Asegurarnos de que cada grupo tenga notas
+            players.forEach(p => {
+                if (!p.notes) p.notes = [];
+            });
+
+            saveData();
+            renderTimesConfig();
+            render();
+            showToast('📂 Estado importado desde archivo', 'teal');
+        } catch (err) {
+            alert('Error al importar el archivo: ' + err.message);
         }
-    }
-    if (!inserted) {
-        container.appendChild(dragPlaceholder);
-    }
+    };
+    reader.onerror = function() {
+        alert('No se pudo leer el archivo');
+    };
+
+    reader.readAsText(file);
 }
+    
 
-function onListMouseUp(e) {
-    endListDrag();
-}
-
-function onListTouchEnd(e) {
-    endListDrag();
-}
-
-function endListDrag() {
-    if (!dragCard) return;
-
-    const container = dragContainer;
-
-    // Insertar la tarjeta en la posición del placeholder
-    container.insertBefore(dragCard, dragPlaceholder);
-
-    // Limpiar estilos
-    dragCard.classList.remove('dragging');
-    dragCard.style.position = '';
-    dragCard.style.top = '';
-    dragCard.style.left = '';
-    dragCard.style.width = '';
-    dragCard.style.zIndex = '';
-
-    if (dragPlaceholder && dragPlaceholder.parentNode) {
-        dragPlaceholder.parentNode.removeChild(dragPlaceholder);
+    // === Drag & drop de la lista (PC + móvil) con mouse + touch ===
+    function initListDragAndDrop() {
+        const container = document.getElementById('playersContainer');
+        if (!container) return;
+        if (!container.style.position) {
+            container.style.position = 'relative';
+        }
+        container.addEventListener('mousedown', onListMouseDown);
+        container.addEventListener('touchstart', onListTouchStart, { passive: false });
     }
 
-    // Reordenar el array players según el DOM
-    const newOrder = [];
-    container.querySelectorAll('.player-card').forEach(cardEl => {
-        const id = parseInt(cardEl.dataset.id, 10);
-        const p = players.find(pl => pl.id === id);
-        if (p) newOrder.push(p);
-    });
+    function onListMouseDown(e) {
+        if (e.button !== 0) return; // solo botón izquierdo
 
-    if (newOrder.length === players.length) {
-        players = newOrder;
-        saveData();
-    }
+        const handle = e.target.closest('.drag-handle');
+        if (!handle) return;
 
-    // Quitar listeners
-    document.removeEventListener('mousemove', onListMouseMove);
-    document.removeEventListener('mouseup', onListMouseUp);
-    document.removeEventListener('touchmove', onListTouchMove);
-    document.removeEventListener('touchend', onListTouchEnd);
-    document.removeEventListener('touchcancel', onListTouchEnd);
-
-    // Reset estado
-    dragCard = null;
-    dragPlaceholder = null;
-    dragContainer = null;
-    dragListEl = null;
-    isListDragging = false;
-
-    render();
-
-    }
-
-    function onListPointerDown(e) {
-        if (e.button !== 0 && e.button !== undefined) return;
-
-        const card = e.target.closest('.player-card');
+        const card = handle.closest('.player-card');
         if (!card) return;
 
-        if (e.target.closest('.action-btn')) return;
+        const container = document.getElementById('playersContainer');
+        const listEl = container.parentElement; // .players-list
+
+        startListDrag(card, e.clientY, container, listEl);
+
+        document.addEventListener('mousemove', onListMouseMove);
+        document.addEventListener('mouseup', onListMouseUp);
+
+        e.preventDefault();
+    }
+
+    function onListTouchStart(e) {
+        const touch = e.touches[0];
+        if (!touch) return;
+
+        const handle = e.target.closest('.drag-handle');
+        if (!handle) return; // si no es el asa, dejamos que haga scroll
+
+        const card = handle.closest('.player-card');
+        if (!card) return;
 
         const container = document.getElementById('playersContainer');
         const listEl = container.parentElement;
 
-        dragCard = card;
-        dragPointerId = e.pointerId;
-        isListDragging = true;
+        startListDrag(card, touch.clientY, container, listEl);
 
-        dragStartY = e.clientY;
+        document.addEventListener('touchmove', onListTouchMove, { passive: false });
+        document.addEventListener('touchend', onListTouchEnd);
+        document.addEventListener('touchcancel', onListTouchEnd);
+
+        e.preventDefault();
+    }
+
+    function startListDrag(card, clientY, container, listEl) {
+        dragCard = card;
+        isListDragging = true;
+        dragContainer = container;
+        dragListEl = listEl;
+
+        dragStartY = clientY;
         dragStartTop = card.offsetTop;
         dragStartScrollTop = listEl.scrollTop;
 
@@ -2513,32 +2447,36 @@ function endListDrag() {
         card.style.top = dragStartTop + 'px';
         card.style.zIndex = '1000';
         card.classList.add('dragging');
-        card.style.touchAction = 'none';
+    }
 
-        card.setPointerCapture(dragPointerId);
-        card.addEventListener('pointermove', onListPointerMove);
-        card.addEventListener('pointerup', onListPointerUp);
-        card.addEventListener('pointercancel', onListPointerUp);
-
+    function onListMouseMove(e) {
+        if (!dragCard) return;
+        moveListDrag(e.clientY);
         e.preventDefault();
     }
 
-    function onListPointerMove(e) {
-        if (!dragCard || e.pointerId !== dragPointerId) return;
+    function onListTouchMove(e) {
+        if (!dragCard) return;
+        const touch = e.touches[0];
+        if (!touch) return;
+        moveListDrag(touch.clientY);
+        e.preventDefault();
+    }
 
-        const container = document.getElementById('playersContainer');
-        const listEl = container.parentElement;
+    function moveListDrag(clientY) {
+        const container = dragContainer;
+        const listEl = dragListEl;
 
         const listRect = listEl.getBoundingClientRect();
         const edge = 40;
 
-        if (e.clientY < listRect.top + edge) {
+        if (clientY < listRect.top + edge) {
             listEl.scrollTop -= 10;
-        } else if (e.clientY > listRect.bottom - edge) {
+        } else if (clientY > listRect.bottom - edge) {
             listEl.scrollTop += 10;
         }
 
-        const deltaY = e.clientY - dragStartY;
+        const deltaY = clientY - dragStartY;
         const scrollDelta = listEl.scrollTop - dragStartScrollTop;
         let newTop = dragStartTop + deltaY + scrollDelta;
 
@@ -2548,13 +2486,11 @@ function endListDrag() {
 
         dragCard.style.top = newTop + 'px';
 
-        updatePlaceholderPosition(e);
-
-        e.preventDefault();
+        updatePlaceholderPositionList(clientY);
     }
 
-    function updatePlaceholderPosition(e) {
-        const container = document.getElementById('playersContainer');
+    function updatePlaceholderPositionList(clientY) {
+        const container = dragContainer;
         const cards = Array.from(container.querySelectorAll('.player-card'))
             .filter(c => c !== dragCard && !c.classList.contains('placeholder'));
 
@@ -2562,7 +2498,7 @@ function endListDrag() {
         for (const c of cards) {
             const rect = c.getBoundingClientRect();
             const midpoint = rect.top + rect.height / 2;
-            if (e.clientY < midpoint) {
+            if (clientY < midpoint) {
                 container.insertBefore(dragPlaceholder, c);
                 inserted = true;
                 break;
@@ -2573,10 +2509,18 @@ function endListDrag() {
         }
     }
 
-    function onListPointerUp(e) {
-        if (!dragCard || e.pointerId !== dragPointerId) return;
+    function onListMouseUp() {
+        endListDrag();
+    }
 
-        const container = document.getElementById('playersContainer');
+    function onListTouchEnd() {
+        endListDrag();
+    }
+
+    function endListDrag() {
+        if (!dragCard) return;
+
+        const container = dragContainer;
 
         container.insertBefore(dragCard, dragPlaceholder);
 
@@ -2586,8 +2530,6 @@ function endListDrag() {
         dragCard.style.left = '';
         dragCard.style.width = '';
         dragCard.style.zIndex = '';
-        dragCard.style.touchAction = '';
-        try { dragCard.releasePointerCapture(dragPointerId); } catch (e) {}
 
         if (dragPlaceholder && dragPlaceholder.parentNode) {
             dragPlaceholder.parentNode.removeChild(dragPlaceholder);
@@ -2605,17 +2547,20 @@ function endListDrag() {
             saveData();
         }
 
-        dragCard.removeEventListener('pointermove', onListPointerMove);
-        dragCard.removeEventListener('pointerup', onListPointerUp);
-        dragCard.removeEventListener('pointercancel', onListPointerUp);
+        document.removeEventListener('mousemove', onListMouseMove);
+        document.removeEventListener('mouseup', onListMouseUp);
+        document.removeEventListener('touchmove', onListTouchMove);
+        document.removeEventListener('touchend', onListTouchEnd);
+        document.removeEventListener('touchcancel', onListTouchEnd);
 
         dragCard = null;
-        dragPointerId = null;
         dragPlaceholder = null;
+        dragContainer = null;
+        dragListEl = null;
         isListDragging = false;
 
         render();
     }
-</script>   
+</script>
 </body>
 </html>
