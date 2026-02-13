@@ -282,7 +282,17 @@
             transition: all 0.2s;
             user-select: none;
         }
+            /* Colores base para 9H (naranja) y 18H (rojo),
+            solo si NO son torneo ni Green Monday */
+        .player-card.nine-holes-card:not(.tournament-group):not(.greenmonday-group):not(.greenmonday1-group) {
+             border-left-color: #ff9800;      /* naranja */
+             background: #fff8e1;
+        }
 
+        .player-card.eighteen-holes-card:not(.tournament-group):not(.greenmonday-group):not(.greenmonday1-group) {
+    border-left-color: #e53935;      /* rojizo */
+    background: #ffebee;
+        }
         .player-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
         .player-card.dragging { opacity: 0.5; }
         .player-card.drag-over { border-top: 3px solid #1976d2; margin-top: 10px; }
@@ -365,7 +375,12 @@
         }
 
         .player-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
-        .expected-hole { font-size: 1.4rem; font-weight: bold; color: #1a472a; }
+        .expected-hole { font-size: 1.2rem; font-weight: bold; color: #1a472a; }
+
+        .round-end {
+            font-size: 0.75rem;
+            color: #555;
+        }
 
         .player-status { padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
         .status-ontime { background: #e8f5e9; color: #2d5a3d; }
@@ -720,7 +735,6 @@
         .current-time-info .value { font-size: 1.2rem; font-weight: bold; color: #1a472a; }
         .current-time-info .label { font-size: 0.8rem; color: #666; }
 
-        /* ===== SALIDAS PANEL ===== */
         .salidas-panel { max-width: 1000px; margin: 0 auto; }
 
         .salidas-header { text-align: center; margin-bottom: 25px; }
@@ -802,7 +816,6 @@
         .no-preview { text-align: center; padding: 40px; color: #999; }
         .no-preview-icon { font-size: 3rem; margin-bottom: 10px; opacity: 0.5; }
 
-        /* ===== CONFIG & RULES ===== */
         .config-panel, .rules-panel { max-width: 900px; margin: 0 auto; }
 
         .config-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
@@ -829,7 +842,6 @@
         .nine-subtotal { margin-top: 12px; padding: 10px; background: #e8f5e9; border-radius: 8px; text-align: center; font-weight: 600; color: #1a472a; }
         .save-config-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #2d5a3d, #1a472a); color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 20px; }
 
-        /* ===== MARSHALL ===== */
         .marshall-header { text-align: center; margin-bottom: 25px; }
         .marshall-icon { font-size: 4rem; margin-bottom: 10px; animation: bounce 2s infinite; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -910,21 +922,37 @@
                     <input type="text" id="editName" placeholder="Nuevo nombre">
                 </div>
                 
-                <!-- HORA DE SALIDA -->
                 <div class="form-group">
                     <label>🕐 Hora de Salida</label>
                     <input type="time" id="editStartTime">
                 </div>
                 
-                <!-- TEE DE SALIDA EN MODAL -->
-                <div class="form-group">
-                    <label>⛳ Tee de Salida (Hoyo)</label>
-                    <div class="tee-grid-selector" id="editTeeSelector">
-                        <!-- Se genera dinámicamente -->
-                    </div>
-                </div>
+                <!-- TEE Y HOYOS EN MODAL -->
+<div class="form-group">
+    <label>Tee de Salida y Hoyos</label>
+    <div class="tee-selector" id="editTeeSelector">
+        <div class="tee-option" onclick="selectEditTeeOption(this,1)">
+            <div class="tee-number">1</div>
+            <div class="tee-label">Tee 1</div>
+        </div>
+        <div class="tee-option" onclick="selectEditTeeOption(this,10)">
+            <div class="tee-number">10</div>
+            <div class="tee-label">Tee 10</div>
+        </div>
+    </div>
 
-                <!-- JUGADORES Y VEHÍCULOS -->
+    <div class="holes-selector" id="editHolesSelector" style="margin-top:10px;">
+        <div class="holes-option" onclick="selectEditNumHoles(this,9)">
+            <div class="holes-number">9</div>
+            <div class="holes-label">Hoyos</div>
+        </div>
+        <div class="holes-option" onclick="selectEditNumHoles(this,18)">
+            <div class="holes-number">18</div>
+            <div class="holes-label">Hoyos</div>
+        </div>
+    </div>
+</div>
+
                 <div class="form-group">
                     <label>🏌️ Jugadores y Vehículos</label>
                     <div class="group-config" id="editGroupConfig">
@@ -999,7 +1027,6 @@
                     </div>
                 </div>
 
-                <!-- MARCADORES EN MODAL -->
                 <div class="form-group">
                     <label>🏷️ Marcadores</label>
                     <div class="modal-markers" id="editMarkers">
@@ -1030,7 +1057,6 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN DE NOTAS -->
                 <div class="notes-section">
                     <div class="notes-section-title">
                         <span>📝</span>
@@ -1048,9 +1074,7 @@
                     <textarea class="notes-textarea" id="editNotes" placeholder="Escribe una nota personalizada..."></textarea>
                     <button class="btn btn-info" style="margin-top: 8px; padding: 8px;" onclick="addCustomNote()">➕ Añadir Nota</button>
                     
-                    <div class="notes-history" id="notesHistory">
-                        <!-- Las notas se mostrarán aquí -->
-                    </div>
+                    <div class="notes-history" id="notesHistory"></div>
                     <button class="clear-notes-btn" id="clearNotesBtn" onclick="clearAllNotes()" style="display: none;">🗑️ Borrar todas las notas</button>
                 </div>
 
@@ -1269,7 +1293,10 @@ Formato esperado (separado por tabulaciones):
             <div class="panel config-panel">
                 <div class="config-header">
                     <div><h2 style="border:none;padding:0;margin:0;">⏱️ Tiempos por Hoyo</h2></div>
-                    <div class="total-time-box"><div class="label">Total</div><div class="value" id="totalTimeDisplay">4h 28min</div></div>
+                    <div class="total-time-box">
+                        <div class="label">Total</div>
+                        <div class="value" id="totalTimeDisplay">4h 28min</div>
+                    </div>
                 </div>
                 <div class="preset-buttons">
                     <button class="preset-btn" onclick="applyPreset('standard')">📊 Predefinido GolfBarcelona</button>
@@ -1277,8 +1304,16 @@ Formato esperado (separado por tabulaciones):
                     <button class="preset-btn" onclick="applyPreset('slow')">🐢 Predefinido Mal Tiempo</button>
                 </div>
                 <div class="times-grid">
-                    <div class="nine-section"><h3>IDA (1-9)</h3><div id="frontNineTimes"></div><div class="nine-subtotal">Subtotal: <span id="frontNineTotal">0</span> min</div></div>
-                    <div class="nine-section"><h3>VUELTA (10-18)</h3><div id="backNineTimes"></div><div class="nine-subtotal">Subtotal: <span id="backNineTotal">0</span> min</div></div>
+                    <div class="nine-section">
+                        <h3>IDA (1-9)</h3>
+                        <div id="frontNineTimes"></div>
+                        <div class="nine-subtotal">Subtotal: <span id="frontNineTotal">0</span> min</div>
+                    </div>
+                    <div class="nine-section">
+                        <h3>VUELTA (10-18)</h3>
+                        <div id="backNineTimes"></div>
+                        <div class="nine-subtotal">Subtotal: <span id="backNineTotal">0</span> min</div>
+                    </div>
                 </div>
                 <button class="save-config-btn" onclick="saveHoleTimes()">💾 Guardar</button>
             </div>
@@ -1289,27 +1324,100 @@ Formato esperado (separado por tabulaciones):
             <div class="main-content">
                 <div class="panel">
                     <h2>➕ PREPARANDO EL GRUPO</h2>
-                    <div class="current-time-info"><div class="label">Tiempo total</div><div class="value" id="currentTotalTime">4h 28min</div></div>
-                    <div class="form-group"><label>Nombre</label><input type="text" id="playerName" placeholder="Ej: Grupo García"></div>
-                    <div class="form-group"><label>Hora Salida</label><input type="time" id="startTime" value="08:00"></div>
+                    <div class="current-time-info">
+                        <div class="label">Tiempo total</div>
+                        <div class="value" id="currentTotalTime">4h 28min</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" id="playerName" placeholder="Ej: Grupo García">
+                    </div>
+                    <div class="form-group">
+                        <label>Hora Salida</label>
+                        <input type="time" id="startTime" value="08:00">
+                    </div>
                     <div class="form-group">
                         <label>Tee de Salida</label>
                         <div class="tee-selector">
-                            <div class="tee-option active" onclick="selectTee(this,1)"><div class="tee-number">1</div><div class="tee-label">Tee 1</div></div>
-                            <div class="tee-option" onclick="selectTee(this,10)"><div class="tee-number">10</div><div class="tee-label">Tee 10</div></div>
+                            <div class="tee-option active" onclick="selectTee(this,1)">
+                                <div class="tee-number">1</div>
+                                <div class="tee-label">Tee 1</div>
+                            </div>
+                            <div class="tee-option" onclick="selectTee(this,10)">
+                                <div class="tee-number">10</div>
+                                <div class="tee-label">Tee 10</div>
+                            </div>
                         </div>
                         <div class="holes-selector">
-                            <div class="holes-option" onclick="selectNumHoles(this, 9)"><div class="holes-number">9</div><div class="holes-label">Hoyos</div></div>
-                            <div class="holes-option active" onclick="selectNumHoles(this, 18)"><div class="holes-number">18</div><div class="holes-label">Hoyos</div></div>
+                            <div class="holes-option" onclick="selectNumHoles(this, 9)">
+                                <div class="holes-number">9</div>
+                                <div class="holes-label">Hoyos</div>
+                            </div>
+                            <div class="holes-option active" onclick="selectNumHoles(this, 18)">
+                                <div class="holes-number">18</div>
+                                <div class="holes-label">Hoyos</div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>🏌️ Jugadores y Vehículos</label>
                         <div class="group-config">
-                            <div class="config-row has-value" id="rowPlayers"><div class="config-label"><span class="config-icon">🏌️‍♂️</span><div><div class="config-text">Jugadores</div><div class="config-subtext">1-4</div></div></div><div class="quantity-selector"><button class="qty-btn" onclick="changeQty('players',-1)">−</button><div class="qty-value" id="qtyPlayers">4</div><button class="qty-btn" onclick="changeQty('players',1)">+</button></div></div>
-                            <div class="config-row" id="rowBuggys"><div class="config-label"><span class="config-icon">🚗</span><div><div class="config-text">Buggys</div><div class="config-subtext">0-2</div></div></div><div class="quantity-selector"><button class="qty-btn" onclick="changeQty('buggys',-1)">−</button><div class="qty-value zero" id="qtyBuggys">0</div><button class="qty-btn" onclick="changeQty('buggys',1)">+</button></div></div>
-                            <div class="config-row" id="rowMoto3"><div class="config-label"><span class="config-icon">🛵</span><div><div class="config-text">Scooter 3R</div><div class="config-subtext">0-4</div></div></div><div class="quantity-selector"><button class="qty-btn" onclick="changeQty('moto3',-1)">−</button><div class="qty-value zero" id="qtyMoto3">0</div><button class="qty-btn" onclick="changeQty('moto3',1)">+</button></div></div>
-                            <div class="config-row" id="rowMoto4"><div class="config-label"><span class="config-icon">🏍️</span><div><div class="config-text">Scooter 4R</div><div class="config-subtext">0-4</div></div></div><div class="quantity-selector"><button class="qty-btn" onclick="changeQty('moto4',-1)">−</button><div class="qty-value zero" id="qtyMoto4">0</div><button class="qty-btn" onclick="changeQty('moto4',1)">+</button></div></div>
+                            <div class="config-row has-value" id="rowPlayers">
+                                <div class="config-label">
+                                    <span class="config-icon">🏌️‍♂️</span>
+                                    <div>
+                                        <div class="config-text">Jugadores</div>
+                                        <div class="config-subtext">1-4</div>
+                                    </div>
+                                </div>
+                                <div class="quantity-selector">
+                                    <button class="qty-btn" onclick="changeQty('players',-1)">−</button>
+                                    <div class="qty-value" id="qtyPlayers">4</div>
+                                    <button class="qty-btn" onclick="changeQty('players',1)">+</button>
+                                </div>
+                            </div>
+                            <div class="config-row" id="rowBuggys">
+                                <div class="config-label">
+                                    <span class="config-icon">🚗</span>
+                                    <div>
+                                        <div class="config-text">Buggys</div>
+                                        <div class="config-subtext">0-2</div>
+                                    </div>
+                                </div>
+                                <div class="quantity-selector">
+                                    <button class="qty-btn" onclick="changeQty('buggys',-1)">−</button>
+                                    <div class="qty-value zero" id="qtyBuggys">0</div>
+                                    <button class="qty-btn" onclick="changeQty('buggys',1)">+</button>
+                                </div>
+                            </div>
+                            <div class="config-row" id="rowMoto3">
+                                <div class="config-label">
+                                    <span class="config-icon">🛵</span>
+                                    <div>
+                                        <div class="config-text">Scooter 3R</div>
+                                        <div class="config-subtext">0-4</div>
+                                    </div>
+                                </div>
+                                <div class="quantity-selector">
+                                    <button class="qty-btn" onclick="changeQty('moto3',-1)">−</button>
+                                    <div class="qty-value zero" id="qtyMoto3">0</div>
+                                    <button class="qty-btn" onclick="changeQty('moto3',1)">+</button>
+                                </div>
+                            </div>
+                            <div class="config-row" id="rowMoto4">
+                                <div class="config-label">
+                                    <span class="config-icon">🏍️</span>
+                                    <div>
+                                        <div class="config-text">Scooter 4R</div>
+                                        <div class="config-subtext">0-4</div>
+                                    </div>
+                                </div>
+                                <div class="quantity-selector">
+                                    <button class="qty-btn" onclick="changeQty('moto4',-1)">−</button>
+                                    <div class="qty-value zero" id="qtyMoto4">0</div>
+                                    <button class="qty-btn" onclick="changeQty('moto4',1)">+</button>
+                                </div>
+                            </div>
                             <div class="group-summary" id="groupSummary">👦👦👦👦</div>
                         </div>
                     </div>
@@ -1326,12 +1434,30 @@ Formato esperado (separado por tabulaciones):
                     <div class="form-group">
                         <label>🏷️ Tipo / Marcadores</label>
                         <div class="group-markers">
-                            <div class="marker-box tournament" id="markerTournament" onclick="toggleMarker('tournament')"><div class="marker-icon">🏆</div><div class="marker-text">TORNEO</div></div>
-                            <div class="marker-box greenmonday10" id="markerGreenMonday10" onclick="toggleMarker('greenmonday10')"><div class="marker-icon">🏆</div><div class="marker-text">GM TEE 10</div></div>
-                            <div class="marker-box greenmonday1" id="markerGreenMonday1" onclick="toggleMarker('greenmonday1')"><div class="marker-icon">🏆</div><div class="marker-text">GM TEE 1</div></div>
-                            <div class="marker-box watch" id="markerWatch" onclick="toggleMarker('watch')"><div class="marker-icon">⚠️</div><div class="marker-text">VIGILAR</div></div>
-                            <div class="marker-box warned" id="markerWarned" onclick="toggleMarker('warned')"><div class="marker-icon">🔔</div><div class="marker-text">AVISADO</div></div>
-                            <div class="marker-box pacesetter" id="markerPacesetter" onclick="toggleMarker('pacesetter')"><div class="marker-icon">🐇</div><div class="marker-text">LIEBRE</div></div>
+                            <div class="marker-box tournament" id="markerTournament" onclick="toggleMarker('tournament')">
+                                <div class="marker-icon">🏆</div>
+                                <div class="marker-text">TORNEO</div>
+                            </div>
+                            <div class="marker-box greenmonday10" id="markerGreenMonday10" onclick="toggleMarker('greenmonday10')">
+                                <div class="marker-icon">🏆</div>
+                                <div class="marker-text">GM TEE 10</div>
+                            </div>
+                            <div class="marker-box greenmonday1" id="markerGreenMonday1" onclick="toggleMarker('greenmonday1')">
+                                <div class="marker-icon">🏆</div>
+                                <div class="marker-text">GM TEE 1</div>
+                            </div>
+                            <div class="marker-box watch" id="markerWatch" onclick="toggleMarker('watch')">
+                                <div class="marker-icon">⚠️</div>
+                                <div class="marker-text">VIGILAR</div>
+                            </div>
+                            <div class="marker-box warned" id="markerWarned" onclick="toggleMarker('warned')">
+                                <div class="marker-icon">🔔</div>
+                                <div class="marker-text">AVISADO</div>
+                            </div>
+                            <div class="marker-box pacesetter" id="markerPacesetter" onclick="toggleMarker('pacesetter')">
+                                <div class="marker-icon">🐇</div>
+                                <div class="marker-text">LIEBRE</div>
+                            </div>
                         </div>
                     </div>
                     <button class="btn btn-primary" onclick="addPlayer()">➕ AÑADIR AL CAMPO</button>
@@ -1340,8 +1466,8 @@ Formato esperado (separado por tabulaciones):
                         <div id="playersContainer"><div class="no-players">No hay grupos</div></div>
                     </div>
                     <button class="btn btn-danger" onclick="clearAllPlayers()">🗑️ Limpiar</button>
-                    <button class="btn btn-secondary" onclick="exportState()">📤 Exportar estado</button>
-                    <button class="btn btn-secondary" onclick="importState()">📥 Importar estado</button>
+                    <button class="btn btn-secondary" onclick="exportState()">📤 Exportar estado (texto)</button>
+                    <button class="btn btn-secondary" onclick="importState()">📥 Importar estado (texto)</button>
                     <button class="btn btn-secondary" onclick="exportStateToFile()">📁 Exportar a archivo</button>
                     <button class="btn btn-secondary" onclick="triggerImportFile()">📂 Importar desde archivo</button>
                     <input type="file" id="importFileInput" accept=".json,application/json" style="display:none" onchange="importStateFromFile(this.files[0])">
@@ -1354,7 +1480,10 @@ Formato esperado (separado por tabulaciones):
                         <div class="nine-section-visual back-nine" id="backNineVisual"></div>
                     </div>
                     <div class="legend" id="legend"></div>
-                    <div class="clock-display"><div class="date" id="currentDate"></div><div class="time" id="currentTime"></div></div>
+                    <div class="clock-display">
+                        <div class="date" id="currentDate"></div>
+                        <div class="time" id="currentTime"></div>
+                    </div>
                     <div class="summary-stats">
                         <div class="stat-card"><div class="stat-value" id="totalGroups">0</div><div class="stat-label">GRUPOS</div></div>
                         <div class="stat-card"><div class="stat-value" id="totalJugadores">0</div><div class="stat-label">JUGADORES</div></div>
@@ -1395,7 +1524,7 @@ Formato esperado (separado por tabulaciones):
     let warnedGroup = false, pacesetterGroup = false;
     let qty = {players:4,buggys:0,moto3:0,moto4:0};
 
-    let editingPlayerId = null, editSelectedColor = null, editSelectedTee = 1;
+    let editingPlayerId = null, editSelectedColor = null, editSelectedTee = 1, editNumHoles = 18;
     let editMarkers = {};
     let editQty = {players:4,buggys:0,moto3:0,moto4:0};
 
@@ -1576,6 +1705,8 @@ Formato esperado (separado por tabulaciones):
         document.querySelectorAll('.marker-box').forEach(m => m.classList.remove('active'));
         selectedNumHoles = 18;
         document.querySelectorAll('.main-content .holes-option').forEach((o, i) => o.classList.toggle('active', i === 1));
+        selectedTee = 1;
+        document.querySelectorAll('.main-content .tee-option').forEach((o, i) => o.classList.toggle('active', i === 0));
     }
 
     function getNextColor() {
@@ -1603,7 +1734,9 @@ Formato esperado (separado por tabulaciones):
         selectedColor = getNextColor();
         useCustomColor = false;
         initColors();
-        document.querySelectorAll('#colorPicker .color-option').forEach(o => o.style.background === selectedColor && o.classList.add('selected'));
+        document.querySelectorAll('#colorPicker .color-option').forEach(o => {
+            if (o.style.background === selectedColor) o.classList.add('selected');
+        });
         showToast('✅ '+name+' añadido', '');
     }
 
@@ -1615,7 +1748,8 @@ Formato esperado (separado por tabulaciones):
         if (!player) return;
         editingPlayerId = id;
         editSelectedColor = player.color;
-        editSelectedTee = player.startTee;
+        editSelectedTee = player.startTee || 1;
+        editNumHoles = player.numHoles || 18;
         
         document.getElementById('editName').value = player.name;
         document.getElementById('editStartTime').value = player.startTime;
@@ -1643,12 +1777,6 @@ Formato esperado (separado por tabulaciones):
             document.getElementById('editCustomColorWrapper').classList.remove('selected');
         }
         
-        let teeHtml = '';
-        for (let i = 1; i <= 18; i++) {
-            teeHtml += `<div class="tee-grid-option ${i === player.startTee ? 'active' : ''}" onclick="selectEditTee(${i})">${i}</div>`;
-        }
-        document.getElementById('editTeeSelector').innerHTML = teeHtml;
-        
         editMarkers = {
             tournament: player.tournamentGroup || false,
             greenmonday10: player.greenMonday10Group || false,
@@ -1660,8 +1788,9 @@ Formato esperado (separado por tabulaciones):
         updateEditMarkers();
         
         document.getElementById('editNotes').value = '';
-        
         renderNotesHistory(player);
+
+        updateEditTeeAndHolesUI();
         
         document.getElementById('editModal').classList.add('active');
     }
@@ -1675,10 +1804,30 @@ Formato esperado (separado por tabulaciones):
         editSelectedColor = c;
     }
 
-    function selectEditTee(tee) {
-        document.querySelectorAll('.tee-grid-option').forEach(o => o.classList.remove('active'));
-        event.target.classList.add('active');
+    // NUEVAS funciones para tee y hoyos en el modal
+    function selectEditTeeOption(el, tee) {
+        document.querySelectorAll('#editTeeSelector .tee-option').forEach(o => o.classList.remove('active'));
+        el.classList.add('active');
         editSelectedTee = tee;
+    }
+
+    function selectEditNumHoles(el, num) {
+        document.querySelectorAll('#editHolesSelector .holes-option').forEach(o => o.classList.remove('active'));
+        el.classList.add('active');
+        editNumHoles = num;
+    }
+
+    function updateEditTeeAndHolesUI() {
+        // Tee
+        document.querySelectorAll('#editTeeSelector .tee-option').forEach(o => {
+            const n = parseInt(o.querySelector('.tee-number')?.textContent || '0', 10);
+            o.classList.toggle('active', n === editSelectedTee);
+        });
+        // Hoyos
+        document.querySelectorAll('#editHolesSelector .holes-option').forEach(o => {
+            const n = parseInt(o.querySelector('.holes-number')?.textContent || '0', 10);
+            o.classList.toggle('active', n === editNumHoles);
+        });
     }
 
     function toggleEditMarker(type) {
@@ -1806,6 +1955,7 @@ Formato esperado (separado por tabulaciones):
         if (newTime) player.startTime = newTime;
         if (editSelectedColor) player.color = editSelectedColor;
         player.startTee = editSelectedTee;
+        player.numHoles = editNumHoles;
         
         player.numPlayers = editQty.players;
         player.numBuggys = editQty.buggys;
@@ -2074,63 +2224,109 @@ Formato esperado (separado por tabulaciones):
         return parts.join(' • ');
     }
 
+    // Info de fin de vuelta
+    function getRoundInfo(p) {
+        const numHoles = p.numHoles || 18;
+        const startTee = p.startTee || 1;
+
+        const order = [];
+        for (let i = 0; i < numHoles; i++) {
+            order.push(((startTee - 1 + i) % 18) + 1);
+        }
+
+        let totalMinutes = 0;
+        for (const ho of order) {
+            totalMinutes += getHoleTime(ho, p);
+        }
+
+        const endHole = order[order.length - 1];
+
+        let endTimeText = '-';
+        if (p.startTime && /^\d{1,2}:\d{2}$/.test(p.startTime)) {
+            const [h, m] = p.startTime.split(':').map(Number);
+            if (!isNaN(h) && !isNaN(m)) {
+                const end = new Date();
+                end.setHours(h, m, 0, 0);
+                end.setMinutes(end.getMinutes() + totalMinutes);
+                endTimeText = end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            }
+        }
+
+        return { endHole, endTimeText, totalMinutes };
+    }
+
     function render() { renderPlayers(); renderCourse(); }
 
     function renderPlayers() {
-        const c = document.getElementById('playersContainer');
-        if(players.length === 0) { c.innerHTML = '<div class="no-players">No hay grupos</div>'; updateStats(); return; }
-        let html = '';
-        players.forEach(p => {
-            const exp = calcHole(p);
-            let sc = '', st = '', bc = '';
-            if(exp.status==='pending') { st='Sale en '+exp.diff+' min'; bc='status-ontime'; }
-            else if(exp.status==='finished') { st='Finalizado'; bc='status-ahead'; }
-            else if(exp.status==='delayed') { sc='delayed'; st=exp.diff+'/'+exp.holeTime+' min'; bc='status-delayed'; }
-            else if(exp.status==='ahead') { st='Adelantado'; bc='status-ahead'; }
-            else { st='En tiempo'; bc='status-ontime'; }
-            if(p.watchGroup) sc += ' watch-group';
-            if(p.tournamentGroup) sc += ' tournament-group';
-            if(p.greenMonday10Group) sc += ' greenmonday-group';
-            if(p.greenMonday1Group) sc += ' greenmonday1-group';
-            if(p.skippedHoles > 0) sc += ' skipped-group';
-            if(p.warnedGroup) sc += ' warned-group';
-            if(p.pacesetterGroup) sc += ' pacesetter-group';
-            const numHoles = p.numHoles || 18;
-            
-            let extraInfo = '';
-            if (p.greenMonday10Group) extraInfo = ' • <span style="color:#7e57c2">+10min H16</span>';
-            else if (p.greenMonday1Group) extraInfo = ' • <span style="color:#00897b">+10min H9</span>';
-            
-            html += `<div class="player-card ${sc}" data-id="${p.id}">
-                <div class="drag-handle" title="Arrastrar">☰</div>
-                <div class="player-actions">
-                    <button class="action-btn" onclick="openEditModal(${p.id})" title="Editar">✏️</button>
-                    <button class="action-btn" onclick="quickSkip(${p.id})" title="Saltar">⏭️</button>
-                    <button class="action-btn" onclick="deletePlayer(${p.id})" title="Eliminar">✕</button>
+    const c = document.getElementById('playersContainer');
+    if(players.length === 0) { c.innerHTML = '<div class="no-players">No hay grupos</div>'; updateStats(); return; }
+    let html = '';
+    players.forEach(p => {
+        const exp = calcHole(p);
+        let sc = '', st = '', bc = '';
+        if(exp.status==='pending') { st='Sale en '+exp.diff+' min'; bc='status-ontime'; }
+        else if(exp.status==='finished') { st='Finalizado'; bc='status-ahead'; }
+        else if(exp.status==='delayed') { sc='delayed'; st=exp.diff+'/'+exp.holeTime+' min'; bc='status-delayed'; }
+        else if(exp.status==='ahead') { st='Adelantado'; bc='status-ahead'; }
+        else { st='En tiempo'; bc='status-ontime'; }
+
+        if(p.watchGroup) sc += ' watch-group';
+        if(p.tournamentGroup) sc += ' tournament-group';
+        if(p.greenMonday10Group) sc += ' greenmonday-group';
+        if(p.greenMonday1Group) sc += ' greenmonday1-group';
+        if(p.skippedHoles > 0) sc += ' skipped-group';
+        if(p.warnedGroup) sc += ' warned-group';
+        if(p.pacesetterGroup) sc += ' pacesetter-group';
+
+        const numHoles = p.numHoles || 18;
+
+        // NUEVO: marcar por 9/18 hoyos
+        if (numHoles === 9) {
+            sc += ' nine-holes-card';
+        } else {
+            sc += ' eighteen-holes-card';
+        }
+
+        let extraInfo = '';
+        if (p.greenMonday10Group) extraInfo = ' • <span style="color:#7e57c2">+10min H16</span>';
+        else if (p.greenMonday1Group) extraInfo = ' • <span style="color:#00897b">+10min H9</span>';
+
+        const roundInfo = getRoundInfo(p);
+        
+        html += `<div class="player-card ${sc}" data-id="${p.id}">
+            <div class="drag-handle" title="Arrastrar">☰</div>
+            <div class="player-actions">
+                <button class="action-btn" onclick="openEditModal(${p.id})" title="Editar">✏️</button>
+                <button class="action-btn" onclick="quickSkip(${p.id})" title="Saltar">⏭️</button>
+                <button class="action-btn" onclick="deletePlayer(${p.id})" title="Eliminar">✕</button>
+            </div>
+            <div class="player-header">
+                <div class="player-color" style="background:${p.color}"></div>
+                <div class="player-name">${p.name}</div>
+                ${numHoles===9?'<span class="badge nine-holes">9H</span>':''}
+                ${p.skippedHoles>0?'<span class="badge skipped">⏭️'+p.skippedHoles+'</span>':''}
+                ${p.tournamentGroup?'<span class="badge tournament">🏆</span>':''}
+                ${p.greenMonday10Group?'<span class="badge greenmonday">🟣GM10</span>':''}
+                ${p.greenMonday1Group?'<span class="badge greenmonday1">🩵GM1</span>':''}
+                ${p.watchGroup?'<span class="badge watch">⚠️</span>':''}
+                ${p.warnedGroup?'<span class="badge warned">🔔</span>':''}
+                ${p.pacesetterGroup?'<span class="badge pacesetter">🐇</span>':''}
+            </div>
+            <div class="player-info">🕐 ${p.startTime} • Tee ${p.startTee} • 🏌️ ${numHoles}H${extraInfo}</div>
+            <div class="player-details">${getDetails(p)}</div>
+            <div class="player-footer">
+                <div>
+                    ${exp.hole>0&&exp.hole<=18 ? 'Hoyo: <span class="expected-hole">'+exp.hole+'</span>' : ''}
+                    <br>
+                    <span class="round-end">Finaliza hoyo ${roundInfo.endHole} a las ${roundInfo.endTimeText} h</span>
                 </div>
-                <div class="player-header">
-                    <div class="player-color" style="background:${p.color}"></div>
-                    <div class="player-name">${p.name}</div>
-                    ${numHoles===9?'<span class="badge nine-holes">9H</span>':''}
-                    ${p.skippedHoles>0?'<span class="badge skipped">⏭️'+p.skippedHoles+'</span>':''}
-                    ${p.tournamentGroup?'<span class="badge tournament">🏆</span>':''}
-                    ${p.greenMonday10Group?'<span class="badge greenmonday">🟣GM10</span>':''}
-                    ${p.greenMonday1Group?'<span class="badge greenmonday1">🩵GM1</span>':''}
-                    ${p.watchGroup?'<span class="badge watch">⚠️</span>':''}
-                    ${p.warnedGroup?'<span class="badge warned">🔔</span>':''}
-                    ${p.pacesetterGroup?'<span class="badge pacesetter">🐇</span>':''}
-                </div>
-                <div class="player-info">🕐 ${p.startTime} • Tee ${p.startTee} • 🏌️ ${numHoles}H${extraInfo}</div>
-                <div class="player-details">${getDetails(p)}</div>
-                <div class="player-footer">
-                    ${exp.hole>0&&exp.hole<=18?'<div>Hoyo: <span class="expected-hole">'+exp.hole+'</span></div>':'<div></div>'}
-                    <span class="player-status ${bc}">${st}</span>
-                </div>
-            </div>`;
-        });
-        c.innerHTML = html;
-        updateStats();
-    }
+                <span class="player-status ${bc}">${st}</span>
+            </div>
+        </div>`;
+    });
+    c.innerHTML = html;
+    updateStats();
+}
 
     function updateStats() {
         let g=0,j=0,d=0,w=0,t=0,gm10=0,gm1=0,warned=0,pace=0;
@@ -2283,59 +2479,42 @@ Formato esperado (separado por tabulaciones):
         setTimeout(() => t.remove(), 3000);
     }
 
-    // ===== EXPORTAR / IMPORTAR ESTADO COMO ARCHIVO JSON =====
-function exportStateToFile() {
-    const data = {
-        holeTimes,
-        players
-    };
+    // ===== EXPORTAR / IMPORTAR ESTADO (texto) =====
+    function exportState() {
+        const data = {
+            holeTimes,
+            players
+        };
 
-    try {
-        const json = JSON.stringify(data, null, 2); // con sangrado para que sea legible
-        const blob = new Blob([json], { type: 'application/json' });
-
-        // Nombre de archivo con fecha
-        const now = new Date();
-        const y = now.getFullYear();
-        const m = String(now.getMonth() + 1).padStart(2, '0');
-        const d = String(now.getDate()).padStart(2, '0');
-        const fileName = `golf-marshall-${y}${m}${d}.json`;
-
-        // Descargar archivo
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        showToast('📁 Archivo exportado. Envía este .json por WhatsApp como documento.', 'blue');
-    } catch (e) {
-        alert('Error al exportar el archivo: ' + e.message);
-    }
-}
-
-function triggerImportFile() {
-    const input = document.getElementById('importFileInput');
-    if (input) {
-        input.value = ''; // por si se importa dos veces el mismo archivo
-        input.click();
-    }
-}
-
-function importStateFromFile(file) {
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
         try {
-            const text = e.target.result;
-            const data = JSON.parse(text);
+            const json = JSON.stringify(data);
+            const payload = btoa(unescape(encodeURIComponent(json)));
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(payload).then(() => {
+                    showToast('📤 Estado copiado al portapapeles', 'blue');
+                }).catch(() => {
+                    prompt('Copia este texto y envíalo a tu compañero:', payload);
+                });
+            } else {
+            prompt('Copia este texto y envíalo a tu compañero:', payload);
+            }
+        } catch (e) {
+            alert('Error al exportar el estado: ' + e.message);
+        }
+    }
+
+    function importState() {
+        const payloadInput = prompt('Pega aquí el texto que te han enviado:');
+        if (!payloadInput) return;
+
+        try {
+            const payload = payloadInput.trim().replace(/\s+/g, '');
+            const json = decodeURIComponent(escape(atob(payload)));
+            const data = JSON.parse(json);
 
             if (!data || typeof data !== 'object') {
-                alert('El archivo no tiene un formato válido');
+                alert('El texto no tiene un formato válido');
                 return;
             }
             if (!data.holeTimes || typeof data.holeTimes !== 'object') {
@@ -2350,7 +2529,6 @@ function importStateFromFile(file) {
             holeTimes = data.holeTimes;
             players = data.players;
 
-            // Asegurarnos de que cada grupo tenga notas
             players.forEach(p => {
                 if (!p.notes) p.notes = [];
             });
@@ -2358,18 +2536,95 @@ function importStateFromFile(file) {
             saveData();
             renderTimesConfig();
             render();
-            showToast('📂 Estado importado desde archivo', 'teal');
-        } catch (err) {
-            alert('Error al importar el archivo: ' + err.message);
+            showToast('📥 Estado importado correctamente', 'teal');
+        } catch (e) {
+            alert('Error al importar el estado: ' + e.message);
         }
-    };
-    reader.onerror = function() {
-        alert('No se pudo leer el archivo');
-    };
+    }
 
-    reader.readAsText(file);
-}
-    
+    // ===== EXPORTAR / IMPORTAR ESTADO COMO ARCHIVO JSON =====
+    function exportStateToFile() {
+        const data = {
+            holeTimes,
+            players
+        };
+
+        try {
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            const fileName = `golf-marshall-${y}${m}${d}.json`;
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('📁 Archivo exportado. Envía este .json por WhatsApp como documento.', 'blue');
+        } catch (e) {
+            alert('Error al exportar el archivo: ' + e.message);
+        }
+    }
+
+    function triggerImportFile() {
+        const input = document.getElementById('importFileInput');
+        if (input) {
+            input.value = '';
+            input.click();
+        }
+    }
+
+    function importStateFromFile(file) {
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const text = e.target.result;
+                const data = JSON.parse(text);
+
+                if (!data || typeof data !== 'object') {
+                    alert('El archivo no tiene un formato válido');
+                    return;
+                }
+                if (!data.holeTimes || typeof data.holeTimes !== 'object') {
+                    alert('Faltan los tiempos de hoyo en los datos importados');
+                    return;
+                }
+                if (!Array.isArray(data.players)) {
+                    alert('Faltan los grupos en los datos importados');
+                    return;
+                }
+
+                holeTimes = data.holeTimes;
+                players = data.players;
+
+                players.forEach(p => {
+                    if (!p.notes) p.notes = [];
+                });
+
+                saveData();
+                renderTimesConfig();
+                render();
+                showToast('📂 Estado importado desde archivo', 'teal');
+            } catch (err) {
+                alert('Error al importar el archivo: ' + err.message);
+            }
+        };
+        reader.onerror = function() {
+            alert('No se pudo leer el archivo');
+        };
+
+        reader.readAsText(file);
+    }
 
     // === Drag & drop de la lista (PC + móvil) con mouse + touch ===
     function initListDragAndDrop() {
@@ -2383,16 +2638,14 @@ function importStateFromFile(file) {
     }
 
     function onListMouseDown(e) {
-        if (e.button !== 0) return; // solo botón izquierdo
-
+        if (e.button !== 0) return;
         const handle = e.target.closest('.drag-handle');
         if (!handle) return;
-
         const card = handle.closest('.player-card');
         if (!card) return;
 
         const container = document.getElementById('playersContainer');
-        const listEl = container.parentElement; // .players-list
+        const listEl = container.parentElement;
 
         startListDrag(card, e.clientY, container, listEl);
 
@@ -2407,8 +2660,7 @@ function importStateFromFile(file) {
         if (!touch) return;
 
         const handle = e.target.closest('.drag-handle');
-        if (!handle) return; // si no es el asa, dejamos que haga scroll
-
+        if (!handle) return;
         const card = handle.closest('.player-card');
         if (!card) return;
 
