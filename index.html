@@ -1501,6 +1501,8 @@ Formato esperado (separado por tabulaciones):
     let importTee = 1, importHoles = 18, importType = 'normal';
     let parsedGroups = [];
 
+    let holeMeta = []; // {n, par, m} por hoyo
+
     // Estado para drag & drop de la lista (PC + móvil)
     let isListDragging = false;
     let dragCard = null;
@@ -1532,6 +1534,15 @@ Formato esperado (separado por tabulaciones):
         try {
             holeTimes = JSON.parse(localStorage.getItem('golf_times')) || {...presets.standard};
             players = JSON.parse(localStorage.getItem('golf_players')) || [];
+
+            const storedMeta = JSON.parse(localStorage.getItem('golf_holeMeta'));
+            if (Array.isArray(storedMeta) && storedMeta.length === 18) {
+                holeMeta = storedMeta;
+            } else {
+                holeMeta = holesData.map(h => ({ n: h.n, par: h.par, m: h.m }));
+            }
+
+            // Compatibilidad antigua
             players.forEach(p => {
                 if (!p.notes) p.notes = [];
                 if (p.greenMondayGroup && !p.greenMonday10Group && !p.greenMonday1Group) {
@@ -1539,12 +1550,17 @@ Formato esperado (separado por tabulaciones):
                     delete p.greenMondayGroup;
                 }
             });
-        } catch(e) { holeTimes = {...presets.standard}; players = []; }
+        } catch(e) {
+            holeTimes = {...presets.standard};
+            players = [];
+            holeMeta = holesData.map(h => ({ n: h.n, par: h.par, m: h.m }));
+        }
     }
 
     function saveData() {
         localStorage.setItem('golf_times', JSON.stringify(holeTimes));
         localStorage.setItem('golf_players', JSON.stringify(players));
+        localStorage.setItem('golf_holeMeta', JSON.stringify(holeMeta));
     }
 
     function showTab(tab) {
@@ -1774,7 +1790,6 @@ Formato esperado (separado por tabulaciones):
         editSelectedColor = c;
     }
 
-    // NUEVAS funciones para tee y hoyos en el modal
     function selectEditTeeOption(el, tee) {
         document.querySelectorAll('#editTeeSelector .tee-option').forEach(o => o.classList.remove('active'));
         el.classList.add('active');
@@ -1788,12 +1803,10 @@ Formato esperado (separado por tabulaciones):
     }
 
     function updateEditTeeAndHolesUI() {
-        // Tee
         document.querySelectorAll('#editTeeSelector .tee-option').forEach(o => {
             const n = parseInt(o.querySelector('.tee-number')?.textContent || '0', 10);
             o.classList.toggle('active', n === editSelectedTee);
         });
-        // Hoyos
         document.querySelectorAll('#editHolesSelector .holes-option').forEach(o => {
             const n = parseInt(o.querySelector('.holes-number')?.textContent || '0', 10);
             o.classList.toggle('active', n === editNumHoles);
@@ -2194,7 +2207,6 @@ Formato esperado (separado por tabulaciones):
         return parts.join(' • ');
     }
 
-    // Info de fin de vuelta
     function getRoundInfo(p) {
         const numHoles = p.numHoles || 18;
         const startTee = p.startTee || 1;
@@ -2228,75 +2240,75 @@ Formato esperado (separado por tabulaciones):
     function render() { renderPlayers(); renderCourse(); }
 
     function renderPlayers() {
-    const c = document.getElementById('playersContainer');
-    if(players.length === 0) { c.innerHTML = '<div class="no-players">No hay grupos</div>'; updateStats(); return; }
-    let html = '';
-    players.forEach(p => {
-        const exp = calcHole(p);
-        let sc = '', st = '', bc = '';
-        if(exp.status==='pending') { st='Sale en '+exp.diff+' min'; bc='status-ontime'; }
-        else if(exp.status==='finished') { st='Finalizado'; bc='status-ahead'; }
-        else if(exp.status==='delayed') { sc='delayed'; st=exp.diff+'/'+exp.holeTime+' min'; bc='status-delayed'; }
-        else if(exp.status==='ahead') { st='Adelantado'; bc='status-ahead'; }
-        else { st='En tiempo'; bc='status-ontime'; }
+        const c = document.getElementById('playersContainer');
+        if(players.length === 0) { c.innerHTML = '<div class="no-players">No hay grupos</div>'; updateStats(); return; }
+        let html = '';
+        players.forEach(p => {
+            const exp = calcHole(p);
+            let sc = '', st = '', bc = '';
+            if(exp.status==='pending') { st='Sale en '+exp.diff+' min'; bc='status-ontime'; }
+            else if(exp.status==='finished') { st='Finalizado'; bc='status-ahead'; }
+            else if(exp.status==='delayed') { sc='delayed'; st=exp.diff+'/'+exp.holeTime+' min'; bc='status-delayed'; }
+            else if(exp.status==='ahead') { st='Adelantado'; bc='status-ahead'; }
+            else { st='En tiempo'; bc='status-ontime'; }
 
-        if(p.watchGroup) sc += ' watch-group';
-        if(p.tournamentGroup) sc += ' tournament-group';
-        if(p.greenMonday10Group) sc += ' greenmonday-group';
-        if(p.greenMonday1Group) sc += ' greenmonday1-group';
-        if(p.skippedHoles > 0) sc += ' skipped-group';
-        if(p.warnedGroup) sc += ' warned-group';
-        if(p.pacesetterGroup) sc += ' pacesetter-group';
+            if(p.watchGroup) sc += ' watch-group';
+            if(p.tournamentGroup) sc += ' tournament-group';
+            if(p.greenMonday10Group) sc += ' greenmonday-group';
+            if(p.greenMonday1Group) sc += ' greenmonday1-group';
+            if(p.skippedHoles > 0) sc += ' skipped-group';
+            if(p.warnedGroup) sc += ' warned-group';
+            if(p.pacesetterGroup) sc += ' pacesetter-group';
 
-        const numHoles = p.numHoles || 18;
+            const numHoles = p.numHoles || 18;
 
-        // NUEVO: marcar por 9/18 hoyos
-        if (numHoles === 9) {
-            sc += ' nine-holes-card';
-        } else {
-            sc += ' eighteen-holes-card';
-        }
+            // Clases para 9H / 18H (base)
+            if (numHoles === 9) {
+                sc += ' nine-holes-card';
+            } else {
+                sc += ' eighteen-holes-card';
+            }
 
-        let extraInfo = '';
-        if (p.greenMonday10Group) extraInfo = ' • <span style="color:#7e57c2">+10min H16</span>';
-        else if (p.greenMonday1Group) extraInfo = ' • <span style="color:#00897b">+10min H9</span>';
+            let extraInfo = '';
+            if (p.greenMonday10Group) extraInfo = ' • <span style="color:#7e57c2">+10min H16</span>';
+            else if (p.greenMonday1Group) extraInfo = ' • <span style="color:#00897b">+10min H9</span>';
 
-        const roundInfo = getRoundInfo(p);
-        
-        html += `<div class="player-card ${sc}" data-id="${p.id}">
-            <div class="drag-handle" title="Arrastrar">☰</div>
-            <div class="player-actions">
-                <button class="action-btn" onclick="openEditModal(${p.id})" title="Editar">✏️</button>
-                <button class="action-btn" onclick="quickSkip(${p.id})" title="Saltar">⏭️</button>
-                <button class="action-btn" onclick="deletePlayer(${p.id})" title="Eliminar">✕</button>
-            </div>
-            <div class="player-header">
-                <div class="player-color" style="background:${p.color}"></div>
-                <div class="player-name">${p.name}</div>
-                ${numHoles===9?'<span class="badge nine-holes">9H</span>':''}
-                ${p.skippedHoles>0?'<span class="badge skipped">⏭️'+p.skippedHoles+'</span>':''}
-                ${p.tournamentGroup?'<span class="badge tournament">🏆</span>':''}
-                ${p.greenMonday10Group?'<span class="badge greenmonday">🟣GM10</span>':''}
-                ${p.greenMonday1Group?'<span class="badge greenmonday1">🩵GM1</span>':''}
-                ${p.watchGroup?'<span class="badge watch">⚠️</span>':''}
-                ${p.warnedGroup?'<span class="badge warned">🔔</span>':''}
-                ${p.pacesetterGroup?'<span class="badge pacesetter">🐇</span>':''}
-            </div>
-            <div class="player-info">🕐 ${p.startTime} • Tee ${p.startTee} • 🏌️ ${numHoles}H${extraInfo}</div>
-            <div class="player-details">${getDetails(p)}</div>
-            <div class="player-footer">
-                <div>
-                    ${exp.hole>0&&exp.hole<=18 ? 'Hoyo: <span class="expected-hole">'+exp.hole+'</span>' : ''}
-                    <br>
-                    <span class="round-end">TERMINARA EN EL HOYO  ${roundInfo.endHole} a las ${roundInfo.endTimeText} h</span>
+            const roundInfo = getRoundInfo(p);
+            
+            html += `<div class="player-card ${sc}" data-id="${p.id}">
+                <div class="drag-handle" title="Arrastrar">☰</div>
+                <div class="player-actions">
+                    <button class="action-btn" onclick="openEditModal(${p.id})" title="Editar">✏️</button>
+                    <button class="action-btn" onclick="quickSkip(${p.id})" title="Saltar">⏭️</button>
+                    <button class="action-btn" onclick="deletePlayer(${p.id})" title="Eliminar">✕</button>
                 </div>
-                <span class="player-status ${bc}">${st}</span>
-            </div>
-        </div>`;
-    });
-    c.innerHTML = html;
-    updateStats();
-}
+                <div class="player-header">
+                    <div class="player-color" style="background:${p.color}"></div>
+                    <div class="player-name">${p.name}</div>
+                    ${numHoles===9?'<span class="badge nine-holes">9H</span>':''}
+                    ${p.skippedHoles>0?'<span class="badge skipped">⏭️'+p.skippedHoles+'</span>':''}
+                    ${p.tournamentGroup?'<span class="badge tournament">🏆</span>':''}
+                    ${p.greenMonday10Group?'<span class="badge greenmonday">🟣GM10</span>':''}
+                    ${p.greenMonday1Group?'<span class="badge greenmonday1">🩵GM1</span>':''}
+                    ${p.watchGroup?'<span class="badge watch">⚠️</span>':''}
+                    ${p.warnedGroup?'<span class="badge warned">🔔</span>':''}
+                    ${p.pacesetterGroup?'<span class="badge pacesetter">🐇</span>':''}
+                </div>
+                <div class="player-info">🕐 ${p.startTime} • Tee ${p.startTee} • 🏌️ ${numHoles}H${extraInfo}</div>
+                <div class="player-details">${getDetails(p)}</div>
+                <div class="player-footer">
+                    <div>
+                        ${exp.hole>0&&exp.hole<=18 ? 'Hoyo: <span class="expected-hole">'+exp.hole+'</span>' : ''}
+                        <br>
+                        <span class="round-end">Finaliza hoyo ${roundInfo.endHole} a las ${roundInfo.endTimeText} h</span>
+                    </div>
+                    <span class="player-status ${bc}">${st}</span>
+                </div>
+            </div>`;
+        });
+        c.innerHTML = html;
+        updateStats();
+    }
 
     function updateStats() {
         let g=0,j=0,d=0,w=0,t=0,gm10=0,gm1=0,warned=0,pace=0;
@@ -2330,6 +2342,8 @@ Formato esperado (separado por tabulaciones):
         let bh = '<div class="nine-title">VUELTA (10-18)</div>';
         holesData.forEach(h => {
             const pls = byHole[h.n]||[];
+            const meta = holeMeta[h.n - 1] || { n: h.n, par: h.par, m: h.m };
+
             const hasW = pls.some(p=>p.watchGroup);
             const hasT = pls.some(p=>p.tournamentGroup);
             const hasGM10 = pls.some(p=>p.greenMonday10Group);
@@ -2355,7 +2369,14 @@ Formato esperado (separado por tabulaciones):
             if(h.n===16&&hasGM10Here)td=ht+'+10';
             if(h.n===9&&hasGM1Here)td=ht+'+10';
             
-            let holeHtml = `<div class="hole ${hc}"><div class="hole-number">${h.n}</div><div class="hole-info">Par ${h.par} • ${h.m}m<br>⏱️ ${td}</div>`;
+            let holeHtml = `
+                <div class="hole ${hc}">
+                    <div class="hole-number">${h.n}</div>
+                    <div class="hole-info">
+                        Par ${meta.par} • ${meta.m}m<br>
+                        ⏱️ ${td}
+                    </div>
+            `;
             if(pls.length>0){
                 holeHtml+='<div class="player-markers">'+pls.map(p=>{
                     let dotClass = '';
@@ -2397,12 +2418,36 @@ Formato esperado (separado por tabulaciones):
         const f = document.getElementById('frontNineTimes');
         const b = document.getElementById('backNineTimes');
         let fh = '', bh = '';
+
         holesData.forEach(h => {
             const t = holeTimes[h.n] || h.t;
-            const html = '<div class="hole-time-row"><div class="hole-badge">'+h.n+'</div><div class="hole-details"><div class="par-info">Par '+h.par+'</div><div class="meters-info">'+h.m+'m</div></div><div class="time-input-wrapper"><input type="number" id="ht'+h.n+'" value="'+t+'" min="5" max="30" onchange="updateTotals()"><span>min</span></div></div>';
-            if(h.n <= 9) fh += html; else bh += html;
+            const meta = holeMeta[h.n - 1] || { n: h.n, par: h.par, m: h.m };
+
+            const html = `
+                <div class="hole-time-row">
+                    <div class="hole-badge">${h.n}</div>
+                    <div class="hole-details">
+                        <div class="par-info">
+                            Par
+                            <input type="number" id="par${h.n}" value="${meta.par}" min="3" max="6">
+                        </div>
+                        <div class="meters-info">
+                            Distancia
+                            <input type="number" id="m${h.n}" value="${meta.m}" min="50" max="700"> m
+                        </div>
+                    </div>
+                    <div class="time-input-wrapper">
+                        <input type="number" id="ht${h.n}" value="${t}" min="5" max="30" onchange="updateTotals()">
+                        <span>min</span>
+                    </div>
+                </div>
+            `;
+
+            if (h.n <= 9) fh += html; else bh += html;
         });
-        f.innerHTML = fh; b.innerHTML = bh;
+
+        f.innerHTML = fh;
+        b.innerHTML = bh;
         updateTotals();
     }
 
@@ -2422,11 +2467,33 @@ Formato esperado (separado por tabulaciones):
 
     function saveHoleTimes() {
         for(let i=1; i<=18; i++) {
-            const inp = document.getElementById('ht'+i);
-            if(inp) holeTimes[i] = parseInt(inp.value) || holesData[i-1].t;
+            const inpTime = document.getElementById('ht'+i);
+            const inpPar  = document.getElementById('par'+i);
+            const inpM    = document.getElementById('m'+i);
+
+            if (inpTime) {
+                const v = parseInt(inpTime.value);
+                holeTimes[i] = !isNaN(v) ? v : holesData[i-1].t;
+            }
+
+            if (!holeMeta[i-1]) {
+                holeMeta[i-1] = { n: i, par: holesData[i-1].par, m: holesData[i-1].m };
+            }
+
+            if (inpPar) {
+                const p = parseInt(inpPar.value);
+                holeMeta[i-1].par = !isNaN(p) ? p : holesData[i-1].par;
+            }
+
+            if (inpM) {
+                const m = parseInt(inpM.value);
+                holeMeta[i-1].m = !isNaN(m) ? m : holesData[i-1].m;
+            }
         }
-        saveData(); render();
-        showToast('✅ Tiempos guardados', '');
+
+        saveData(); 
+        render();
+        showToast('✅ Tiempos y datos de hoyos guardados', '');
     }
 
     function applyPreset(name) { holeTimes = {...presets[name]}; renderTimesConfig(); showToast('📊 Preset aplicado', ''); }
@@ -2451,10 +2518,7 @@ Formato esperado (separado por tabulaciones):
 
     // ===== EXPORTAR / IMPORTAR ESTADO (texto) =====
     function exportState() {
-        const data = {
-            holeTimes,
-            players
-        };
+        const data = { holeTimes, players, holeMeta };
 
         try {
             const json = JSON.stringify(data);
@@ -2467,7 +2531,7 @@ Formato esperado (separado por tabulaciones):
                     prompt('Copia este texto y envíalo a tu compañero:', payload);
                 });
             } else {
-            prompt('Copia este texto y envíalo a tu compañero:', payload);
+                prompt('Copia este texto y envíalo a tu compañero:', payload);
             }
         } catch (e) {
             alert('Error al exportar el estado: ' + e.message);
@@ -2498,6 +2562,9 @@ Formato esperado (separado por tabulaciones):
 
             holeTimes = data.holeTimes;
             players = data.players;
+            holeMeta = Array.isArray(data.holeMeta) && data.holeMeta.length === 18
+                ? data.holeMeta
+                : holesData.map(h => ({ n: h.n, par: h.par, m: h.m }));
 
             players.forEach(p => {
                 if (!p.notes) p.notes = [];
@@ -2514,10 +2581,7 @@ Formato esperado (separado por tabulaciones):
 
     // ===== EXPORTAR / IMPORTAR ESTADO COMO ARCHIVO JSON =====
     function exportStateToFile() {
-        const data = {
-            holeTimes,
-            players
-        };
+        const data = { holeTimes, players, holeMeta };
 
         try {
             const json = JSON.stringify(data, null, 2);
@@ -2576,6 +2640,9 @@ Formato esperado (separado por tabulaciones):
 
                 holeTimes = data.holeTimes;
                 players = data.players;
+                holeMeta = Array.isArray(data.holeMeta) && data.holeMeta.length === 18
+                    ? data.holeMeta
+                    : holesData.map(h => ({ n: h.n, par: h.par, m: h.m }));
 
                 players.forEach(p => {
                     if (!p.notes) p.notes = [];
