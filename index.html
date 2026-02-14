@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -282,30 +282,10 @@
             transition: all 0.2s;
             user-select: none;
         }
-            /* Colores base para 9H (naranja) y 18H (rojo),
-            solo si NO son torneo ni Green Monday */
-        .player-card.nine-holes-card:not(.tournament-group):not(.greenmonday-group):not(.greenmonday1-group) {
-             border-left-color: #ff9800;      /* naranja */
-             background: #fff8e1;
-        }
 
-        .player-card.eighteen-holes-card:not(.tournament-group):not(.greenmonday-group):not(.greenmonday1-group) {
-    border-left-color: #e53935;      /* rojizo */
-    background: #ffebee;
-        }
         .player-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
         .player-card.dragging { opacity: 0.5; }
         .player-card.drag-over { border-top: 3px solid #1976d2; margin-top: 10px; }
-
-        .player-card.delayed { border-left-color: #dc3545; background: #fff5f5; }
-        .player-card.watch-group { border-left-color: #ff9800; background: #fff8e1; }
-        .player-card.tournament-group { border-left-color: #1976d2; background: #e3f2fd; }
-        .player-card.greenmonday-group { border-left-color: #7e57c2; background: #ede7f6; }
-        .player-card.greenmonday1-group { border-left-color: #00897b; background: #e0f2f1; }
-        .player-card.skipped-group { border-left-color: #9c27b0; background: #f3e5f5; }
-        .player-card.warned-group { border-left-color: #f44336; background: #ffebee; }
-        .player-card.pacesetter-group { border-left-color: #9c27b0; background: #f3e5f5; border-left-width: 6px; }
-        .player-card.has-notes { border-left-color: #ff5722; }
 
         .drag-handle {
             position: absolute;
@@ -322,11 +302,20 @@
             background: rgba(0,0,0,0.04);
             cursor: grab;
         }
-
         .drag-handle:active {
             cursor: grabbing;
             background: rgba(0,0,0,0.10);
         }
+
+        .player-card.delayed { border-left-color: #dc3545; background: #fff5f5; }
+        .player-card.watch-group { border-left-color: #ff9800; background: #fff8e1; }
+        .player-card.tournament-group { border-left-color: #1976d2; background: #e3f2fd; }
+        .player-card.greenmonday-group { border-left-color: #7e57c2; background: #ede7f6; }
+        .player-card.greenmonday1-group { border-left-color: #00897b; background: #e0f2f1; }
+        .player-card.skipped-group { border-left-color: #9c27b0; background: #f3e5f5; }
+        .player-card.warned-group { border-left-color: #f44336; background: #ffebee; }
+        .player-card.pacesetter-group { border-left-color: #9c27b0; background: #f3e5f5; border-left-width: 6px; }
+        .player-card.has-notes { border-left-color: #ff5722; }
 
         .player-header { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 5px; }
 
@@ -354,34 +343,12 @@
         .player-info { font-size: 0.8rem; color: #666; margin-bottom: 3px; }
         .player-details { font-size: 0.75rem; color: #888; background: #f0f0f0; padding: 4px 8px; border-radius: 4px; }
 
-        .player-notes {
-            margin-top: 8px;
-            padding: 8px 10px;
-            background: #fff3e0;
-            border-radius: 6px;
-            border-left: 3px solid #ff5722;
-            font-size: 0.8rem;
-            color: #e65100;
-        }
-
-        .player-notes-title {
-            font-weight: 600;
-            font-size: 0.7rem;
-            color: #bf360c;
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
         .player-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
-        .expected-hole { font-size: 1.2rem; font-weight: bold; color: #1a472a; }
-
-        .round-end {
-            font-size: 0.75rem;
-            color: #555;
-        }
-
+        .expected-hole { font-size: 1.4rem; font-weight: bold; color: #1a472a; }
+         .round-end {
+         font-size: 0.75rem;
+         color: #555;
+}
         .player-status { padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
         .status-ontime { background: #e8f5e9; color: #2d5a3d; }
         .status-delayed { background: #ffebee; color: #c62828; }
@@ -735,6 +702,7 @@
         .current-time-info .value { font-size: 1.2rem; font-weight: bold; color: #1a472a; }
         .current-time-info .label { font-size: 0.8rem; color: #666; }
 
+        /* ===== SALIDAS PANEL ===== */
         .salidas-panel { max-width: 1000px; margin: 0 auto; }
 
         .salidas-header { text-align: center; margin-bottom: 25px; }
@@ -816,6 +784,7 @@
         .no-preview { text-align: center; padding: 40px; color: #999; }
         .no-preview-icon { font-size: 3rem; margin-bottom: 10px; opacity: 0.5; }
 
+        /* ===== CONFIG & RULES ===== */
         .config-panel, .rules-panel { max-width: 900px; margin: 0 auto; }
 
         .config-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
@@ -841,6 +810,9 @@
         .time-input-wrapper input { width: 50px; padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px; text-align: center; font-size: 1rem; font-weight: 600; color: #1a472a; }
         .nine-subtotal { margin-top: 12px; padding: 10px; background: #e8f5e9; border-radius: 8px; text-align: center; font-weight: 600; color: #1a472a; }
         .save-config-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #2d5a3d, #1a472a); color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 20px; }
+
+        /* ===== MARSHALL ===== */
+        .config-panel, .rules-panel { max-width: 900px; margin: 0 auto; }
 
         .marshall-header { text-align: center; margin-bottom: 25px; }
         .marshall-icon { font-size: 4rem; margin-bottom: 10px; animation: bounce 2s infinite; }
@@ -890,7 +862,6 @@
         #playersContainer {
             position: relative;
         }
-
         .player-card.placeholder {
             background: transparent !important;
             border: none !important;
@@ -927,9 +898,9 @@
                     <input type="time" id="editStartTime">
                 </div>
                 
-                <!-- TEE Y HOYOS EN MODAL -->
-<div class="form-group">
-    <label>Tee de Salida y Hoyos</label>
+                <div class="form-group">
+                <label>⛳ Tee de Salida (Hoyo)</label>
+                <label>Tee de Salida y Hoyos</label>
     <div class="tee-selector" id="editTeeSelector">
         <div class="tee-option" onclick="selectEditTeeOption(this,1)">
             <div class="tee-number">1</div>
@@ -952,6 +923,27 @@
         </div>
     </div>
 </div>
+                <div class="tee-grid-selector" id="editTeeSelector">
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 1)"><span class="tee-number">1</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 2)"><span class="tee-number">2</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 3)"><span class="tee-number">3</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 4)"><span class="tee-number">4</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 5)"><span class="tee-number">5</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 6)"><span class="tee-number">6</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 7)"><span class="tee-number">7</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 8)"><span class="tee-number">8</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 9)"><span class="tee-number">9</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 10)"><span class="tee-number">10</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 11)"><span class="tee-number">11</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 12)"><span class="tee-number">12</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 13)"><span class="tee-number">13</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 14)"><span class="tee-number">14</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 15)"><span class="tee-number">15</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 16)"><span class="tee-number">16</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 17)"><span class="tee-number">17</span></div>
+                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 18)"><span class="tee-number">18</span></div>
+                </div>
+                </div>
 
                 <div class="form-group">
                     <label>🏌️ Jugadores y Vehículos</label>
@@ -1096,7 +1088,7 @@
             <div style="font-size: 2.5rem;">⛳</div>
             <div class="header-text">
                 <h1>Track&Golf</h1>
-                <p>Marshall</p>
+                <p>Atentos al cruze</p>
             </div>
         </header>
 
@@ -1215,14 +1207,14 @@ Formato esperado (separado por tabulaciones):
                 <div class="marshall-header">
                     <div class="marshall-icon">👮</div>
                     <div class="marshall-title">MARSHALL</div>
-                    <div class="marshall-subtitle"></div>
+                    <div class="marshall-subtitle">Reglamento del Club</div>
                 </div>
                 <div class="notebook">
                     <div class="notebook-binding"></div>
                     <div class="notebook-header">
                         <div class="notebook-header-icon">📋</div>
                         <div class="notebook-header-text">
-                            <h3>Normas de Juego</h3>
+                            <h3>Normas de Juego - Golf Barcelona</h3>
                             <p>Por favor, respete las siguientes normas</p>
                         </div>
                     </div>
@@ -1250,9 +1242,19 @@ Formato esperado (separado por tabulaciones):
                             <div class="rule-item"><div class="rule-number">10</div><div class="rule-text">Respete las indicaciones del <strong>Marshall</strong>.</div></div>
                         </div>
                     </div>
-                                   </div>
-                                 </div>
+                               </div>
                                 </div>
+                                
+                            </div>
+                           
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -1265,27 +1267,16 @@ Formato esperado (separado por tabulaciones):
             <div class="panel config-panel">
                 <div class="config-header">
                     <div><h2 style="border:none;padding:0;margin:0;">⏱️ Tiempos por Hoyo</h2></div>
-                    <div class="total-time-box">
-                        <div class="label">Total</div>
-                        <div class="value" id="totalTimeDisplay">4h 28min</div>
-                    </div>
+                    <div class="total-time-box"><div class="label">Total</div><div class="value" id="totalTimeDisplay">4h 28min</div></div>
                 </div>
                 <div class="preset-buttons">
-                    <button class="preset-btn" onclick="applyPreset('standard')">📊 Predefinido Estandar</button>
+                    <button class="preset-btn" onclick="applyPreset('standard')">📊 Predefinido GolfBarcelona</button>
                     <button class="preset-btn" onclick="applyPreset('fast')">🏃 Predefinido Pocos jugadores</button>
                     <button class="preset-btn" onclick="applyPreset('slow')">🐢 Predefinido Mal Tiempo</button>
                 </div>
                 <div class="times-grid">
-                    <div class="nine-section">
-                        <h3>IDA (1-9)</h3>
-                        <div id="frontNineTimes"></div>
-                        <div class="nine-subtotal">Subtotal: <span id="frontNineTotal">0</span> min</div>
-                    </div>
-                    <div class="nine-section">
-                        <h3>VUELTA (10-18)</h3>
-                        <div id="backNineTimes"></div>
-                        <div class="nine-subtotal">Subtotal: <span id="backNineTotal">0</span> min</div>
-                    </div>
+                    <div class="nine-section"><h3>IDA (1-9)</h3><div id="frontNineTimes"></div><div class="nine-subtotal">Subtotal: <span id="frontNineTotal">0</span> min</div></div>
+                    <div class="nine-section"><h3>VUELTA (10-18)</h3><div id="backNineTimes"></div><div class="nine-subtotal">Subtotal: <span id="backNineTotal">0</span> min</div></div>
                 </div>
                 <button class="save-config-btn" onclick="saveHoleTimes()">💾 Guardar</button>
             </div>
@@ -1296,100 +1287,27 @@ Formato esperado (separado por tabulaciones):
             <div class="main-content">
                 <div class="panel">
                     <h2>➕ PREPARANDO EL GRUPO</h2>
-                    <div class="current-time-info">
-                        <div class="label">Tiempo total</div>
-                        <div class="value" id="currentTotalTime">4h 28min</div>
-                    </div>
-                    <div class="form-group">
-                        <label>Nombre</label>
-                        <input type="text" id="playerName" placeholder="Ej: Grupo García">
-                    </div>
-                    <div class="form-group">
-                        <label>Hora Salida</label>
-                        <input type="time" id="startTime" value="08:00">
-                    </div>
+                    <div class="current-time-info"><div class="label">Tiempo total</div><div class="value" id="currentTotalTime">4h 28min</div></div>
+                    <div class="form-group"><label>Nombre</label><input type="text" id="playerName" placeholder="Ej: Grupo García"></div>
+                    <div class="form-group"><label>Hora Salida</label><input type="time" id="startTime" value="08:00"></div>
                     <div class="form-group">
                         <label>Tee de Salida</label>
                         <div class="tee-selector">
-                            <div class="tee-option active" onclick="selectTee(this,1)">
-                                <div class="tee-number">1</div>
-                                <div class="tee-label">Tee 1</div>
-                            </div>
-                            <div class="tee-option" onclick="selectTee(this,10)">
-                                <div class="tee-number">10</div>
-                                <div class="tee-label">Tee 10</div>
-                            </div>
+                            <div class="tee-option active" onclick="selectTee(this,1)"><div class="tee-number">1</div><div class="tee-label">Tee 1</div></div>
+                            <div class="tee-option" onclick="selectTee(this,10)"><div class="tee-number">10</div><div class="tee-label">Tee 10</div></div>
                         </div>
                         <div class="holes-selector">
-                            <div class="holes-option" onclick="selectNumHoles(this, 9)">
-                                <div class="holes-number">9</div>
-                                <div class="holes-label">Hoyos</div>
-                            </div>
-                            <div class="holes-option active" onclick="selectNumHoles(this, 18)">
-                                <div class="holes-number">18</div>
-                                <div class="holes-label">Hoyos</div>
-                            </div>
+                            <div class="holes-option" onclick="selectNumHoles(this, 9)"><div class="holes-number">9</div><div class="holes-label">Hoyos</div></div>
+                            <div class="holes-option active" onclick="selectNumHoles(this, 18)"><div class="holes-number">18</div><div class="holes-label">Hoyos</div></div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>🏌️ Jugadores y Vehículos</label>
                         <div class="group-config">
-                            <div class="config-row has-value" id="rowPlayers">
-                                <div class="config-label">
-                                    <span class="config-icon">🏌️‍♂️</span>
-                                    <div>
-                                        <div class="config-text">Jugadores</div>
-                                        <div class="config-subtext">1-4</div>
-                                    </div>
-                                </div>
-                                <div class="quantity-selector">
-                                    <button class="qty-btn" onclick="changeQty('players',-1)">−</button>
-                                    <div class="qty-value" id="qtyPlayers">4</div>
-                                    <button class="qty-btn" onclick="changeQty('players',1)">+</button>
-                                </div>
-                            </div>
-                            <div class="config-row" id="rowBuggys">
-                                <div class="config-label">
-                                    <span class="config-icon">🚗</span>
-                                    <div>
-                                        <div class="config-text">Buggys</div>
-                                        <div class="config-subtext">0-2</div>
-                                    </div>
-                                </div>
-                                <div class="quantity-selector">
-                                    <button class="qty-btn" onclick="changeQty('buggys',-1)">−</button>
-                                    <div class="qty-value zero" id="qtyBuggys">0</div>
-                                    <button class="qty-btn" onclick="changeQty('buggys',1)">+</button>
-                                </div>
-                            </div>
-                            <div class="config-row" id="rowMoto3">
-                                <div class="config-label">
-                                    <span class="config-icon">🛵</span>
-                                    <div>
-                                        <div class="config-text">Scooter 3R</div>
-                                        <div class="config-subtext">0-4</div>
-                                    </div>
-                                </div>
-                                <div class="quantity-selector">
-                                    <button class="qty-btn" onclick="changeQty('moto3',-1)">−</button>
-                                    <div class="qty-value zero" id="qtyMoto3">0</div>
-                                    <button class="qty-btn" onclick="changeQty('moto3',1)">+</button>
-                                </div>
-                            </div>
-                            <div class="config-row" id="rowMoto4">
-                                <div class="config-label">
-                                    <span class="config-icon">🏍️</span>
-                                    <div>
-                                        <div class="config-text">Scooter 4R</div>
-                                        <div class="config-subtext">0-4</div>
-                                    </div>
-                                </div>
-                                <div class="quantity-selector">
-                                    <button class="qty-btn" onclick="changeQty('moto4',-1)">−</button>
-                                    <div class="qty-value zero" id="qtyMoto4">0</div>
-                                    <button class="qty-btn" onclick="changeQty('moto4',1)">+</button>
-                                </div>
-                            </div>
+                            <div class="config-row has-value" id="rowPlayers"><div class="config-label"><span class="config-icon">🏌️‍♂️</span><div><div class="config-text">Jugadores</div><div class="config-subtext">1-4</div></div></div><div class="quantity-selector"><button class="qty-btn" onclick="changeQty('players',-1)">−</button><div class="qty-value" id="qtyPlayers">4</div><button class="qty-btn" onclick="changeQty('players',1)">+</button></div></div>
+                            <div class="config-row" id="rowBuggys"><div class="config-label"><span class="config-icon">🚗</span><div><div class="config-text">Buggys</div><div class="config-subtext">0-2</div></div></div><div class="quantity-selector"><button class="qty-btn" onclick="changeQty('buggys',-1)">−</button><div class="qty-value zero" id="qtyBuggys">0</div><button class="qty-btn" onclick="changeQty('buggys',1)">+</button></div></div>
+                            <div class="config-row" id="rowMoto3"><div class="config-label"><span class="config-icon">🛵</span><div><div class="config-text">Scooter 3R</div><div class="config-subtext">0-4</div></div></div><div class="quantity-selector"><button class="qty-btn" onclick="changeQty('moto3',-1)">−</button><div class="qty-value zero" id="qtyMoto3">0</div><button class="qty-btn" onclick="changeQty('moto3',1)">+</button></div></div>
+                            <div class="config-row" id="rowMoto4"><div class="config-label"><span class="config-icon">🏍️</span><div><div class="config-text">Scooter 4R</div><div class="config-subtext">0-4</div></div></div><div class="quantity-selector"><button class="qty-btn" onclick="changeQty('moto4',-1)">−</button><div class="qty-value zero" id="qtyMoto4">0</div><button class="qty-btn" onclick="changeQty('moto4',1)">+</button></div></div>
                             <div class="group-summary" id="groupSummary">👦👦👦👦</div>
                         </div>
                     </div>
@@ -1406,30 +1324,12 @@ Formato esperado (separado por tabulaciones):
                     <div class="form-group">
                         <label>🏷️ Tipo / Marcadores</label>
                         <div class="group-markers">
-                            <div class="marker-box tournament" id="markerTournament" onclick="toggleMarker('tournament')">
-                                <div class="marker-icon">🏆</div>
-                                <div class="marker-text">TORNEO</div>
-                            </div>
-                            <div class="marker-box greenmonday10" id="markerGreenMonday10" onclick="toggleMarker('greenmonday10')">
-                                <div class="marker-icon">🏆</div>
-                                <div class="marker-text">GM TEE 10</div>
-                            </div>
-                            <div class="marker-box greenmonday1" id="markerGreenMonday1" onclick="toggleMarker('greenmonday1')">
-                                <div class="marker-icon">🏆</div>
-                                <div class="marker-text">GM TEE 1</div>
-                            </div>
-                            <div class="marker-box watch" id="markerWatch" onclick="toggleMarker('watch')">
-                                <div class="marker-icon">⚠️</div>
-                                <div class="marker-text">VIGILAR</div>
-                            </div>
-                            <div class="marker-box warned" id="markerWarned" onclick="toggleMarker('warned')">
-                                <div class="marker-icon">🔔</div>
-                                <div class="marker-text">AVISADO</div>
-                            </div>
-                            <div class="marker-box pacesetter" id="markerPacesetter" onclick="toggleMarker('pacesetter')">
-                                <div class="marker-icon">🐇</div>
-                                <div class="marker-text">LIEBRE</div>
-                            </div>
+                            <div class="marker-box tournament" id="markerTournament" onclick="toggleMarker('tournament')"><div class="marker-icon">🏆</div><div class="marker-text">TORNEO</div></div>
+                            <div class="marker-box greenmonday10" id="markerGreenMonday10" onclick="toggleMarker('greenmonday10')"><div class="marker-icon">🏆</div><div class="marker-text">GM TEE 10</div></div>
+                            <div class="marker-box greenmonday1" id="markerGreenMonday1" onclick="toggleMarker('greenmonday1')"><div class="marker-icon">🏆</div><div class="marker-text">GM TEE 1</div></div>
+                            <div class="marker-box watch" id="markerWatch" onclick="toggleMarker('watch')"><div class="marker-icon">⚠️</div><div class="marker-text">VIGILAR</div></div>
+                            <div class="marker-box warned" id="markerWarned" onclick="toggleMarker('warned')"><div class="marker-icon">🔔</div><div class="marker-text">AVISADO</div></div>
+                            <div class="marker-box pacesetter" id="markerPacesetter" onclick="toggleMarker('pacesetter')"><div class="marker-icon">🐇</div><div class="marker-text">LIEBRE</div></div>
                         </div>
                     </div>
                     <button class="btn btn-primary" onclick="addPlayer()">➕ AÑADIR AL CAMPO</button>
@@ -1450,10 +1350,7 @@ Formato esperado (separado por tabulaciones):
                         <div class="nine-section-visual back-nine" id="backNineVisual"></div>
                     </div>
                     <div class="legend" id="legend"></div>
-                    <div class="clock-display">
-                        <div class="date" id="currentDate"></div>
-                        <div class="time" id="currentTime"></div>
-                    </div>
+                    <div class="clock-display"><div class="date" id="currentDate"></div><div class="time" id="currentTime"></div></div>
                     <div class="summary-stats">
                         <div class="stat-card"><div class="stat-value" id="totalGroups">0</div><div class="stat-label">GRUPOS</div></div>
                         <div class="stat-card"><div class="stat-value" id="totalJugadores">0</div><div class="stat-label">JUGADORES</div></div>
@@ -1469,7 +1366,7 @@ Formato esperado (separado por tabulaciones):
         </div>
     </div>
 
-<script>
+   <script>
     const holesData = [
         { n: 1,  par: 5, m: 478, t: 16 }, { n: 2,  par: 3, m: 141, t: 13 }, { n: 3,  par: 4, m: 272, t: 14 },
         { n: 4,  par: 4, m: 353, t: 15 }, { n: 5,  par: 3, m: 150, t: 14 }, { n: 6,  par: 4, m: 379, t: 15 },
@@ -1648,7 +1545,7 @@ Formato esperado (separado por tabulaciones):
             }
         });
         let s = '';
-        for(let i=0;i<editQty.players;i++) s+='👤';
+        for(let i=0;i<editQty.players;i++) s+='👦';
         if(editQty.buggys+editQty.moto3+editQty.moto4>0) s+=' ';
         for(let i=0;i<editQty.buggys;i++) s+='🚗';
         for(let i=0;i<editQty.moto3;i++) s+='🛵';
@@ -2300,7 +2197,7 @@ Formato esperado (separado por tabulaciones):
                     <div>
                         ${exp.hole>0&&exp.hole<=18 ? 'Hoyo: <span class="expected-hole">'+exp.hole+'</span>' : ''}
                         <br>
-                        <span class="round-end">Finaliza hoyo ${roundInfo.endHole} a las ${roundInfo.endTimeText} h</span>
+                        <span class="round-end">Termina en el hoyo ${roundInfo.endHole} a las ${roundInfo.endTimeText} h</span>
                     </div>
                     <span class="player-status ${bc}">${st}</span>
                 </div>
