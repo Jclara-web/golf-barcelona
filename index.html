@@ -1095,8 +1095,8 @@
         <header>
             <div style="font-size: 2.5rem;">⛳</div>
             <div class="header-text">
-                <h1>Marshall Golf Barcelona</h1>
-                <p>Control de Tiempos de Juego</p>
+                <h1>Track&Golf</h1>
+                <p>Marshall</p>
             </div>
         </header>
 
@@ -1215,14 +1215,14 @@ Formato esperado (separado por tabulaciones):
                 <div class="marshall-header">
                     <div class="marshall-icon">👮</div>
                     <div class="marshall-title">MARSHALL</div>
-                    <div class="marshall-subtitle">Reglamento del Club</div>
+                    <div class="marshall-subtitle"></div>
                 </div>
                 <div class="notebook">
                     <div class="notebook-binding"></div>
                     <div class="notebook-header">
                         <div class="notebook-header-icon">📋</div>
                         <div class="notebook-header-text">
-                            <h3>Normas de Juego - Golf Barcelona</h3>
+                            <h3>Normas de Juego</h3>
                             <p>Por favor, respete las siguientes normas</p>
                         </div>
                     </div>
@@ -1250,37 +1250,9 @@ Formato esperado (separado por tabulaciones):
                             <div class="rule-item"><div class="rule-number">10</div><div class="rule-text">Respete las indicaciones del <strong>Marshall</strong>.</div></div>
                         </div>
                     </div>
-                    <div class="notebook-footer">
-                        <div class="contact-section">
-                            <div class="contact-item">
-                                <div class="contact-info-left">
-                                    <div class="contact-icon">👮</div>
-                                    <div class="contact-details">
-                                        <div class="contact-label">MARSHALL</div>
-                                        <div class="contact-value">(+34) 937 728 802</div>
-                                    </div>
+                                   </div>
+                                 </div>
                                 </div>
-                                <a href="tel:+34937728802" class="contact-btn phone">📞 Llamar</a>
-                            </div>
-                            <div class="contact-item">
-                                <div class="contact-info-left">
-                                    <div class="contact-icon">🏠</div>
-                                    <div class="contact-details">
-                                        <div class="contact-label">CASA CLUB</div>
-                                        <div class="contact-value">(+34) 937 728 800</div>
-                                    </div>
-                                </div>
-                                <a href="tel:+34937728800" class="contact-btn phone">📞 Llamar</a>
-                            </div>
-                            <div class="contact-item">
-                                <div class="contact-info-left">
-                                    <div class="contact-icon">🌐</div>
-                                    <div class="contact-details">
-                                        <div class="contact-label">PÁGINA WEB</div>
-                                        <div class="contact-value">golfbarcelona.com</div>
-                                    </div>
-                                </div>
-                                <a href="https://www.golfbarcelona.com" target="_blank" class="contact-btn web">🌍 Visitar</a>
                             </div>
                         </div>
                     </div>
@@ -1299,7 +1271,7 @@ Formato esperado (separado por tabulaciones):
                     </div>
                 </div>
                 <div class="preset-buttons">
-                    <button class="preset-btn" onclick="applyPreset('standard')">📊 Predefinido GolfBarcelona</button>
+                    <button class="preset-btn" onclick="applyPreset('standard')">📊 Predefinido Estandar</button>
                     <button class="preset-btn" onclick="applyPreset('fast')">🏃 Predefinido Pocos jugadores</button>
                     <button class="preset-btn" onclick="applyPreset('slow')">🐢 Predefinido Mal Tiempo</button>
                 </div>
@@ -1466,8 +1438,6 @@ Formato esperado (separado por tabulaciones):
                         <div id="playersContainer"><div class="no-players">No hay grupos</div></div>
                     </div>
                     <button class="btn btn-danger" onclick="clearAllPlayers()">🗑️ Limpiar</button>
-                    <button class="btn btn-secondary" onclick="exportState()">📤 Exportar estado (texto)</button>
-                    <button class="btn btn-secondary" onclick="importState()">📥 Importar estado (texto)</button>
                     <button class="btn btn-secondary" onclick="exportStateToFile()">📁 Exportar a archivo</button>
                     <button class="btn btn-secondary" onclick="triggerImportFile()">📂 Importar desde archivo</button>
                     <input type="file" id="importFileInput" accept=".json,application/json" style="display:none" onchange="importStateFromFile(this.files[0])">
