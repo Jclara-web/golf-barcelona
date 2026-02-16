@@ -418,7 +418,7 @@
         /* Selector de Tee en Modal */
         .tee-grid-selector {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 8px;
             margin-top: 10px;
         }
@@ -435,8 +435,8 @@
             font-size: 0.9rem;
         }
 
-        .tee-grid-option:hover { border-color: #2d5a3d; background: #e8f5e9; }
-        .tee-grid-option.active { border-color: #2d5a3d; background: #2d5a3d; color: white; }
+        .tee-grid-option:hover { border-color: #9ea1a0; background: #e8f5e9; }
+        .tee-grid-option.active { border-color: #9ea1a0; background: #9ea1a0; color: white; }
 
         /* Marcadores en Modal */
         .modal-markers {
@@ -898,52 +898,56 @@
                     <input type="time" id="editStartTime">
                 </div>
                 
-                <div class="form-group">
-                <label>⛳ Tee de Salida (Hoyo)</label>
-                <label>Tee de Salida y Hoyos</label>
-    <div class="tee-selector" id="editTeeSelector">
-        <div class="tee-option" onclick="selectEditTeeOption(this,1)">
+                <!-- TEE Y HOYOS EN MODAL -->
+<div class="form-group">
+    <label>⛳ Tee de Salida y Hoyos</label>
+
+    <!-- Selector rápido Tee 1 / Tee 10 -->
+    <div class="tee-selector" id="editTeeSelectorMain">
+        <div class="tee-option" onclick="selectEditTeeOption(this, 1)">
             <div class="tee-number">1</div>
             <div class="tee-label">Tee 1</div>
         </div>
-        <div class="tee-option" onclick="selectEditTeeOption(this,10)">
+        <div class="tee-option" onclick="selectEditTeeOption(this, 10)">
             <div class="tee-number">10</div>
             <div class="tee-label">Tee 10</div>
         </div>
     </div>
 
-    <div class="holes-selector" id="editHolesSelector" style="margin-top:10px;">
-        <div class="holes-option" onclick="selectEditNumHoles(this,9)">
+    <!-- 9 / 18 hoyos -->
+    <div class="holes-selector" id="editHolesSelector">
+        <div class="holes-option" onclick="selectEditNumHoles(this, 9)">
             <div class="holes-number">9</div>
             <div class="holes-label">Hoyos</div>
         </div>
-        <div class="holes-option" onclick="selectEditNumHoles(this,18)">
+        <div class="holes-option" onclick="selectEditNumHoles(this, 18)">
             <div class="holes-number">18</div>
             <div class="holes-label">Hoyos</div>
         </div>
     </div>
+
+    <!-- Cuadrícula 1–18 para afinar el tee exacto -->
+    <div class="tee-grid-selector" id="editTeeGridSelector">
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 1)"><span class="tee-number">1</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 2)"><span class="tee-number">2</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 3)"><span class="tee-number">3</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 4)"><span class="tee-number">4</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 5)"><span class="tee-number">5</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 6)"><span class="tee-number">6</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 7)"><span class="tee-number">7</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 8)"><span class="tee-number">8</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 9)"><span class="tee-number">9</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 10)"><span class="tee-number">10</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 11)"><span class="tee-number">11</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 12)"><span class="tee-number">12</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 13)"><span class="tee-number">13</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 14)"><span class="tee-number">14</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 15)"><span class="tee-number">15</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 16)"><span class="tee-number">16</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 17)"><span class="tee-number">17</span></div>
+        <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 18)"><span class="tee-number">18</span></div>
+    </div>
 </div>
-                <div class="tee-grid-selector" id="editTeeSelector">
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 1)"><span class="tee-number">1</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 2)"><span class="tee-number">2</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 3)"><span class="tee-number">3</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 4)"><span class="tee-number">4</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 5)"><span class="tee-number">5</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 6)"><span class="tee-number">6</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 7)"><span class="tee-number">7</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 8)"><span class="tee-number">8</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 9)"><span class="tee-number">9</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 10)"><span class="tee-number">10</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 11)"><span class="tee-number">11</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 12)"><span class="tee-number">12</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 13)"><span class="tee-number">13</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 14)"><span class="tee-number">14</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 15)"><span class="tee-number">15</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 16)"><span class="tee-number">16</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 17)"><span class="tee-number">17</span></div>
-                <div class="tee-grid-option tee-option" onclick="selectEditTeeOption(this, 18)"><span class="tee-number">18</span></div>
-                </div>
-                </div>
 
                 <div class="form-group">
                     <label>🏌️ Jugadores y Vehículos</label>
@@ -1088,7 +1092,7 @@
             <div style="font-size: 2.5rem;">⛳</div>
             <div class="header-text">
                 <h1>Track&Golf</h1>
-                <p>Atentos al cruze</p>
+                <p>CONTROL DEL JUEGO</p>
             </div>
         </header>
 
@@ -1202,65 +1206,93 @@ Formato esperado (separado por tabulaciones):
         </div>
 
         <!-- TAB RULES / MARSHALL -->
-        <div id="rulesTab" class="tab-content">
-            <div class="panel rules-panel">
-                <div class="marshall-header">
-                    <div class="marshall-icon">👮</div>
-                    <div class="marshall-title">MARSHALL</div>
-                    <div class="marshall-subtitle">Reglamento del Club</div>
+<div id="rulesTab" class="tab-content">
+    <div class="panel rules-panel">
+        <div class="marshall-header">
+            <div class="marshall-icon">👮</div>
+            <div class="marshall-title">MARSHALL</div>
+            <div class="marshall-subtitle">Reglamento del Club</div>
+        </div>
+        <div class="notebook">
+            <div class="notebook-binding"></div>
+            <div class="notebook-header">
+                <div class="notebook-header-icon">📋</div>
+                <div class="notebook-header-text">
+                    <h3>Normas de Juego - Golf Barcelona</h3>
+                    <p>Por favor, respete las siguientes normas</p>
                 </div>
-                <div class="notebook">
-                    <div class="notebook-binding"></div>
-                    <div class="notebook-header">
-                        <div class="notebook-header-icon">📋</div>
-                        <div class="notebook-header-text">
-                            <h3>Normas de Juego - Golf Barcelona</h3>
-                            <p>Por favor, respete las siguientes normas</p>
-                        </div>
+            </div>
+            <div class="notebook-content">
+                <div class="rule-section">
+                    <div class="rule-section-title">
+                        <span class="section-icon">⏱️</span>Ritmo de Juego
                     </div>
-                    <div class="notebook-content">
-                        <div class="rule-section">
-                            <div class="rule-section-title"><span class="section-icon">⏱️</span>Ritmo de Juego</div>
-                            <div class="rule-item rule-important"><div class="rule-number">1</div><div class="rule-text"><strong>Tiempo máximo:</strong> 4h 28min para 18 hoyos.</div></div>
-                            <div class="rule-item"><div class="rule-number">2</div><div class="rule-text">Si pierde más de un hoyo, <strong>deje pasar</strong> al grupo siguiente.</div></div>
-                            <div class="rule-item"><div class="rule-number">3</div><div class="rule-text">Búsqueda de bolas: <strong>3 minutos</strong> máximo.</div></div>
-                        </div>
-                        <div class="rule-section">
-                            <div class="rule-section-title"><span class="section-icon">🏌️</span>Tee de Salida</div>
-                            <div class="rule-item rule-important"><div class="rule-number">4</div><div class="rule-text">Está <strong>totalmente prohibido</strong> jugar fuera de las marcas del tee.</div></div>
-                            <div class="rule-item"><div class="rule-number">5</div><div class="rule-text">Presentarse <strong>10 minutos antes</strong> de la hora reservada.</div></div>
-                        </div>
-                        <div class="rule-section">
-                            <div class="rule-section-title"><span class="section-icon">⚠️</span>Seguridad</div>
-                            <div class="rule-item rule-important"><div class="rule-number">6</div><div class="rule-text"><strong>¡BOLA O FORE!</strong> Grite en voz alta si su bola puede alcanzar a otros.</div></div>
-                            <div class="rule-item rule-important"><div class="rule-number">7</div><div class="rule-text">Está <strong>totalmente prohibido</strong> acercarse al ante-green con buggys y motos.</div></div>
-                            <div class="rule-item"><div class="rule-number">8</div><div class="rule-text">No golpee hasta que el grupo de delante esté fuera de alcance.</div></div>
-                        </div>
-                        <div class="rule-section">
-                            <div class="rule-section-title"><span class="section-icon">📌</span>General</div>
-                            <div class="rule-item rule-highlight"><div class="rule-number">9</div><div class="rule-text"><strong>Máximo 4 jugadores</strong> por grupo.</div></div>
-                            <div class="rule-item"><div class="rule-number">10</div><div class="rule-text">Respete las indicaciones del <strong>Marshall</strong>.</div></div>
-                        </div>
+                    <div class="rule-item rule-important">
+                        <div class="rule-number">1</div>
+                        <div class="rule-text"><strong>Tiempo máximo:</strong> 4h 28min para 18 hoyos.</div>
                     </div>
-                               </div>
-                                </div>
-                                
-                            </div>
-                           
-                                    </div>
-                                </div>
-                                
-                            </div>
-                            
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div>
+                    <div class="rule-item">
+                        <div class="rule-number">2</div>
+                        <div class="rule-text">Si pierde más de un hoyo, <strong>deje pasar</strong> al grupo siguiente.</div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-number">3</div>
+                        <div class="rule-text">Búsqueda de bolas: <strong>3 minutos</strong> máximo.</div>
+                    </div>
+                </div>
+
+                <div class="rule-section">
+                    <div class="rule-section-title">
+                        <span class="section-icon">🏌️</span>Tee de Salida
+                    </div>
+                    <div class="rule-item rule-important">
+                        <div class="rule-number">4</div>
+                        <div class="rule-text">Está <strong>totalmente prohibido</strong> jugar fuera de las marcas del tee.</div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-number">5</div>
+                        <div class="rule-text">Presentarse <strong>10 minutos antes</strong> de la hora reservada.</div>
+                    </div>
+                </div>
+
+                <div class="rule-section">
+                    <div class="rule-section-title">
+                        <span class="section-icon">⚠️</span>Seguridad
+                    </div>
+                    <div class="rule-item rule-important">
+                        <div class="rule-number">6</div>
+                        <div class="rule-text"><strong>¡BOLA O FORE!</strong> Grite en voz alta si su bola puede alcanzar a otros.</div>
+                    </div>
+                    <div class="rule-item rule-important">
+                        <div class="rule-number">7</div>
+                        <div class="rule-text">Está <strong>totalmente prohibido</strong> acercarse al ante-green con buggys y motos.</div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-number">8</div>
+                        <div class="rule-text">No golpee hasta que el grupo de delante esté fuera de alcance.</div>
+                    </div>
+                </div>
+
+                <div class="rule-section">
+                    <div class="rule-section-title">
+                        <span class="section-icon">📌</span>General
+                    </div>
+                    <div class="rule-item rule-highlight">
+                        <div class="rule-number">9</div>
+                        <div class="rule-text"><strong>Máximo 4 jugadores</strong> por grupo.</div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-number">10</div>
+                        <div class="rule-text">Respete las indicaciones del <strong>Marshall</strong>.</div>
                     </div>
                 </div>
             </div>
+            <div class="notebook-footer">
+                <!-- aquí puedes añadir teléfono/web si quieres -->
+            </div>
         </div>
+    </div>
+</div>
 
         <!-- TAB CONFIG -->
         <div id="configTab" class="tab-content">
@@ -1688,10 +1720,12 @@ Formato esperado (separado por tabulaciones):
     }
 
     function selectEditTeeOption(el, tee) {
-        document.querySelectorAll('#editTeeSelector .tee-option').forEach(o => o.classList.remove('active'));
-        el.classList.add('active');
-        editSelectedTee = tee;
-    }
+    document
+        .querySelectorAll('#editTeeSelectorMain .tee-option, #editTeeGridSelector .tee-option')
+        .forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+    editSelectedTee = tee;
+}
 
     function selectEditNumHoles(el, num) {
         document.querySelectorAll('#editHolesSelector .holes-option').forEach(o => o.classList.remove('active'));
@@ -1700,15 +1734,20 @@ Formato esperado (separado por tabulaciones):
     }
 
     function updateEditTeeAndHolesUI() {
-        document.querySelectorAll('#editTeeSelector .tee-option').forEach(o => {
+    // Tees (1/10 y 1–18)
+    document
+        .querySelectorAll('#editTeeSelectorMain .tee-option, #editTeeGridSelector .tee-option')
+        .forEach(o => {
             const n = parseInt(o.querySelector('.tee-number')?.textContent || '0', 10);
             o.classList.toggle('active', n === editSelectedTee);
         });
-        document.querySelectorAll('#editHolesSelector .holes-option').forEach(o => {
-            const n = parseInt(o.querySelector('.holes-number')?.textContent || '0', 10);
-            o.classList.toggle('active', n === editNumHoles);
-        });
-    }
+
+    // 9 / 18 hoyos
+    document.querySelectorAll('#editHolesSelector .holes-option').forEach(o => {
+        const n = parseInt(o.querySelector('.holes-number')?.textContent || '0', 10);
+        o.classList.toggle('active', n === editNumHoles);
+    });
+}
 
     function toggleEditMarker(type) {
         editMarkers[type] = !editMarkers[type];
@@ -2197,7 +2236,7 @@ Formato esperado (separado por tabulaciones):
                     <div>
                         ${exp.hole>0&&exp.hole<=18 ? 'Hoyo: <span class="expected-hole">'+exp.hole+'</span>' : ''}
                         <br>
-                        <span class="round-end">Termina en el hoyo ${roundInfo.endHole} a las ${roundInfo.endTimeText} h</span>
+                        <span class="round-end">FIN EN EL HOYO ${roundInfo.endHole} a las ${roundInfo.endTimeText} h</span>
                     </div>
                     <span class="player-status ${bc}">${st}</span>
                 </div>
@@ -2696,57 +2735,60 @@ Formato esperado (separado por tabulaciones):
     }
 
     function onListMouseUp() {
-        endListDrag();
+    endListDrag();
+}
+
+function onListTouchEnd() {
+    endListDrag();
+}
+
+function endListDrag() {
+    if (!dragCard) return;
+
+    const container = dragContainer;
+
+    // Insertar la tarjeta en la posición del placeholder
+    container.insertBefore(dragCard, dragPlaceholder);
+
+    dragCard.classList.remove('dragging');
+    dragCard.style.position = '';
+    dragCard.style.top = '';
+    dragCard.style.left = '';
+    dragCard.style.width = '';
+    dragCard.style.zIndex = '';
+    dragCard.style.transform = '';
+
+    if (dragPlaceholder && dragPlaceholder.parentNode) {
+        dragPlaceholder.parentNode.removeChild(dragPlaceholder);
     }
 
-    function onListTouchEnd() {
-        endListDrag();
+    // Recalcular el orden de players según el DOM
+    const newOrder = [];
+    container.querySelectorAll('.player-card').forEach(cardEl => {
+        const id = parseInt(cardEl.dataset.id, 10);
+        const p = players.find(pl => pl.id === id);
+        if (p) newOrder.push(p);
+    });
+
+    if (newOrder.length === players.length) {
+        players = newOrder;
+        saveData();
     }
 
-    function endListDrag() {
-        if (!dragCard) return;
+    document.removeEventListener('mousemove', onListMouseMove);
+    document.removeEventListener('mouseup', onListMouseUp);
+    document.removeEventListener('touchmove', onListTouchMove);
+    document.removeEventListener('touchend', onListTouchEnd);
+    document.removeEventListener('touchcancel', onListTouchEnd);
 
-        const container = dragContainer;
+    dragCard = null;
+    dragPlaceholder = null;
+    dragContainer = null;
+    dragListEl = null;
+    isListDragging = false;
 
-        container.insertBefore(dragCard, dragPlaceholder);
-
-        dragCard.classList.remove('dragging');
-        dragCard.style.position = '';
-        dragCard.style.top = '';
-        dragCard.style.left = '';
-        dragCard.style.width = '';
-        dragCard.style.zIndex = '';
-
-        if (dragPlaceholder && dragPlaceholder.parentNode) {
-            dragPlaceholder.parentNode.removeChild(dragPlaceholder);
-        }
-
-        const newOrder = [];
-        container.querySelectorAll('.player-card').forEach(cardEl => {
-            const id = parseInt(cardEl.dataset.id, 10);
-            const p = players.find(pl => pl.id === id);
-            if (p) newOrder.push(p);
-        });
-
-        if (newOrder.length === players.length) {
-            players = newOrder;
-            saveData();
-        }
-
-        document.removeEventListener('mousemove', onListMouseMove);
-        document.removeEventListener('mouseup', onListMouseUp);
-        document.removeEventListener('touchmove', onListTouchMove);
-        document.removeEventListener('touchend', onListTouchEnd);
-        document.removeEventListener('touchcancel', onListTouchEnd);
-
-        dragCard = null;
-        dragPlaceholder = null;
-        dragContainer = null;
-        dragListEl = null;
-        isListDragging = false;
-
-        render();
-    }
+    render();
+}
 </script>
 </body>
 </html>
