@@ -870,6 +870,51 @@
             padding: 0 !important;
             cursor: default;
         }
+        /* ===== ADMIN LOGIN ===== */
+.admin-indicator {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: linear-gradient(135deg, #43a047, #2e7d32);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-indicator.active {
+    display: flex;
+}
+
+.admin-indicator button {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-indicator button:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.locked-input {
+    background: #f5f5f5 !important;
+    cursor: not-allowed !important;
+    opacity: 0.7;
+}
     </style>
 </head>
 <body>
@@ -1493,13 +1538,24 @@ Formato esperado (separado por tabulaciones):
     }
 
     function showTab(tab) {
-        ['play','salidas','config','rules'].forEach(t => {
-            document.getElementById(t+'Tab')?.classList.remove('active');
-            document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1))?.classList.remove('active');
-        });
-        document.getElementById(tab+'Tab')?.classList.add('active');
-        document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1))?.classList.add('active');
+    // Si intenta acceder a Config sin ser admin
+    if (tab === 'config' && !isAdminAuthenticated) {
+        openAdminLogin();
+        return;
     }
+    
+    ['play','salidas','config','rules'].forEach(t => {
+        document.getElementById(t+'Tab')?.classList.remove('active');
+        document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1))?.classList.remove('active');
+    });
+    document.getElementById(tab+'Tab')?.classList.add('active');
+    document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1))?.classList.add('active');
+    
+    // Si es config y es admin, desbloquear inputs
+    if (tab === 'config' && isAdminAuthenticated) {
+        unlockConfigInputs();
+    }
+}
 
     function initColors() {
         document.getElementById('colorPicker').innerHTML = colors.map((c,i) => 
@@ -2789,6 +2845,124 @@ function endListDrag() {
 
     render();
 }
+// ===== SISTEMA ADMIN =====
+const ADMIN_PASSWORD = '1234'; // CAMBIA ESTA CONTRASEÑA
+let isAdminAuthenticated = false;
+let adminSessionTimeout = null;
+
+function openAdminLogin() {
+    document.getElementById('adminLoginModal').classList.add('active');
+    document.getElementById('adminPassword').value = '';
+    setTimeout(() => document.getElementById('adminPassword').focus(), 100);
+}
+
+function closeAdminLogin() {
+    document.getElementById('adminLoginModal').classList.remove('active');
+}
+
+function checkAdminPassword() {
+    const password = document.getElementById('adminPassword').value;
+    if (password === ADMIN_PASSWORD) {
+        isAdminAuthenticated = true;
+        closeAdminLogin();
+        showTab('config');
+        showToast('✅ Acceso concedido', 'green');
+        showAdminIndicator();
+        unlockConfigInputs();
+        clearTimeout(adminSessionTimeout);
+        adminSessionTimeout = setTimeout(logoutAdmin, 30 * 60 * 1000);
+    } else {
+        showToast('❌ Contraseña incorrecta', 'red');
+        document.getElementById('adminPassword').value = '';
+    }
+}
+
+function logoutAdmin() {
+    isAdminAuthenticated = false;
+    hideAdminIndicator();
+    clearTimeout(adminSessionTimeout);
+    lockConfigInputs();
+    showTab('play');
+    showToast('🔒 Sesión cerrada', 'orange');
+}
+
+function showAdminIndicator() {
+    let indicator = document.getElementById('adminIndicator');
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.id = 'adminIndicator';
+        indicator.className = 'admin-indicator';
+        indicator.innerHTML = '🔓 Admin <button onclick="logoutAdmin()" title="Salir">✕</button>';
+        document.body.appendChild(indicator);
+    }
+    indicator.classList.add('active');
+}
+
+function hideAdminIndicator() {
+    const indicator = document.getElementById('adminIndicator');
+    if (indicator) indicator.classList.remove('active');
+}
+
+function lockConfigInputs() {
+    const configTab = document.getElementById('configTab');
+    if (!configTab) return;
+    configTab.querySelectorAll('input').forEach(inp => {
+        inp.classList.add('locked-input');
+        inp.setAttribute('readonly', 'readonly');
+    });
+    const saveBtn = configTab.querySelector('.save-config-btn');
+    if (saveBtn) {
+        saveBtn.style.opacity = '0.5';
+        saveBtn.style.cursor = 'not-allowed';
+        saveBtn.onclick = function(e) {
+            e.preventDefault();
+            showToast('🔒 Accede como admin para guardar', 'red');
+            return false;
+        };
+    }
+}
+
+function unlockConfigInputs() {
+    const configTab = document.getElementById('configTab');
+    if (!configTab) return;
+    configTab.querySelectorAll('input').forEach(inp => {
+        inp.classList.remove('locked-input');
+        inp.removeAttribute('readonly');
+    });
+    const saveBtn = configTab.querySelector('.save-config-btn');
+    if (saveBtn) {
+        saveBtn.style.opacity = '1';
+        saveBtn.style.cursor = 'pointer';
+    }
+}
+
+// Ejecutar al cargar
+document.addEventListener('DOMContentLoaded', function() {
+    lockConfigInputs(); // Bloquear por defecto
+});
 </script>
+<!-- Modal de Login Admin -->
+<div class="modal-overlay" id="adminLoginModal">
+    <div class="modal" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3>🔐 Acceso Administrador</h3>
+            <button class="modal-close" onclick="closeAdminLogin()">✕</button>
+        </div>
+        <div class="modal-body">
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">
+                Esta sección requiere permisos de administrador
+            </p>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" id="adminPassword" placeholder="Introduce la contraseña" onkeypress="if(event.key==='Enter') checkAdminPassword()">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeAdminLogin()">Cancelar</button>
+                <button class="btn btn-primary" onclick="checkAdminPassword()">🔓 Acceder</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 </body>
 </html>
