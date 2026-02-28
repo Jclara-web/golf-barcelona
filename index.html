@@ -1144,7 +1144,7 @@
         <div class="tabs">
             <button class="tab-btn active" id="tabPlay" onclick="showTab('play')">🏌️ Control</button>
             <button class="tab-btn" id="tabSalidas" onclick="showTab('salidas')">📋 Salidas</button>
-            <button class="tab-btn" id="tabConfig" onclick="showTab('config')">⏱️ Ajusta los hoyos</button>
+            <button class="tab-btn" id="tabConfig" onclick="showTab('config')">⏱️ Tiempos</button>
             <button class="tab-btn" id="tabRules" onclick="showTab('rules')">👮 Marshall</button>
         </div>
 
@@ -1352,8 +1352,8 @@ Formato esperado (separado por tabulaciones):
                     <button class="preset-btn" onclick="applyPreset('slow')">🐢 Predefinido Mal Tiempo</button>
                 </div>
                 <div class="times-grid">
-                    <div class="nine-section"><h3>IDA (1-9)</h3><div id="frontNineTimes"></div><div class="nine-subtotal">Subtotal: <span id="frontNineTotal">0</span> min</div></div>
-                    <div class="nine-section"><h3>VUELTA (10-18)</h3><div id="backNineTimes"></div><div class="nine-subtotal">Subtotal: <span id="backNineTotal">0</span> min</div></div>
+                    <div class="nine-section"><h3>TEE (1-9)</h3><div id="frontNineTimes"></div><div class="nine-subtotal">Subtotal: <span id="frontNineTotal">0</span> min</div></div>
+                    <div class="nine-section"><h3>TEE (10-18)</h3><div id="backNineTimes"></div><div class="nine-subtotal">Subtotal: <span id="backNineTotal">0</span> min</div></div>
                 </div>
                 <button class="save-config-btn" onclick="saveHoleTimes()">💾 Guardar</button>
             </div>
@@ -1421,7 +1421,7 @@ Formato esperado (separado por tabulaciones):
                 </div>
 
                 <div class="panel golf-course">
-                    <div class="course-title">🏌️ Golf Barcelona - 18 Hoyos</div>
+                    <div class="course-title">🏌️ RECORRIDO & CRUCES - 18 Hoyos</div>
                     <div class="holes-container">
                         <div class="nine-section-visual" id="frontNineVisual"></div>
                         <div class="nine-section-visual back-nine" id="backNineVisual"></div>
@@ -2330,8 +2330,8 @@ Formato esperado (separado por tabulaciones):
         const back = document.getElementById('backNineVisual');
         const byHole = {};
         players.forEach(p => { const exp = calcHole(p); if(exp.hole>0&&exp.hole<=18){if(!byHole[exp.hole])byHole[exp.hole]=[];byHole[exp.hole].push(p);} });
-        let fh = '<div class="nine-title">IDA (1-9)</div>';
-        let bh = '<div class="nine-title">VUELTA (10-18)</div>';
+        let fh = '<div class="nine-title">SALIDAS TEE 1 </div>';
+        let bh = '<div class="nine-title">SALIDAS TEE 10 </div>';
         holesData.forEach(h => {
             const pls = byHole[h.n]||[];
             const meta = holeMeta[h.n - 1] || { n: h.n, par: h.par, m: h.m };
@@ -2846,7 +2846,7 @@ function endListDrag() {
     render();
 }
 // ===== SISTEMA ADMIN =====
-const ADMIN_PASSWORD = 'xxxx'; // CAMBIA ESTA CONTRASEÑA
+const ADMIN_PASSWORD = '1234'; // CAMBIA ESTA CONTRASEÑA
 let isAdminAuthenticated = false;
 let adminSessionTimeout = null;
 
